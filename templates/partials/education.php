@@ -18,16 +18,16 @@ $ed = $c['education'];
       <?php endforeach; ?>
     </ul>
     <div class="education__side">
-      <h3 class="label"><?= $e($ed['certs_title']) ?></h3>
+      <h3 class="side-heading"><?= $e($ed['certs_title']) ?></h3>
       <ul class="plain-list">
         <?php foreach ($ed['certs'] as $cert): ?>
-        <li><?= $e($cert['name']) ?> <span class="muted">· <?= $e($cert['issuer']) ?></span></li>
+        <li><?= $e($cert['name']) ?> <span class="muted">(<?= $e($cert['issuer']) ?>)</span></li>
         <?php endforeach; ?>
       </ul>
-      <h3 class="label"><?= $e($ed['languages_title']) ?></h3>
+      <h3 class="side-heading"><?= $e($ed['languages_title']) ?></h3>
       <ul class="plain-list">
         <?php foreach ($ed['languages'] as $language): ?>
-        <li><?= $e($language['name']) ?> <span class="muted">· <?= $e($language['level']) ?></span></li>
+        <li><?= $e($language['name']) ?>: <span class="muted"><?= $e($language['level']) ?></span></li>
         <?php endforeach; ?>
       </ul>
     </div>

@@ -4,8 +4,9 @@
   "updated": "2026-10-16",
   "updated_label": "16 oct 2026",
   "meta": {
-    "title": "John Andrés Trujillo — Ingeniero de software sénior",
-    "description": "Ingeniero de software sénior. iOS y Android nativo desde 2015; los últimos dos años, una plataforma de IA en producción construida de punta a punta: backend en Python, pipeline de IA, app web, extensión de navegador, app iOS e infraestructura en la nube."
+    "title": "John Andrés Trujillo, ingeniero de software sénior",
+    "description": "Ingeniero de software sénior en Quito, Ecuador. Apps iOS y Android desde 2015 y, desde 2024, una plataforma de IA en producción: backend en Python, pipeline de IA, app web, extensión de navegador, app iOS e infraestructura en la nube.",
+    "og_alt": "John Andrés Trujillo, ingeniero móvil desde 2015 que también construye sistemas de IA, junto al dibujo de un chip con un pin por capacidad."
   },
   "ui": {
     "skip": "Saltar al contenido",
@@ -19,7 +20,7 @@
     ],
     "theme": "Tema oscuro",
     "other_lang": {"code": "en", "label": "English", "url": "/"},
-    "staging": "Candidato en staging · no público",
+    "staging": "Candidato en staging, no público",
     "show_all": "Ver los {n}",
     "not_found_title": "Esta página no existe",
     "not_found_body": "Puede que el enlace sea antiguo o tenga un error. Todo el sitio está en una sola página.",
@@ -32,10 +33,8 @@
     "knows_about": ["iOS", "Android", "Swift", "Kotlin", "Python", "Pipelines con LLM", "Ingeniería de plataforma"]
   },
   "hero": {
-    "eyebrow": "Ingeniero de software sénior · Quito, Ecuador · Remoto",
-    "title_lines": ["Móvil nativo desde {2015}.", "Hoy construyo sistemas de IA de punta a punta."],
-    "lede": "Los últimos dos años diseñé, construí y operé una plataforma de IA en producción de punta a punta —backend, pipeline de IA, app web, extensión de navegador, app iOS e infraestructura— con un equipo pequeño y agentes de programación con IA cuyo trabajo reviso y apruebo. Antes: apps iOS y Android para banca, salud, pedidos de restaurantes de alto volumen, Web3 y un marketplace de arte en línea.",
-    "cta_work": "Ver el trabajo",
+    "title_lines": ["Ingeniero móvil desde {2015}.", "Hoy también construyo sistemas de IA."],
+    "lede": "Soy ingeniero de software sénior en Quito, Ecuador, y trabajo de forma remota. Desde 2024 diseño y opero una plataforma de IA en producción que convierte reuniones grabadas en decisiones, tareas y riesgos. La construyo con un equipo pequeño y agentes de programación con IA; reviso su código y apruebo cada versión. En paralelo sigo haciendo apps iOS y Android, y las he entregado para banca, salud, pedidos de restaurantes de alto volumen, Web3 y un marketplace de arte en línea.",
     "cta_contact": "Escríbeme"
   },
   "pinout": {
@@ -44,7 +43,7 @@
     "empty": "Lado izquierdo: apps y clientes. Lado derecho: web, backend, IA y plataforma. Cada pin abre los proyectos y los años que lo respaldan.",
     "status_one": "{name}: 1 lugar donde lo he usado.",
     "status_many": "{name}: {n} lugares donde lo he usado.",
-    "marks": ["John Andrés Trujillo", "Móvil · IA · Plataforma", "Rev 2026.10"]
+    "marks": ["John Andrés Trujillo", "Quito, Ecuador", "Rev 2026.10"]
   },
   "pins": [
     {"id": "swift", "side": "left", "label": "Swift", "name": "Swift y SwiftUI"},
@@ -63,12 +62,11 @@
     {"id": "sec", "side": "right", "label": "Sec", "name": "Seguridad"}
   ],
   "work": {
-    "title": "Trabajo destacado",
+    "title": "Trabajo",
     "case": {
       "period": "2024 – presente",
-      "context": "Independiente",
       "title": "Plataforma de inteligencia de reuniones con IA",
-      "summary": "Un producto B2B multi-tenant, en inglés y español, que graba reuniones y extrae decisiones, tareas y riesgos, cada uno atado al momento de la grabación que lo respalda. Está en uso diario en producción, en reuniones reales con clientes, desde junio de 2025.",
+      "summary": "Un producto B2B multi-tenant, en inglés y español, que graba reuniones y extrae decisiones, tareas y riesgos. Cada uno enlaza al momento de la grabación que lo respalda. Está en uso diario en producción, en reuniones reales con clientes, desde junio de 2025.",
       "role": "Diseñé la arquitectura y la construí con un equipo pequeño y agentes de Claude Code: backend, pipeline de IA, app web, extensión de Chrome, app iOS complementaria e infraestructura. Reviso, pruebo y apruebo el código generado y cada versión que sale a producción.",
       "flow_title": "Cómo una grabación se convierte en decisiones",
       "flow": [
@@ -80,7 +78,7 @@
         {"name": "Uso", "detail": "App web en Next.js, integraciones con Slack y gestores de tareas, estado diario por persona"}
       ],
       "rail_label": "Plataforma",
-      "rail": "Terraform en Google Cloud · despliegues Docker blue/green con Jenkins · Prometheus y Grafana · secretos en OpenBao",
+      "rail": "Terraform en Google Cloud, despliegues Docker blue/green con Jenkins, alertas con Prometheus y Grafana, secretos en OpenBao.",
       "specs_caption": "En números, medido en octubre de 2026",
       "specs_head": ["Parámetro", "Valor", "Condiciones"],
       "specs": [
@@ -91,19 +89,19 @@
         ["App web", "2400+ commits", "~1600 archivos TypeScript, ~220 de pruebas"],
         ["Extensión de Chrome", "230+ commits", "50+ archivos de pruebas"]
       ],
-      "decisions_title": "Decisiones de ingeniería para conversar",
+      "decisions_title": "Decisiones de diseño",
       "decisions": [
-        {"title": "Mejor quedarse corto", "text": "La extracción pasa por un filtro de evidencia: cada decisión, acción y riesgo enlaza a su fuente, y el filtro prefiere omitir un elemento antes que inventarlo."},
-        {"title": "El silencio no es una transcripción", "text": "Un filtro de presencia de voz envía las grabaciones de pantalla sin voz a resúmenes visuales estructurados —pasos con marca de tiempo, texto en pantalla y resultados— en lugar de transcripciones inventadas."},
-        {"title": "Las grabaciones sobreviven a las fallas", "text": "El servidor reensambla las grabaciones en vivo interrumpidas a partir de los segmentos WebM transmitidos, incluso los que llegan sin cabecera, y reprocesa el audio automáticamente."},
-        {"title": "Cada versión necesita evidencia", "text": "Los despliegues Docker blue/green pasan por admisión por salud del host, bloqueos de despliegue y autorización por commit exacto; las imágenes se construyen en nodos de cómputo remotos y se descargan por digest."},
-        {"title": "Los agentes escriben, yo apruebo", "text": "Reviso cada día el código, los diseños y los informes de incidentes de los agentes de IA y devuelvo comentarios por escrito. Los merges y las versiones dependen de pruebas que pasan y de evidencia de producción, no de lo que el agente afirma."}
+        {"title": "Filtro de evidencia en la extracción", "text": "La extracción pasa por un filtro de evidencia que prefiere quedarse corto: cada decisión, acción y riesgo enlaza a su fuente en la grabación."},
+        {"title": "Grabaciones de pantalla sin voz", "text": "Un control de presencia de voz envía las grabaciones sin habla a un resumen visual estructurado (pasos con marca de tiempo, texto en pantalla y resultados) en lugar de producir una transcripción inventada."},
+        {"title": "Recuperación de grabaciones interrumpidas", "text": "El servidor reconstruye las grabaciones en vivo interrumpidas a partir de los segmentos WebM transmitidos, incluso los que llegan sin cabecera, y reprocesa el audio automáticamente."},
+        {"title": "Controles antes de cada versión", "text": "Los despliegues Docker blue/green pasan por admisión por salud del host, bloqueos de despliegue y autorización por commit exacto. Las imágenes se construyen en nodos de cómputo remotos y se descargan por digest."},
+        {"title": "Revisión del trabajo de los agentes de IA", "text": "Reviso cada día el código, los diseños y los informes de incidentes de los agentes y les dejo comentarios por escrito. Un cambio sale a producción solo con pruebas que pasan y evidencia de producción; el reporte del propio agente no cuenta como evidencia."}
       ]
     },
     "mobile": {
       "period": "2015 – hoy",
       "title": "iOS y Android nativo",
-      "text": "Apps nativas para productos de banca y fideicomisos, una app con foco en seguridad, una app de salud, una app de pedidos de restaurantes de alto volumen, una billetera Web3 y un marketplace de arte con realidad aumentada; y antes, desde 2015, una plataforma de aprendizaje accesible para estudiantes ciegos y con baja visión.",
+      "text": "Apps nativas para productos de banca y fideicomisos, una app con foco en seguridad, una app de salud, una app de pedidos de restaurantes de alto volumen, una billetera Web3 y un marketplace de arte con realidad aumentada. Todo empezó en 2015 con una plataforma de aprendizaje accesible para estudiantes ciegos y con baja visión.",
       "link": "Ver toda la experiencia"
     }
   },
@@ -115,7 +113,7 @@
         "id": "ai-platform",
         "title": "Plataforma de inteligencia de reuniones con IA",
         "role": "Ingeniero de software sénior",
-        "context": "Independiente · remoto",
+        "context": "independiente, remoto",
         "period": "oct 2024 – presente",
         "lead": 6,
         "highlights": [
@@ -124,13 +122,13 @@
           {"text": "Construí servicios en Python/FastAPI y colas de Celery con workers en dos hosts, sobre MySQL, Redis y búsqueda vectorial con ChromaDB, con LangGraph y un servidor MCP para asistentes de IA.", "tags": ["python", "data", "llm"]},
           {"text": "Construí la infraestructura en Google Cloud como código con Terraform (dic 2025 – mar 2026): 20 módulos reutilizables entre preproducción y producción para Cloud Run, Cloud SQL, Memorystore, Pub/Sub, Cloud Tasks, Cloud Scheduler, KMS, Secret Manager, IAM, VPC, balanceo de carga HTTPS, Cloud CDN, Artifact Registry y Cloud Storage.", "tags": ["iac", "sec"]},
           {"text": "Operé despliegues Docker blue/green con Jenkins, con admisión por salud del host, bloqueos de despliegue y autorización por commit exacto; las imágenes se construyen en nodos de cómputo remotos y se descargan por digest.", "tags": ["ops"]},
-          {"text": "Reviso cada día el código, los diseños y los informes de incidentes de los agentes de programación con IA y devuelvo comentarios detallados por escrito; los merges y las versiones dependen de pruebas que pasan y de evidencia de producción, no de lo que el agente afirma.", "tags": ["llm", "ops"]},
+          {"text": "Reviso cada día el código, los diseños y los informes de incidentes de los agentes de programación con IA, con comentarios detallados por escrito, y condiciono los merges y las versiones a pruebas que pasan y a evidencia de producción.", "tags": ["llm", "ops"]},
           {"text": "Construí la app iOS complementaria en Swift y SwiftUI: captura de micrófono con AVFoundation, captura de pantalla con ReplayKit y reproducción con AVKit; async/await con subidas reanudables aisladas en actores, manifiestos de subida persistentes, inicio de sesión con device flow, almacenamiento en Keychain, App Intents y pruebas unitarias.", "tags": ["swift", "media", "sec"]},
           {"text": "Construí una extensión de Chrome Manifest V3 en JavaScript que graba Google Meet, Teams y Zoom, transmite fragmentos de audio y video en vivo, inicia sesión con device flow y reintenta las subidas.", "tags": ["ext", "media"]},
           {"text": "Construí la app web con Next.js 15, React 19, TypeScript y Tailwind, con pruebas en Vitest y Playwright y analítica con PostHog.", "tags": ["web"]},
           {"text": "Construí salas aisladas de navegador en la nube, transmitidas por WebRTC, para atender y grabar reuniones, con operadores por sala, protección del micrófono y medición de asistencia por reunión.", "tags": ["media"]},
           {"text": "Implementé la recuperación en el servidor de grabaciones en vivo interrumpidas: reensambla los segmentos WebM transmitidos, incluso los que llegan sin cabecera, y reprocesa el audio recuperado automáticamente.", "tags": ["media", "python"]},
-          {"text": "Agregué un filtro de presencia de voz para que las grabaciones de pantalla sin voz reciban resúmenes visuales estructurados —pasos con marca de tiempo, texto en pantalla y resultados— en lugar de transcripciones inventadas.", "tags": ["llm", "media"]},
+          {"text": "Agregué un filtro de presencia de voz para que las grabaciones de pantalla sin voz reciban resúmenes visuales estructurados (pasos con marca de tiempo, texto en pantalla y resultados) en lugar de transcripciones inventadas.", "tags": ["llm", "media"]},
           {"text": "Construí el producto multi-tenant en inglés y español con integraciones de Jira, GitHub, Slack, calendario y MCP, permisos por tenant para ver, editar, enviar y administrar, tokens de acceso personal y registro de consentimiento.", "tags": ["sec", "python"]},
           {"text": "Construí el estado en vivo de las reuniones en Slack y controles remotos para silenciar el micrófono, apagar la cámara y salir de la llamada, con autorización por canal, registros de auditoría y revisión automática del resumen al terminar.", "tags": ["python", "sec"]},
           {"text": "Construí un estado diario por persona que concilia datos de Jira, Azure DevOps, Notion, Plane y GitHub con Slack y la evidencia de las reuniones.", "tags": ["python"]},
@@ -142,7 +140,7 @@
         "id": "mobile-modernization",
         "title": "Modernización Android y funciones multiplataforma",
         "role": "Desarrollador móvil nativo sénior",
-        "context": "Empresa de desarrollo de software · remoto",
+        "context": "empresa de desarrollo de software, remoto",
         "period": "oct 2024 – presente",
         "highlights": [
           {"text": "Migré layouts XML heredados de Android a Jetpack Compose con patrones ViewModel/MVVM, para un estado y una interfaz fáciles de mantener.", "tags": ["kotlin"]},
@@ -156,7 +154,7 @@
         "id": "web3-wallet",
         "title": "App de billetera Web3",
         "role": "Desarrollador móvil sénior",
-        "context": "Contrato · remoto",
+        "context": "contrato, remoto",
         "period": "ago 2025 – ene 2026",
         "highlights": [
           {"text": "Construí el flujo de intercambio de tokens y funciones Android con Jetpack Compose, Hilt y el patrón repositorio.", "tags": ["kotlin"]},
@@ -167,7 +165,7 @@
         "id": "art-marketplace",
         "title": "Marketplace de arte en línea con RA",
         "role": "Desarrollador iOS sénior",
-        "context": "Medio tiempo · remoto",
+        "context": "medio tiempo, remoto",
         "period": "feb 2023 – ene 2026",
         "highlights": [
           {"text": "Desarrollé y mantuve funciones iOS en producción con Swift, incluida la visualización de obras en realidad aumentada y experiencias de catálogo.", "tags": ["swift", "ar"]},
@@ -180,7 +178,7 @@
         "id": "consultancy",
         "title": "Proyectos para clientes de una consultora de software",
         "role": "Desarrollador móvil nativo sénior",
-        "context": "Consultora · remoto",
+        "context": "consultora, remoto",
         "period": "feb 2019 – oct 2024",
         "engagements": [
           {
@@ -225,7 +223,7 @@
         "id": "accessibility",
         "title": "Plataforma de aprendizaje accesible",
         "role": "Ingeniero de accesibilidad",
-        "context": "Centro educativo para estudiantes ciegos",
+        "context": "centro educativo para estudiantes ciegos",
         "period": "2015 – ago 2018",
         "highlights": [
           {"text": "Diseñé y desarrollé una plataforma móvil de aprendizaje inclusiva para personas ciegas y con baja visión, con Android (Java/Kotlin), retroalimentación táctil, narración por audio, una experiencia pensada primero para la accesibilidad e integración con dispositivos.", "tags": ["a11y", "kotlin"]}
@@ -252,6 +250,7 @@
   "code": {
     "title": "Código abierto",
     "intro": "Proyectos públicos pequeños: experimentos, plantillas y trabajos de curso. El trabajo de producción de arriba es privado.",
+    "head": ["Repositorio", "Lenguaje", "Qué es"],
     "profile_label": "Todos los repositorios en GitHub",
     "evidence_prefix": "Código abierto: ",
     "stars_one": "1 estrella",
@@ -284,8 +283,8 @@
     ],
     "languages_title": "Idiomas",
     "languages": [
-      {"name": "Inglés", "level": "Competencia profesional (B2+)"},
-      {"name": "Español", "level": "Nativo"}
+      {"name": "Inglés", "level": "competencia profesional (B2+)"},
+      {"name": "Español", "level": "nativo"}
     ]
   },
   "contact": {

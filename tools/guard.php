@@ -16,6 +16,7 @@ declare(strict_types=1);
  *
  * Checks:
  *   terms     tracked files, commit messages and rendered pages contain no entry
+ *   images    no tracked image carries EXIF, XMP, IPTC or text metadata (GPS, camera, author)
  *   authors   every commit is authored by an allowed address
  *   links     rendered pages link only to allowed external hosts
  *   --fetch   linked external pages (one hop) contain no entry
@@ -213,7 +214,86 @@ if ($terms !== []) {
     }
 }
 
-// ---------- 2. Authors ----------
+// ---------- 2. Image metadata ----------
+
+/** Name of the first metadata block found in an image, or null when it has none. */
+function imageMetadata(string $data, string $ext): ?string
+{
+    switch ($ext) {
+        case 'png':
+            for ($at = 8; $at + 8 <= strlen($data);) {
+                $length = unpack('N', substr($data, $at, 4))[1];
+                $type = substr($data, $at + 4, 4);
+                if (in_array($type, ['tEXt', 'zTXt', 'iTXt', 'eXIf'], true)) {
+                    return "PNG {$type} chunk";
+                }
+                if ($type === 'IEND') {
+                    return null;
+                }
+                $at += 12 + $length;
+            }
+
+            return null;
+        case 'jpg':
+        case 'jpeg':
+            for ($at = 2; $at + 4 <= strlen($data) && $data[$at] === "\xFF";) {
+                $marker = ord($data[$at + 1]);
+                if ($marker === 0xD9 || $marker === 0xDA) {
+                    return null; // end of image, or start of the pixel data
+                }
+                $length = unpack('n', substr($data, $at + 2, 2))[1];
+                $segment = substr($data, $at + 4, $length - 2);
+                if ($marker === 0xE1 && str_starts_with($segment, "Exif\0")) {
+                    return 'EXIF';
+                }
+                if ($marker === 0xE1 && str_starts_with($segment, 'http://ns.adobe.com/xap/')) {
+                    return 'XMP';
+                }
+                if ($marker === 0xED) {
+                    return 'IPTC';
+                }
+                if ($marker === 0xFE) {
+                    return 'JPEG comment';
+                }
+                $at += 2 + $length;
+            }
+
+            return null;
+        case 'webp':
+            for ($at = 12; $at + 8 <= strlen($data);) {
+                $type = substr($data, $at, 4);
+                $size = unpack('V', substr($data, $at + 4, 4))[1];
+                if ($type === 'EXIF' || $type === 'XMP ') {
+                    return 'WebP ' . trim($type) . ' chunk';
+                }
+                $at += 8 + $size + ($size & 1);
+            }
+
+            return null;
+        case 'svg':
+            return preg_match('/<metadata\b|xmlns:(rdf|dc|cc)=/i', $data) ? 'SVG metadata' : null;
+        default:
+            return str_contains($data, "Exif\0\0") || str_contains($data, '<x:xmpmeta') ? 'EXIF or XMP' : null;
+    }
+}
+
+$images = array_filter(
+    array_filter(explode("\0", git($root, 'ls-files -z'))),
+    static fn (string $path): bool => (bool) preg_match('/\.(png|jpe?g|webp|gif|avif|svg)$/i', $path),
+);
+$dirty = 0;
+foreach ($images as $path) {
+    $found = imageMetadata((string) file_get_contents($root . '/' . $path), strtolower(pathinfo($path, PATHINFO_EXTENSION)));
+    if ($found !== null) {
+        $dirty++;
+        $fail(safe($path, $terms) . " carries metadata ({$found}); strip it before publishing");
+    }
+}
+if ($dirty === 0) {
+    $info(count($images) . ' tracked images without EXIF, XMP, IPTC or text metadata');
+}
+
+// ---------- 3. Authors ----------
 
 if (!isset($options['skip-authors'])) {
     $allowed = array_map('strtolower', array_filter(array_map('trim', explode(',', getenv('PORTFOLIO_AUTHOR_EMAILS') ?: implode(',', DEFAULT_AUTHORS)))));
@@ -242,7 +322,7 @@ if (!isset($options['skip-authors'])) {
     }
 }
 
-// ---------- 3. Outbound links ----------
+// ---------- 4. Outbound links ----------
 
 $base = parse_url((string) $app->config()['base_url'], PHP_URL_HOST);
 $external = [];
@@ -264,7 +344,7 @@ foreach ($pages as $path => $body) {
 }
 $info(count($external) . ' outbound links, all to allowed hosts');
 
-// ---------- 4. One hop ----------
+// ---------- 5. One hop ----------
 
 /** @return string|null page text, or null when it cannot be fetched */
 function fetch(string $url): ?string
@@ -308,7 +388,7 @@ if (isset($options['fetch']) && $terms !== []) {
     }
 }
 
-// ---------- 5. Shared phrases ----------
+// ---------- 6. Shared phrases ----------
 
 if (isset($options['overlap'])) {
     $sites = array_values(array_filter(array_map('trim', file((string) $options['overlap']) ?: []), static fn (string $l): bool => $l !== '' && !str_starts_with($l, '#')));

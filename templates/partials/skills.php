@@ -14,24 +14,20 @@ $s = $c['skills'];
     <h2 class="section__title" id="skills-title"><?= $e($s['title']) ?></h2>
     <p class="section__intro"><?= $e($s['intro']) ?></p>
   </div>
-  <div class="skill-groups">
+  <dl class="skills">
     <?php foreach ($s['groups'] as $group): ?>
-    <section class="skill-group">
-      <h3 class="skill-group__name label"><?= $e($group['name']) ?></h3>
-      <ul class="tags">
-        <?php foreach ($group['items'] as $skill): ?>
-        <li><?= $e($skill) ?></li>
-        <?php endforeach; ?>
-      </ul>
-    </section>
+    <div class="skills__row">
+      <dt><?= $e($group['name']) ?></dt>
+      <dd><?= $e(implode(', ', $group['items'])) ?></dd>
+    </div>
     <?php endforeach; ?>
-  </div>
+  </dl>
 
   <h3 class="evidence-index__title"><?= $e($s['evidence_title']) ?></h3>
   <div class="evidence-index">
     <?php foreach ($c['pins'] as $pin): ?>
     <details class="evidence" id="pin-<?= $e($pin['id']) ?>">
-      <summary><span class="evidence__pin label"><?= $e($pin['label']) ?></span> <?= $e($pin['name']) ?> <span class="evidence__count num"><?= count($evidence[$pin['id']]) ?></span></summary>
+      <summary><span class="evidence__pin"><?= $e($pin['label']) ?></span> <?= $e($pin['name']) ?> <span class="evidence__count num"><?= count($evidence[$pin['id']]) ?></span></summary>
       <div class="evidence__body">
         <ul class="evidence__list">
           <?php foreach ($evidence[$pin['id']] as $item): ?>

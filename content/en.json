@@ -4,8 +4,9 @@
   "updated": "2026-10-16",
   "updated_label": "16 Oct 2026",
   "meta": {
-    "title": "John Andrés Trujillo — Senior Software Engineer",
-    "description": "Senior software engineer. Native iOS and Android since 2015; for the last two years, a production AI platform built end to end: Python backend, AI pipeline, web app, browser extension, iOS app and cloud infrastructure."
+    "title": "John Andrés Trujillo, Senior Software Engineer",
+    "description": "Senior software engineer in Quito, Ecuador. iOS and Android apps since 2015, and since 2024 a production AI platform: Python backend, AI pipeline, web app, browser extension, iOS app and cloud infrastructure.",
+    "og_alt": "John Andrés Trujillo, mobile engineer since 2015 who also builds AI systems, next to a chip drawing with one pin per capability."
   },
   "ui": {
     "skip": "Skip to content",
@@ -19,7 +20,7 @@
     ],
     "theme": "Dark theme",
     "other_lang": {"code": "es", "label": "Español", "url": "/es/"},
-    "staging": "Staging candidate · not public",
+    "staging": "Staging candidate, not public",
     "show_all": "Show all {n}",
     "not_found_title": "This page doesn’t exist",
     "not_found_body": "The link may be old or mistyped. Everything on this site is on one page.",
@@ -32,11 +33,9 @@
     "knows_about": ["iOS", "Android", "Swift", "Kotlin", "Python", "LLM pipelines", "Platform engineering"]
   },
   "hero": {
-    "eyebrow": "Senior software engineer · Quito, Ecuador · Remote",
-    "title_lines": ["Native mobile since {2015}.", "Now building AI systems end to end."],
-    "lede": "For the last two years I’ve designed, built and run a production AI platform end to end — backend, AI pipeline, web app, browser extension, iOS app and infrastructure — with a small team and AI coding agents whose work I review and gate. Before that: iOS and Android apps for banking, health, high-volume restaurant ordering, Web3 and an online art marketplace.",
-    "cta_work": "See the work",
-    "cta_contact": "Get in touch"
+    "title_lines": ["Mobile engineer since {2015}.", "These days I also build AI systems."],
+    "lede": "I’m a senior software engineer in Quito, Ecuador, and I work remotely. Since 2024 I’ve designed and run a production AI platform that turns recorded meetings into decisions, action items and risks. I build it with a small team and AI coding agents; I review their code and approve every release. Alongside it I still build iOS and Android apps, and I’ve shipped them for banking, health, high-volume restaurant ordering, Web3 and an online art marketplace.",
+    "cta_contact": "Write to me"
   },
   "pinout": {
     "title": "Capabilities",
@@ -44,7 +43,7 @@
     "empty": "Left side: apps and clients. Right side: web, backend, AI and platform. Each pin opens the projects and years behind it.",
     "status_one": "{name}: 1 place where I’ve used it.",
     "status_many": "{name}: {n} places where I’ve used it.",
-    "marks": ["John Andrés Trujillo", "Mobile · AI · Platform", "Rev 2026.10"]
+    "marks": ["John Andrés Trujillo", "Quito, Ecuador", "Rev 2026.10"]
   },
   "pins": [
     {"id": "swift", "side": "left", "label": "Swift", "name": "Swift & SwiftUI"},
@@ -63,12 +62,11 @@
     {"id": "sec", "side": "right", "label": "Sec", "name": "Security"}
   ],
   "work": {
-    "title": "Selected work",
+    "title": "Work",
     "case": {
       "period": "2024 – present",
-      "context": "Independent",
       "title": "AI meeting-intelligence platform",
-      "summary": "A multi-tenant B2B product, in English and Spanish, that records meetings and extracts decisions, action items and risks — each tied to the moment in the recording that supports it. It has been in daily production use in real client meetings since June 2025.",
+      "summary": "A multi-tenant B2B product, in English and Spanish, that records meetings and extracts decisions, action items and risks. Each one links to the moment in the recording that supports it. It has been in daily production use in real client meetings since June 2025.",
       "role": "I designed the architecture and built it with a small team and Claude Code agents: backend, AI pipeline, web app, Chrome extension, iOS companion app and infrastructure. I review, test and approve the generated code and every production release.",
       "flow_title": "How a recording becomes decisions",
       "flow": [
@@ -80,7 +78,7 @@
         {"name": "Use", "detail": "Next.js web app, Slack and tracker integrations, per-person daily status"}
       ],
       "rail_label": "Platform",
-      "rail": "Terraform on Google Cloud · blue/green Docker releases through Jenkins · Prometheus and Grafana · OpenBao secrets",
+      "rail": "Terraform on Google Cloud, blue/green Docker releases through Jenkins, Prometheus and Grafana alerts, OpenBao for secrets.",
       "specs_caption": "In numbers, measured in October 2026",
       "specs_head": ["Parameter", "Value", "Conditions"],
       "specs": [
@@ -91,19 +89,19 @@
         ["Web app", "2,400+ commits", "~1,600 TypeScript files, ~220 test files"],
         ["Chrome extension", "230+ commits", "50+ test files"]
       ],
-      "decisions_title": "Engineering choices worth asking about",
+      "decisions_title": "Design decisions",
       "decisions": [
-        {"title": "Prefer under-claiming", "text": "Extraction runs behind an evidence gate: every decision, action and risk links to its source, and the gate would rather miss an item than invent one."},
-        {"title": "Silence is not a transcript", "text": "A voice-presence gate sends silent screen recordings to structured visual summaries — timestamped steps, on-screen text and results — instead of hallucinated transcripts."},
-        {"title": "Recordings survive failures", "text": "The server reassembles interrupted live recordings from streamed WebM segments, including segments missing their header, and reprocesses the audio automatically."},
-        {"title": "Releases need evidence", "text": "Blue/green Docker deployments pass host-health admission, deploy locks and exact-commit authorization; images are built on remote compute nodes and pulled by digest."},
-        {"title": "Agents write, I gate", "text": "I review the AI agents’ code, designs and incident write-ups every day and return written feedback. Merges and releases depend on passing tests and production evidence, not on the agent’s own claims."}
+        {"title": "Evidence gate on extraction", "text": "Extraction runs behind an evidence gate that prefers under-claiming: each decision, action and risk links to its source in the recording."},
+        {"title": "Silent screen recordings", "text": "A voice-presence check sends recordings without speech to a structured visual summary (timestamped steps, on-screen text and results) instead of producing a hallucinated transcript."},
+        {"title": "Recovering interrupted recordings", "text": "The server rebuilds interrupted live recordings from the streamed WebM segments, including segments that arrive without a header, and reprocesses the audio automatically."},
+        {"title": "Release gates", "text": "Blue/green Docker deployments go through host-health admission, deploy locks and exact-commit authorization. Images are built on remote compute nodes and pulled by digest."},
+        {"title": "Reviewing AI agents’ work", "text": "I review the agents’ code, designs and incident write-ups every day and leave written feedback. A change ships only with passing tests and evidence from production; the agent’s own report doesn’t count as evidence."}
       ]
     },
     "mobile": {
       "period": "2015 – today",
       "title": "Native iOS and Android",
-      "text": "Native apps for banking and trust products, a security-focused app, a health app, a high-volume restaurant ordering app, a Web3 wallet and an online art marketplace with augmented reality — and before that, from 2015, an accessible learning platform for blind and visually impaired students.",
+      "text": "Native apps for banking and trust products, a security-focused app, a health app, a high-volume restaurant ordering app, a Web3 wallet and an online art marketplace with augmented reality. It started in 2015 with an accessible learning platform for blind and visually impaired students.",
       "link": "Full experience"
     }
   },
@@ -115,7 +113,7 @@
         "id": "ai-platform",
         "title": "AI meeting-intelligence platform",
         "role": "Senior Software Engineer",
-        "context": "Independent · remote",
+        "context": "independent, remote",
         "period": "Oct 2024 – present",
         "lead": 6,
         "highlights": [
@@ -124,13 +122,13 @@
           {"text": "Built Python/FastAPI services and Celery queues with workers across two hosts, backed by MySQL, Redis and ChromaDB vector search, with LangGraph and an MCP server for AI assistants.", "tags": ["python", "data", "llm"]},
           {"text": "Built the Google Cloud infrastructure as code with Terraform (Dec 2025 – Mar 2026): 20 reusable modules across preprod and prod for Cloud Run, Cloud SQL, Memorystore, Pub/Sub, Cloud Tasks, Cloud Scheduler, KMS, Secret Manager, IAM, VPC, HTTPS load balancing, Cloud CDN, Artifact Registry and Cloud Storage.", "tags": ["iac", "sec"]},
           {"text": "Operated blue/green Docker deployments through Jenkins with host-health admission, deploy locks and exact-commit authorization; images are built on remote compute nodes and pulled by digest.", "tags": ["ops"]},
-          {"text": "Review AI coding agents’ code, designs and incident write-ups every day with detailed written feedback; merges and releases are gated on passing tests and production evidence, not on the agent’s own claims.", "tags": ["llm", "ops"]},
+          {"text": "Review AI coding agents’ code, designs and incident write-ups every day with detailed written feedback, and gate merges and releases on passing tests and production evidence.", "tags": ["llm", "ops"]},
           {"text": "Built the iOS companion app in Swift and SwiftUI: AVFoundation microphone capture, ReplayKit broadcast capture and AVKit playback; async/await with actor-isolated resumable uploads, persisted upload manifests, device-flow sign-in, Keychain storage, App Intents and unit tests.", "tags": ["swift", "media", "sec"]},
           {"text": "Built a Manifest V3 Chrome extension in JavaScript that records Google Meet, Teams and Zoom, streams live audio and video chunks, signs in through device flow and retries uploads.", "tags": ["ext", "media"]},
           {"text": "Built the web app with Next.js 15, React 19, TypeScript and Tailwind, tested with Vitest and Playwright, with PostHog analytics.", "tags": ["web"]},
           {"text": "Built isolated cloud-browser rooms streamed over WebRTC to run and record meetings, with per-room operators, a microphone guard and per-meeting attendance measurement.", "tags": ["media"]},
           {"text": "Implemented server-side recovery of interrupted live recordings by reassembling streamed WebM segments, including segments missing their header, and reprocessing the recovered audio automatically.", "tags": ["media", "python"]},
-          {"text": "Added a voice-presence gate so silent screen recordings receive structured visual summaries — timestamped steps, on-screen text and results — instead of hallucinated transcripts.", "tags": ["llm", "media"]},
+          {"text": "Added a voice-presence gate so silent screen recordings receive structured visual summaries (timestamped steps, on-screen text and results) instead of hallucinated transcripts.", "tags": ["llm", "media"]},
           {"text": "Built the multi-tenant product in English and Spanish with Jira, GitHub, Slack, calendar and MCP integrations, tenant-scoped view, edit, send and admin permissions, personal access tokens and consent capture.", "tags": ["sec", "python"]},
           {"text": "Built live-meeting Slack status and remote controls to mute the microphone, turn off the camera and leave calls, with channel-wide authorization, audit trails and automatic post-meeting summary checks.", "tags": ["python", "sec"]},
           {"text": "Built per-person daily status that reconciles Jira, Azure DevOps, Notion, Plane and GitHub data with Slack and meeting evidence.", "tags": ["python"]},
@@ -142,7 +140,7 @@
         "id": "mobile-modernization",
         "title": "Android modernization and cross-platform features",
         "role": "Senior Native Mobile Developer",
-        "context": "Software development firm · remote",
+        "context": "software development firm, remote",
         "period": "Oct 2024 – present",
         "highlights": [
           {"text": "Migrated legacy Android XML layouts to Jetpack Compose with ViewModel/MVVM patterns for maintainable state and UI behavior.", "tags": ["kotlin"]},
@@ -156,7 +154,7 @@
         "id": "web3-wallet",
         "title": "Web3 wallet app",
         "role": "Senior Mobile Developer",
-        "context": "Contract · remote",
+        "context": "contract, remote",
         "period": "Aug 2025 – Jan 2026",
         "highlights": [
           {"text": "Built the token-swap flow and Android features with Jetpack Compose, Hilt and the repository pattern.", "tags": ["kotlin"]},
@@ -167,7 +165,7 @@
         "id": "art-marketplace",
         "title": "Online art marketplace with AR",
         "role": "Senior iOS Developer",
-        "context": "Part-time · remote",
+        "context": "part-time, remote",
         "period": "Feb 2023 – Jan 2026",
         "highlights": [
           {"text": "Developed and maintained production iOS features in Swift, including augmented-reality art visualization and catalog experiences.", "tags": ["swift", "ar"]},
@@ -180,7 +178,7 @@
         "id": "consultancy",
         "title": "Client engagements for a software consultancy",
         "role": "Senior Native Mobile Developer",
-        "context": "Consultancy · remote",
+        "context": "consultancy, remote",
         "period": "Feb 2019 – Oct 2024",
         "engagements": [
           {
@@ -225,7 +223,7 @@
         "id": "accessibility",
         "title": "Accessible learning platform",
         "role": "Accessibility Engineer",
-        "context": "Education center for blind students",
+        "context": "education center for blind students",
         "period": "2015 – Aug 2018",
         "highlights": [
           {"text": "Designed and developed an inclusive mobile learning platform for blind and visually impaired users with Android (Java/Kotlin), tactile feedback, audio narration, accessibility-first UX and device integration.", "tags": ["a11y", "kotlin"]}
@@ -252,6 +250,7 @@
   "code": {
     "title": "Open source",
     "intro": "Small public projects: experiments, templates and course work. The production work above is private.",
+    "head": ["Repository", "Language", "What it is"],
     "profile_label": "All repositories on GitHub",
     "evidence_prefix": "Open source: ",
     "stars_one": "1 star",
@@ -284,8 +283,8 @@
     ],
     "languages_title": "Languages",
     "languages": [
-      {"name": "English", "level": "Professional working proficiency (B2+)"},
-      {"name": "Spanish", "level": "Native"}
+      {"name": "English", "level": "professional working proficiency (B2+)"},
+      {"name": "Spanish", "level": "native"}
     ]
   },
   "contact": {
@@ -300,7 +299,7 @@
       "website": "Leave this field empty"
     },
     "submit": "Send message",
-    "sent": "Message sent. Thank you — I’ll answer by email.",
+    "sent": "Message sent. Thanks, I’ll answer by email.",
     "privacy": "No cookies and no tracking. I use your details only to answer you.",
     "unavailable": "The form is offline right now. You can find me on GitHub:",
     "elsewhere": "Elsewhere",

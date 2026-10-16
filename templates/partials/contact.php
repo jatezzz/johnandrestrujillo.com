@@ -22,7 +22,7 @@ $invalid = static function (string $field) use ($fieldErrors): string {
       <h2 class="section__title" id="contact-title"><?= $e($k['title']) ?></h2>
       <p><?= $e($k['intro']) ?></p>
       <p class="muted"><?= $e($k['privacy']) ?></p>
-      <h3 class="label"><?= $e($k['elsewhere']) ?></h3>
+      <h3 class="side-heading"><?= $e($k['elsewhere']) ?></h3>
       <ul class="plain-list">
         <li><a href="<?= $e($site['github_url']) ?>">GitHub</a></li>
         <?php if ($site['linkedin_url'] !== ''): ?>

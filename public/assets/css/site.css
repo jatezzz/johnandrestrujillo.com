@@ -229,13 +229,21 @@ svg {
   font-variant-numeric: tabular-nums;
 }
 
-.label {
+/* Pin codes (SWIFT, LLM...) are the one place for uppercase mono: they are pin names. */
+.label,
+.evidence__pin {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--graphite);
+  color: var(--accent);
+}
+
+.side-heading {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .muted {
@@ -248,20 +256,6 @@ svg {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.arrow-link {
-  font-weight: 700;
-}
-
-.arrow-link::after {
-  content: "";
-  display: inline-block;
-  width: 0.85em;
-  height: 0.6em;
-  margin-left: 0.4em;
-  background: currentColor;
-  clip-path: polygon(0 40%, 62% 40%, 62% 0, 100% 50%, 62% 100%, 62% 60%, 0 60%);
 }
 
 .button {
@@ -438,17 +432,8 @@ svg {
   }
 }
 
-.eyebrow {
-  margin: 0;
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
 .hero__title {
-  margin: 0.85rem 0 1.4rem;
+  margin: 0 0 1.4rem;
   font-size: var(--step-3);
   font-weight: 800;
   line-height: 1.04;
@@ -460,7 +445,6 @@ svg {
 }
 
 .hero__title .num {
-  color: var(--accent);
   letter-spacing: -0.04em;
 }
 
@@ -489,8 +473,7 @@ svg {
   font-size: 0.95rem;
 }
 
-.pinout__caption .label {
-  margin-right: 0.45rem;
+.pinout__caption strong {
   color: var(--ink);
 }
 
@@ -702,7 +685,6 @@ svg {
 
 .evidence-panel__title .label {
   margin-right: 0.4rem;
-  color: var(--accent);
 }
 
 .evidence-panel__empty {
@@ -798,7 +780,7 @@ svg {
 .case__kicker {
   margin: 0;
   color: var(--graphite);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .case__title {
@@ -848,6 +830,7 @@ svg {
 .flow__caption {
   display: block;
   margin-bottom: 1rem;
+  font-weight: 800;
 }
 
 .flow__stages {
@@ -902,11 +885,6 @@ svg {
   font-size: 0.95rem;
 }
 
-.flow__rail .label {
-  margin-right: 0.5rem;
-  color: var(--ink);
-}
-
 @media (min-width: 62rem) {
   .flow__stages {
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -945,13 +923,8 @@ svg {
 
 .specs caption {
   padding-bottom: 0.75rem;
-  color: var(--graphite);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 800;
   text-align: left;
-  text-transform: uppercase;
 }
 
 .specs th,
@@ -962,13 +935,12 @@ svg {
   vertical-align: top;
 }
 
-.specs thead th {
+.specs thead th,
+.repos thead th {
   border-bottom: 1.5px solid var(--ink);
   color: var(--graphite);
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .specs tbody th {
@@ -981,8 +953,9 @@ svg {
 }
 
 .decisions__title {
-  display: block;
   margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .decisions dl {
@@ -1137,44 +1110,34 @@ svg {
 
 /* ---------- Skills and evidence index ---------- */
 
-.skill-groups {
-  display: grid;
-  gap: 1.75rem 2.5rem;
-}
-
-@media (min-width: 48rem) {
-  .skill-groups {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 72rem) {
-  .skill-groups {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.skill-group__name {
-  margin: 0 0 0.6rem;
-  letter-spacing: 0.04em;
-  text-transform: none; /* "iOS", not "IOS" */
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+.skills {
   margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
-.tags li {
-  padding: 0.18rem 0.55rem;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  background: var(--surface);
-  font-size: 0.9rem;
+.skills__row {
+  display: grid;
+  gap: 0.15rem 2.5rem;
+  padding-block: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.skills__row:first-child {
+  border-top: 0;
+}
+
+@media (min-width: 52rem) {
+  .skills__row {
+    grid-template-columns: 12rem minmax(0, 1fr);
+  }
+}
+
+.skills dt {
+  font-weight: 800;
+}
+
+.skills dd {
+  max-width: 80ch;
+  margin: 0;
 }
 
 .evidence-index__title {
@@ -1184,21 +1147,11 @@ svg {
 }
 
 .evidence-index {
-  display: grid;
-  gap: 0.5rem;
-}
-
-@media (min-width: 62rem) {
-  .evidence-index {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
+  border-bottom: 1px solid var(--rule);
 }
 
 .evidence {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--surface);
+  border-top: 1px solid var(--rule);
   scroll-margin-top: 1rem;
 }
 
@@ -1208,12 +1161,11 @@ svg {
 }
 
 .evidence > summary {
-  padding: 0.7rem 0.9rem;
+  padding: 0.7rem 0;
 }
 
 .evidence__pin {
   min-width: 4rem;
-  color: var(--accent);
 }
 
 .evidence__count {
@@ -1223,47 +1175,59 @@ svg {
 }
 
 .evidence__body {
-  padding: 0 0.9rem 0.9rem;
+  padding: 0 0 1rem 1.6rem;
 }
 
 /* ---------- Open source ---------- */
 
 .repos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
-  gap: 1rem;
+  width: 100%;
   margin: 0 0 1.75rem;
-  padding: 0;
-  list-style: none;
-}
-
-.repo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 1rem 1.1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--surface);
-}
-
-.repo__name {
-  margin: 0;
-  font-family: var(--font-mono);
+  border-collapse: collapse;
   font-size: 0.95rem;
-  font-weight: 700;
+}
+
+.repos th,
+.repos td {
+  padding: 0.6rem 1rem 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.repos__name {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
   overflow-wrap: anywhere;
 }
 
-.repo__meta {
-  margin: 0;
+.repos__lang {
   color: var(--graphite);
-  font-size: 0.82rem;
+  white-space: nowrap;
 }
 
-.repo__desc {
-  margin: 0;
-  font-size: 0.95rem;
+/* Narrow screens: each repository becomes a short block. */
+@media (max-width: 40rem) {
+  .repos thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .repos tr {
+    display: block;
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .repos th,
+  .repos td {
+    display: block;
+    padding: 0.1rem 0;
+    border: 0;
+  }
 }
 
 /* ---------- Education ---------- */
@@ -1304,12 +1268,7 @@ svg {
   color: var(--graphite);
 }
 
-.education__side .label {
-  display: block;
-  margin: 0 0 0.5rem;
-}
-
-.education__side .plain-list + .label {
+.education__side .plain-list + .side-heading {
   margin-top: 1.5rem;
 }
 
@@ -1334,9 +1293,8 @@ svg {
   margin-bottom: 1rem;
 }
 
-.contact__intro .label {
-  display: block;
-  margin: 1.75rem 0 0.5rem;
+.contact__intro .side-heading {
+  margin-top: 1.75rem;
 }
 
 .form {
@@ -1431,6 +1389,11 @@ svg {
 
 .not-found {
   border-top: 0;
+}
+
+.not-found__code {
+  margin: 0;
+  color: var(--graphite);
 }
 
 .not-found .section__title {

@@ -10,7 +10,6 @@ $hero = $c['hero'];
 ?>
 <section class="hero wrap" aria-labelledby="hero-title">
   <div class="hero__text">
-    <p class="eyebrow"><?= $e($hero['eyebrow']) ?></p>
     <h1 class="hero__title" id="hero-title">
       <?php foreach ($hero['title_lines'] as $line): ?>
       <span class="hero__line"><?= $m($line) ?></span>
@@ -18,8 +17,7 @@ $hero = $c['hero'];
     </h1>
     <p class="hero__lede"><?= $e($hero['lede']) ?></p>
     <p class="hero__actions">
-      <a class="button button--primary" href="#work"><?= $e($hero['cta_work']) ?></a>
-      <a class="button" href="#contact"><?= $e($hero['cta_contact']) ?></a>
+      <a class="button button--primary" href="#contact"><?= $e($hero['cta_contact']) ?></a>
     </p>
   </div>
   <?= $view->partial('pinout', $vars) ?>

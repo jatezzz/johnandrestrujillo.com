@@ -1,0 +1,65 @@
+/* The 1200x630 social preview card (templates/og.php). Loaded after site.css. */
+
+.og {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 56px;
+  width: 1200px;
+  height: 630px;
+  margin: 0;
+  padding: 64px 72px;
+  overflow: hidden;
+  border-top: 10px solid var(--accent);
+}
+
+.og__name {
+  margin: 0 0 28px;
+  color: var(--graphite);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.og__lines {
+  margin: 0;
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.og__lines .num {
+  letter-spacing: -0.04em;
+}
+
+.og__domain {
+  margin: 36px 0 0;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.og__chip {
+  --pitch: 54px;
+  --lead-w: 30px;
+}
+
+.og__chip .pin__label {
+  font-size: 17px;
+}
+
+.og__chip .package {
+  width: 170px;
+}
+
+.og__chip .package__mark {
+  font-size: 13px;
+}
+
+.og__chip .package__mark--name {
+  font-size: 19px;
+}
+
+.og .pin__lead {
+  animation: none;
+}

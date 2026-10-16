@@ -20,7 +20,7 @@ cd "$root"
 # The footer shows which commit staging runs; "+" marks uncommitted changes.
 revision="$(git rev-parse --short HEAD 2>/dev/null || echo 'no-commit')"
 [[ -n "$(git status --porcelain 2>/dev/null)" ]] && revision="${revision}+"
-printf '%s · %s\n' "$revision" "$(date -u '+%Y-%m-%d %H:%M UTC')" > .revision
+printf '%s, %s\n' "$revision" "$(date -u '+%Y-%m-%d %H:%M UTC')" > .revision
 
 ssh "$STAGE_HOST" "mkdir -p '$stage_dir'"
 rsync -a --delete --exclude '.git/' --exclude 'var/' --exclude 'config/local.php' \

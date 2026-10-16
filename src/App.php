@@ -43,6 +43,7 @@ final class App
                 '/robots.txt' => $this->robots(),
                 '/sitemap.xml' => $this->sitemap(),
                 '/healthz' => Response::text("ok\n")->withHeader('Cache-Control', 'no-store'),
+                '/og/en', '/og/es' => $this->card(substr($path, 4), $path),
                 default => $this->notFound($path),
             };
         } catch (\Throwable $error) {
@@ -126,6 +127,26 @@ final class App
         return Response::html($this->page($lang, '404', []), 404)->withHeader('Cache-Control', 'no-store');
     }
 
+    /**
+     * The social preview card, captured to public/assets/img/og-<lang>.png with a
+     * headless browser. Only served outside production.
+     */
+    private function card(string $lang, string $path): Response
+    {
+        if ($this->config['env'] === 'production') {
+            return $this->notFound($path);
+        }
+        $c = Content::load($this->root, $lang);
+        $html = $this->view->render('og', [
+            'c' => $c,
+            'lang' => $lang,
+            'sides' => Content::pinSides($c),
+            'asset' => $this->asset(...),
+        ]);
+
+        return Response::html($html)->withHeader('Cache-Control', 'no-store');
+    }
+
     /** @param array<string, mixed> $vars */
     private function page(string $lang, string $template, array $vars): string
     {
@@ -149,6 +170,8 @@ final class App
                 'form_token' => $contact->token(),
             ],
             'asset' => $this->asset(...),
+            'og_image' => is_file($this->root . "/public/assets/img/og-{$lang}.png") ? $base . $this->asset("img/og-{$lang}.png") : '',
+            'touch_icon' => is_file($this->root . '/public/assets/img/apple-touch-icon.png'),
             'evidence' => Content::evidence($c),
             'sides' => Content::pinSides($c),
         ];

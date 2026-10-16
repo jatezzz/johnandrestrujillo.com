@@ -8,6 +8,8 @@
  * @var callable $asset
  * @var callable $e
  * @var string $json_ld
+ * @var string $og_image
+ * @var bool $touch_icon
  * @var string $body
  */
 $other = $c['ui']['other_lang'];
@@ -30,8 +32,20 @@ $other = $c['ui']['other_lang'];
 <meta property="og:description" content="<?= $e($c['meta']['description']) ?>">
 <meta property="og:url" content="<?= $e($canonical) ?>">
 <meta property="og:locale" content="<?= $e($c['locale']) ?>">
+<?php if ($og_image !== ''): ?>
+<meta property="og:image" content="<?= $e($og_image) ?>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="<?= $e($c['meta']['og_alt']) ?>">
+<meta name="twitter:card" content="summary_large_image">
+<?php else: ?>
 <meta name="twitter:card" content="summary">
+<?php endif; ?>
 <link rel="icon" href="<?= $e($asset('img/favicon.svg')) ?>" type="image/svg+xml">
+<?php if ($touch_icon): ?>
+<link rel="icon" href="<?= $e($asset('img/favicon-32.png')) ?>" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="<?= $e($asset('img/apple-touch-icon.png')) ?>">
+<?php endif; ?>
 <link rel="preload" href="/assets/fonts/atkinson-next-v7-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?= $e($asset('css/site.css')) ?>">
 <script src="<?= $e($asset('js/theme.js')) ?>"></script>
@@ -41,7 +55,7 @@ $other = $c['ui']['other_lang'];
 <body>
 <a class="skip" href="#main"><?= $e($c['ui']['skip']) ?></a>
 <?php if ($site['staging']): ?>
-<p class="stage-banner"><?= $e($c['ui']['staging']) ?><?php if ($site['revision'] !== ''): ?> · <span class="num"><?= $e($site['revision']) ?></span><?php endif; ?></p>
+<p class="stage-banner"><?= $e($c['ui']['staging']) ?><?php if ($site['revision'] !== ''): ?>: <span class="num"><?= $e($site['revision']) ?></span><?php endif; ?></p>
 <?php endif; ?>
 <header class="masthead">
   <div class="masthead__inner">
@@ -72,10 +86,10 @@ $other = $c['ui']['other_lang'];
   <div class="colophon__inner">
     <p>© <span class="num"><?= $e(substr($c['updated'], 0, 4)) ?></span> <?= $e($c['person']['name']) ?></p>
     <p><?= $e($c['footer']['colophon']) ?></p>
-    <p>
-      <?= $e($c['footer']['updated']) ?> <span class="num"><?= $e($c['updated_label']) ?></span>
-      <?php if ($site['source_url'] !== ''): ?> · <a href="<?= $e($site['source_url']) ?>"><?= $e($c['footer']['source']) ?></a><?php endif; ?>
-    </p>
+    <p><?= $e($c['footer']['updated']) ?> <span class="num"><?= $e($c['updated_label']) ?></span>.</p>
+    <?php if ($site['source_url'] !== ''): ?>
+    <p><a href="<?= $e($site['source_url']) ?>"><?= $e($c['footer']['source']) ?></a></p>
+    <?php endif; ?>
   </div>
 </footer>
 </body>

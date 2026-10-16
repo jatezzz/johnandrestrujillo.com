@@ -18,7 +18,7 @@ $showAll = $c['ui']['show_all'];
       <p class="role__period num"><?= $e($item['period']) ?></p>
       <div class="role__body">
         <h3 class="role__title"><?= $e($item['title']) ?></h3>
-        <p class="role__meta"><?= $e($item['role']) ?> · <?= $e($item['context']) ?></p>
+        <p class="role__meta"><?= $e($item['role']) ?>, <?= $e($item['context']) ?></p>
         <?php if (!empty($item['highlights'])): ?>
         <?= $view->partial('highlights', ['items' => $item['highlights'], 'lead' => (int) ($item['lead'] ?? 0), 'showAll' => $showAll]) ?>
         <?php endif; ?>

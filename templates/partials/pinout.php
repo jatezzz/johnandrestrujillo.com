@@ -13,7 +13,7 @@ $p = $c['pinout'];
 ?>
 <div class="hero__chip">
   <figure class="pinout">
-    <figcaption class="pinout__caption"><span class="label"><?= $e($p['title']) ?></span> <?= $e($p['hint']) ?></figcaption>
+    <figcaption class="pinout__caption"><strong><?= $e($p['title']) ?>.</strong> <?= $e($p['hint']) ?></figcaption>
     <div class="pinout__body">
       <?php foreach (['left', 'right'] as $side): ?>
       <ul class="pins pins--<?= $side ?>">
