@@ -42,7 +42,7 @@ $p = $c['pinout'];
   </figure>
   <div class="evidence-panel" id="evidence-panel" hidden
        data-status-one="<?= $e($p['status_one']) ?>" data-status-many="<?= $e($p['status_many']) ?>">
-    <p class="evidence-panel__status" data-status aria-live="polite"></p>
+    <p class="evidence-panel__status sr-only" data-status aria-live="polite"></p>
     <div class="evidence-panel__content" data-content>
       <p class="evidence-panel__empty"><?= $e($p['empty']) ?></p>
     </div>
