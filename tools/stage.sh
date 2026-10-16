@@ -43,10 +43,11 @@ return [
     'mail_mode' => 'log',
     'form_secret' => '${secret}',
     'var_dir' => '/srv/var',
+    'metrics_mode' => 'log',
 ];
 PHP
   chmod 0644 "$config_dir/local.php"
 fi
-STAGE_CONFIG_DIR="$config_dir" $DOCKER compose -f docker/compose.staging.yml up -d --remove-orphans
+STAGE_CONFIG_DIR="$config_dir" $DOCKER compose -f docker/compose.staging.yml up -d --build --remove-orphans
 STAGE_CONFIG_DIR="$config_dir" $DOCKER compose -f docker/compose.staging.yml ps --format '{{.Name}}  {{.Status}}  {{.Ports}}'
 REMOTE

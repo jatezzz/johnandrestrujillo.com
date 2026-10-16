@@ -7,9 +7,10 @@ namespace Portfolio;
 /**
  * The contact form: validation, spam traps and delivery.
  *
- * Spam handling without cookies or third-party captchas:
+ * Spam handling without cookies or third-party services:
  *  - a honeypot field people never see (filled = silently dropped);
  *  - a signed render timestamp (sent in under MIN_SECONDS = rejected, too old = expired);
+ *  - an image CAPTCHA (see Captcha), when the server can draw it;
  *  - a per-connection hourly limit kept in files outside the web root.
  */
 final class Contact
@@ -35,6 +36,14 @@ final class Contact
             'mail' => $this->config['contact_to'] !== '' && $this->config['contact_from'] !== '',
             default => false,
         };
+    }
+
+    /** The image CAPTCHA, or null when the form is off or the server lacks GD with FreeType. */
+    public function captcha(): ?Captcha
+    {
+        return $this->enabled() && Captcha::available()
+            ? new Captcha((string) $this->config['form_secret'], (string) $this->config['var_dir'])
+            : null;
     }
 
     public function token(?int $at = null): string
@@ -81,11 +90,20 @@ final class Contact
         } elseif ($age < self::MIN_SECONDS) {
             $errors['form'] = 'fast';
         }
+        $captcha = $this->captcha();
+        if ($errors === [] && $captcha !== null) {
+            $answer = is_string($post['captcha_answer'] ?? null) ? $post['captcha_answer'] : '';
+            $captchaToken = is_string($post['captcha_token'] ?? null) ? $post['captcha_token'] : '';
+            if (!$captcha->verify($captchaToken, $answer)) {
+                $errors['captcha'] = 'captcha';
+            }
+        }
         if ($errors !== []) {
             return ['ok' => false, 'status' => 422, 'errors' => $errors, 'values' => $values];
         }
 
-        if (!$this->allow($ip)) {
+        $limit = new RateLimit((string) $this->config['var_dir'], (string) $this->config['form_secret']);
+        if (!$limit->allow('contact', $ip, self::MAX_PER_HOUR, 3600)) {
             return ['ok' => false, 'status' => 429, 'errors' => ['form' => 'rate'], 'values' => $values];
         }
         if (!$this->deliver($values)) {
@@ -110,45 +128,6 @@ final class Contact
         }
 
         return time() - (int) $parts[1];
-    }
-
-    private function allow(string $ip): bool
-    {
-        $dir = $this->config['var_dir'] . '/ratelimit';
-        if (!is_dir($dir) && !@mkdir($dir, 0700, true) && !is_dir($dir)) {
-            error_log('portfolio: rate-limit directory is not writable');
-
-            return true;
-        }
-
-        $file = $dir . '/' . hash_hmac('sha256', $ip, (string) $this->config['form_secret']);
-        $handle = @fopen($file, 'c+');
-        if ($handle === false) {
-            error_log('portfolio: rate-limit file is not writable');
-
-            return true;
-        }
-
-        try {
-            flock($handle, LOCK_EX);
-            $now = time();
-            $recent = array_values(array_filter(
-                array_map('intval', explode(',', (string) stream_get_contents($handle))),
-                static fn (int $t): bool => $t > $now - 3600,
-            ));
-            if (count($recent) >= self::MAX_PER_HOUR) {
-                return false;
-            }
-            $recent[] = $now;
-            ftruncate($handle, 0);
-            rewind($handle);
-            fwrite($handle, implode(',', $recent));
-
-            return true;
-        } finally {
-            flock($handle, LOCK_UN);
-            fclose($handle);
-        }
     }
 
     /** @param array<string, string> $values */

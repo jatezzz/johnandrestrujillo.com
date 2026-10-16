@@ -15,20 +15,28 @@ me as the author; this note is the disclosure.
 
 ## Stack
 
-- **PHP 8.2, no framework, no dependencies.** The host is shared PHP hosting: no Node, no
-  Composer at runtime, a 2 MB default memory limit (the app raises it at bootstrap).
+- **PHP 8.2, no framework, one vendored library** (`vendor/gregwar-captcha`, MIT, for the
+  contact-form image check). The host is shared PHP hosting: no Node, no Composer at runtime,
+  a 2 MB default memory limit (the app raises it at bootstrap).
 - **Content as data.** All copy lives in `content/en.json` and `content/es.json`, which share
   one shape; the templates only arrange it. Tests fail if the two languages drift apart.
 - **Fast and strict by default.** Server-rendered HTML, one stylesheet, two small scripts,
-  self-hosted fonts, no cookies, no analytics, no third-party requests. A strict Content
-  Security Policy (`script-src 'self'`, no inline scripts or styles).
+  self-hosted fonts, no cookies, no third-party requests. A strict Content Security Policy
+  (`script-src 'self'`, `connect-src 'self'`, no inline scripts or styles).
+- **Observable without tracking.** The browser sends a few anonymous events (page views, Core
+  Web Vitals, JavaScript errors, which pin or link was used) to `/e` on this site; PHP checks
+  them against an allow-list and relays them to PostHog after the response is sent, together
+  with server-side events (contact-form outcomes, server errors). No cookies or storage, no
+  person profiles, no IP address or GeoIP, bots dropped, and a visitor id that changes daily.
+  See `src/Metrics.php`.
 - **Accessible.** Skip link, landmarks, visible focus, keyboard-navigable pins (arrow keys),
   reduced-motion support, AA contrast in both themes. Typeface: Atkinson Hyperlegible
   (Braille Institute), designed for low-vision readers.
 
 ```
 public/      web root: front controller, .htaccess, assets
-src/         App (routing, headers), Content, View, Contact (form), Config
+src/         App (routing, headers), Content, View, Contact, Captcha, Metrics, RateLimit, Config
+vendor/      gregwar/captcha v1.3.0 (subset)
 templates/   layout, pages and partials
 content/     site copy, one JSON file per language
 tests/       zero-dependency test runner
@@ -41,13 +49,15 @@ deploy/      host-only .htaccess lines
 
 ```sh
 php -S localhost:8000 -t public public/index.php   # http://localhost:8000
-php tests/run.php                                   # 19 tests: content, routes, headers, HTML, contact form
+php tests/run.php                                   # content, routes, headers, HTML, contact form, captcha, metrics
 ```
 
 ## Contact form
 
-No cookies and no third-party captcha. Spam is handled with a hidden honeypot field, a signed
-render timestamp (too fast or too old is refused) and an hourly limit per connection, stored
+No cookies and no third-party captcha service. Spam is handled with a hidden honeypot field, a
+signed render timestamp (too fast or too old is refused), a self-hosted image check
+(gregwar/captcha; the token is HMAC-signed, carries only a keyed hash of the answer and works
+once) and an hourly limit per connection, stored
 outside the web root. Copy `config/config.example.php` to `config/local.php` to configure the
 inbox and the form secret; without them the form says it is offline instead of pretending
 to send.

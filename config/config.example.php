@@ -13,4 +13,7 @@ return [
     'var_dir' => '',                    // writable and outside the web root (default: <root>/var)
     'linkedin_url' => '',               // shown in Contact when set
     'source_url' => '',                 // link to this repository in the footer when set
+    'metrics_mode' => 'off',            // off | log (var_dir/events.log) | posthog
+    'posthog_key' => '',                // project API key (phc_...) of a personal PostHog project
+    'posthog_host' => 'https://us.i.posthog.com',  // or https://eu.i.posthog.com
 ];

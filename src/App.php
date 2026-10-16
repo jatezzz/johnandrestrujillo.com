@@ -9,12 +9,25 @@ final class App
     /** @var array<string, mixed> */
     private array $config;
     private View $view;
+    private Metrics $metrics;
 
     /** @param array<string, mixed> $overrides */
     public function __construct(private readonly string $root, array $overrides = [])
     {
         $this->config = Config::load($root, $overrides);
         $this->view = new View($root . '/templates');
+        $this->metrics = new Metrics($this->config);
+    }
+
+    public function metrics(): Metrics
+    {
+        return $this->metrics;
+    }
+
+    /** Work that should not delay the response: sending queued metrics. */
+    public function finish(): void
+    {
+        $this->metrics->flush();
     }
 
     /** @return array<string, mixed> */
@@ -27,7 +40,7 @@ final class App
      * @param array<string, mixed> $post
      * @param array<string, mixed> $server
      */
-    public function handle(string $method, string $uri, array $post = [], array $server = []): Response
+    public function handle(string $method, string $uri, array $post = [], array $server = [], string $body = ''): Response
     {
         $method = strtoupper($method);
         $path = parse_url($uri, PHP_URL_PATH);
@@ -40,6 +53,8 @@ final class App
                 '/es/' => $this->home('es', $method, $query),
                 '/es', '/index.php' => Response::redirect($path === '/es' ? '/es/' : '/', 301),
                 '/contact' => $this->contact($method, $post, $server),
+                '/contact/challenge' => $this->challenge($method, $server),
+                '/e' => $this->beacon($method, $body, $server),
                 '/robots.txt' => $this->robots(),
                 '/sitemap.xml' => $this->sitemap(),
                 '/healthz' => Response::text("ok\n")->withHeader('Cache-Control', 'no-store'),
@@ -48,6 +63,11 @@ final class App
             };
         } catch (\Throwable $error) {
             error_log(sprintf('portfolio: %s: %s at %s:%d', $error::class, $error->getMessage(), $error->getFile(), $error->getLine()));
+            $this->metrics->capture('server_error', [
+                '$pathname' => $path,
+                'type' => $error::class,
+                'where' => basename($error->getFile()) . ':' . $error->getLine(),
+            ], (string) ($server['REMOTE_ADDR'] ?? ''), (string) ($server['HTTP_USER_AGENT'] ?? ''));
             $response = Response::text("Something went wrong on this page. Try again in a moment.\n", 500)
                 ->withHeader('Cache-Control', 'no-store');
         }
@@ -64,10 +84,15 @@ final class App
         if ($method !== 'GET' && $method !== 'HEAD') {
             return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'GET, HEAD');
         }
-        $form += ['values' => [], 'errors' => [], 'sent' => isset($query['sent'])];
+        $form += ['values' => [], 'errors' => [], 'sent' => isset($query['sent']), 'captcha' => null];
+        // A rendered challenge makes the page personal: never cache it.
+        if ($form['captcha'] === null && isset($query['challenge']) && !$form['sent']) {
+            $form['captcha'] = (new Contact($this->config))->captcha()?->issue();
+        }
+        $cacheable = $status === 200 && !$form['sent'] && $form['captcha'] === null;
 
         return Response::html($this->page($lang, 'home', ['form' => $form]), $status)
-            ->withHeader('Cache-Control', $this->cacheControl($status === 200 && !$form['sent']));
+            ->withHeader('Cache-Control', $this->cacheControl($cacheable));
     }
 
     /**
@@ -82,14 +107,54 @@ final class App
         $lang = ($post['lang'] ?? '') === 'es' ? 'es' : 'en';
         $home = $lang === 'es' ? '/es/' : '/';
 
-        $result = (new Contact($this->config))->submit($post, (string) ($server['REMOTE_ADDR'] ?? ''));
+        $contact = new Contact($this->config);
+        $result = $contact->submit($post, (string) ($server['REMOTE_ADDR'] ?? ''));
+        $this->metrics->capture('contact_submitted', [
+            '$pathname' => $home,
+            'result' => $result['ok'] ? 'sent' : (string) (reset($result['errors']) ?: 'error'),
+            'status' => $result['status'],
+        ], (string) ($server['REMOTE_ADDR'] ?? ''), (string) ($server['HTTP_USER_AGENT'] ?? ''));
         if ($result['ok']) {
             return Response::redirect($home . '?sent=1#contact', 303);
         }
 
-        $response = $this->home($lang, 'GET', [], ['values' => $result['values'], 'errors' => $result['errors']], $result['status']);
+        $response = $this->home($lang, 'GET', [], [
+            'values' => $result['values'],
+            'errors' => $result['errors'],
+            'captcha' => $contact->captcha()?->issue(),
+        ], $result['status']);
 
         return $result['status'] === 429 ? $response->withHeader('Retry-After', '3600') : $response;
+    }
+
+    /** A fresh image challenge for the contact form, fetched by site.js. */
+    private function challenge(string $method, array $server): Response
+    {
+        if ($method !== 'GET') {
+            return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'GET');
+        }
+        $captcha = (new Contact($this->config))->captcha();
+        if ($captcha === null) {
+            return Response::text("Not available.\n", 404)->withHeader('Cache-Control', 'no-store');
+        }
+        $limit = new RateLimit((string) $this->config['var_dir'], (string) $this->config['form_secret']);
+        if (!$limit->allow('challenge', (string) ($server['REMOTE_ADDR'] ?? ''), 60, 3600)) {
+            return Response::text("Too many requests.\n", 429)->withHeader('Retry-After', '3600');
+        }
+
+        return Response::text((string) json_encode($captcha->issue(), JSON_UNESCAPED_SLASHES), 200, 'application/json')
+            ->withHeader('Cache-Control', 'no-store');
+    }
+
+    /** Anonymous metrics posted by site.js (see Metrics). */
+    private function beacon(string $method, string $body, array $server): Response
+    {
+        if ($method !== 'POST') {
+            return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'POST');
+        }
+        $status = $this->metrics->fromBrowser($body, (string) ($server['REMOTE_ADDR'] ?? ''), (string) ($server['HTTP_USER_AGENT'] ?? ''));
+
+        return new Response($status, ['Cache-Control' => 'no-store']);
     }
 
     private function robots(): Response
@@ -124,7 +189,7 @@ final class App
     {
         $lang = str_starts_with($path, '/es/') ? 'es' : 'en';
 
-        return Response::html($this->page($lang, '404', []), 404)->withHeader('Cache-Control', 'no-store');
+        return Response::html($this->page($lang, '404', ['status' => 404]), 404)->withHeader('Cache-Control', 'no-store');
     }
 
     /**
@@ -156,6 +221,7 @@ final class App
         $contact = new Contact($this->config);
 
         $vars += [
+            'status' => 200,
             'c' => $c,
             'lang' => $lang,
             'urls' => $urls,
@@ -168,6 +234,8 @@ final class App
                 'revision' => $this->config['revision'],
                 'form_enabled' => $contact->enabled(),
                 'form_token' => $contact->token(),
+                'captcha' => $contact->captcha() !== null,
+                'metrics' => $this->metrics->enabled(),
             ],
             'asset' => $this->asset(...),
             'og_image' => is_file($this->root . "/public/assets/img/og-{$lang}.png") ? $base . $this->asset("img/og-{$lang}.png") : '',

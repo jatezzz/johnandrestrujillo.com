@@ -19,6 +19,9 @@ final class Config
         'linkedin_url' => '',
         'source_url' => '',
         'revision' => '',
+        'metrics_mode' => 'off',        // off | log | posthog
+        'posthog_key' => '',            // project API key of a personal PostHog project
+        'posthog_host' => 'https://us.i.posthog.com',
     ];
 
     /**

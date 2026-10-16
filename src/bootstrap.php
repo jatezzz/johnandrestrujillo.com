@@ -29,3 +29,15 @@ spl_autoload_register(static function (string $class): void {
         require $file;
     }
 });
+
+// The one vendored dependency: gregwar/captcha (see vendor/gregwar-captcha/README.md).
+spl_autoload_register(static function (string $class): void {
+    $prefix = 'Gregwar\\Captcha\\';
+    if (strncmp($class, $prefix, strlen($prefix)) !== 0) {
+        return;
+    }
+    $file = dirname(__DIR__) . '/vendor/gregwar-captcha/' . substr($class, strlen($prefix)) . '.php';
+    if (is_file($file)) {
+        require $file;
+    }
+});

@@ -11,6 +11,7 @@ $root = dirname(__DIR__);
 require $root . '/src/bootstrap.php';
 
 use Portfolio\App;
+use Portfolio\Captcha;
 use Portfolio\Contact;
 use Portfolio\Content;
 use Portfolio\Response;
@@ -249,11 +250,16 @@ test('every pin links to its evidence list', function (): void {
 function post(array $fields = [], ?App $app = null, string $ip = '203.0.113.7'): Response
 {
     $app ??= app();
-    $token = (new Contact($app->config()))->token(time() - 10);
+    $contact = new Contact($app->config());
+    $token = $contact->token(time() - 10);
+    $phrase = 'q' . bin2hex(random_bytes(3));           // a fresh challenge per post: tokens are single-use
+    $challenge = $contact->captcha()?->issueFor($phrase, time() - 10);
 
     return $app->handle('POST', '/contact', $fields + [
         'lang' => 'en',
         'token' => $token,
+        'captcha_token' => $challenge['token'] ?? '',
+        'captcha_answer' => strtoupper($phrase),
         'name' => 'Ada Lovelace',
         'email' => 'ada@example.test',
         'org' => '',
@@ -332,6 +338,80 @@ test('contact: disabled form says so and never pretends to send', function (): v
     $app = app(['mail_mode' => 'off']);
     expect(str_contains($app->handle('GET', '/')->body, 'The form is offline right now'), 'disabled form should explain itself');
     expect(post([], $app)->status === 503, 'posting to a disabled form should be 503');
+});
+
+test('captcha: right answer once, then never again', function (): void {
+    expect(Captcha::available(), 'GD with FreeType is needed for these tests');
+    $captcha = new Captcha('secret', sys_get_temp_dir() . '/portfolio-captcha-' . bin2hex(random_bytes(3)));
+    $challenge = $captcha->issueFor('ab0l5', time() - 10);
+    expect(str_starts_with($challenge['image'], 'data:image/png;base64,'), 'image is an inline PNG');
+    expect(!str_contains(base64_decode(strtr(explode('.', $challenge['token'])[0], '-_', '+/')), 'ab0l5'), 'the token must not carry the answer');
+    expect(!$captcha->verify($challenge['token'], 'wrong'), 'wrong answer accepted');
+    expect($captcha->verify($challenge['token'], ' ABOL5 '), 'case and 0/O, 1/l folding should be forgiven');
+    expect(!$captcha->verify($challenge['token'], 'ab0l5'), 'a solved token must not be reusable');
+    $fast = $captcha->issueFor('xyz12');
+    expect(!$captcha->verify($fast['token'], 'xyz12'), 'answered within MIN_SECONDS');
+    $old = $captcha->issueFor('xyz12', time() - Captcha::TTL - 5);
+    expect(!$captcha->verify($old['token'], 'xyz12'), 'expired token accepted');
+    $forged = explode('.', $captcha->issueFor('xyz12', time() - 10)['token'])[0] . '.' . str_repeat('0', 64);
+    expect(!$captcha->verify($forged, 'xyz12'), 'forged signature accepted');
+    expect(!(new Captcha('other', sys_get_temp_dir()))->verify($challenge['token'], 'ab0l5'), 'token signed with another secret accepted');
+});
+
+test('contact: the image check is required', function (): void {
+    $r = post(['captcha_answer' => 'nope'], null, '203.0.113.40');
+    expect($r->status === 422 && str_contains($r->body, 'id="error-captcha"'), 'a wrong answer must be refused with a field error');
+    expect(str_contains($r->body, 'data:image/png;base64,'), 'the error page shows a new image right away');
+    expect(post(['captcha_token' => ''], null, '203.0.113.41')->status === 422, 'a missing token must be refused');
+});
+
+test('captcha: cached page loads it lazily, ?challenge=1 renders it inline', function (): void {
+    $page = app()->handle('GET', '/');
+    expect(!str_contains($page->body, 'data:image/png'), 'the cacheable page must not embed a challenge');
+    expect(str_contains($page->body, 'href="?challenge=1#contact"'), 'no-JS link to load the check');
+    $with = app()->handle('GET', '/es/?challenge=1');
+    expect(str_contains($with->body, 'data:image/png;base64,') && $with->header('Cache-Control') === 'no-store', 'inline challenge, never cached');
+    $json = app()->handle('GET', '/contact/challenge');
+    $data = json_decode($json->body, true);
+    expect($json->status === 200 && str_starts_with($data['image'] ?? '', 'data:image/png') && ($data['token'] ?? '') !== '', 'challenge endpoint returns image and token');
+    expect(app(['mail_mode' => 'off'])->handle('GET', '/contact/challenge')->status === 404, 'no challenge when the form is off');
+});
+
+test('metrics: off by default, nothing leaves the page', function (): void {
+    $app = app(['metrics_mode' => 'off']);
+    expect(!str_contains($app->handle('GET', '/')->body, 'data-metrics'), 'metrics flag must be absent');
+    expect($app->handle('POST', '/e', [], ['HTTP_USER_AGENT' => 'Mozilla/5.0'], '{"event":"$pageview"}')->status === 204, 'beacon answers 204');
+    expect($app->metrics()->pending() === [], 'nothing queued when off');
+});
+
+test('metrics: allow-list, privacy and limits', function (): void {
+    $dir = sys_get_temp_dir() . '/portfolio-metrics-' . bin2hex(random_bytes(3));
+    $app = app(['metrics_mode' => 'log', 'var_dir' => $dir]);
+    $server = ['REMOTE_ADDR' => '198.51.100.9', 'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh)'];
+    expect(str_contains($app->handle('GET', '/')->body, 'data-metrics="on"'), 'page flags metrics on');
+    $ok = $app->handle('POST', '/e', [], $server, json_encode(['event' => '$pageview', 'props' => ['$pathname' => '/', 'lang' => 'en', 'email' => 'x@y.z']]));
+    expect($ok->status === 204, 'valid event accepted');
+    $event = $app->metrics()->pending()[0] ?? [];
+    expect(($event['event'] ?? '') === '$pageview' && !isset($event['properties']['email']), 'unknown properties are dropped');
+    expect($event['properties']['$process_person_profile'] === false && $event['properties']['$geoip_disable'] === true, 'no profiles, no GeoIP');
+    expect(!str_contains(json_encode($event), '198.51.100.9'), 'the IP address must never be sent');
+    expect(str_starts_with($event['distinct_id'], 'anon-'), 'anonymous visitor id');
+    expect($app->handle('POST', '/e', [], $server, '{"event":"buy_now"}')->status === 400, 'unknown event refused');
+    expect($app->handle('POST', '/e', [], $server, str_repeat('x', 5000))->status === 413, 'oversized body refused');
+    $bots = count($app->metrics()->pending());
+    $app->handle('POST', '/e', [], ['HTTP_USER_AGENT' => 'Googlebot/2.1'] + $server, '{"event":"$pageview"}');
+    expect(count($app->metrics()->pending()) === $bots, 'bots are not recorded');
+    $app->finish();
+    $lines = file($dir . '/events.log');
+    expect(count($lines) === 1 && json_decode($lines[0], true)['event'] === '$pageview', 'flush writes the queued event');
+    post([], $app, '203.0.113.50');
+    expect((array_column($app->metrics()->pending(), 'event')[0] ?? '') === 'contact_submitted', 'contact outcome is recorded server-side');
+    $limited = app(['metrics_mode' => 'log', 'var_dir' => $dir]);
+    $statuses = [];
+    for ($i = 0; $i < 301; $i++) {
+        $statuses[] = $limited->handle('POST', '/e', [], ['REMOTE_ADDR' => '198.51.100.77'] + $server, '{"event":"pin_selected","props":{"pin":"llm"}}')->status;
+    }
+    expect(end($statuses) === 429, 'hourly limit per connection');
 });
 
 // ---------- Done ----------

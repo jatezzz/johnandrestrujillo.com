@@ -12,9 +12,17 @@ if (!is_file($root . '/src/bootstrap.php')) {
 require $root . '/src/bootstrap.php';
 
 $app = new Portfolio\App($root);
+$method = (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET');
 $app->handle(
-    (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'),
+    $method,
     (string) ($_SERVER['REQUEST_URI'] ?? '/'),
     $_POST,
     $_SERVER,
+    $method === 'POST' ? (string) file_get_contents('php://input', false, null, 0, 8192) : '',
 )->send();
+
+// Close the connection first where the server allows it, then send metrics.
+if (function_exists('fastcgi_finish_request')) {
+    fastcgi_finish_request();
+}
+$app->finish();

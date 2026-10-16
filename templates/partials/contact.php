@@ -64,6 +64,21 @@ $invalid = static function (string $field) use ($fieldErrors): string {
           <textarea id="contact-message" name="message" rows="6" required minlength="20" maxlength="5000"<?= $invalid('message') ?>><?= $e($values['message']) ?></textarea>
           <?php if (isset($fieldErrors['message'])): ?><p class="field__error" id="error-message"><?= $e($k['errors']['message']) ?></p><?php endif; ?>
         </div>
+        <?php if ($site['captcha']): ?>
+        <?php $challenge = $form['captcha']; ?>
+        <div class="field field--captcha" data-captcha>
+          <label for="contact-captcha"><?= $e($k['fields']['captcha']) ?></label>
+          <p class="field__hint" id="captcha-hint"><?= $e($k['captcha']['hint']) ?></p>
+          <div class="captcha">
+            <img class="captcha__image" data-captcha-image width="160" height="50" alt="<?= $e($k['captcha']['alt']) ?>"<?= $challenge ? ' src="' . $e($challenge['image']) . '"' : ' hidden' ?>>
+            <button class="captcha__new" type="button" data-captcha-new hidden><?= $e($k['captcha']['new']) ?></button>
+            <a class="captcha__show" href="?challenge=1#contact" data-captcha-show data-loading="<?= $e($k['captcha']['loading']) ?>"<?= $challenge ? ' hidden' : '' ?>><?= $e($k['captcha']['show']) ?></a>
+          </div>
+          <input id="contact-captcha" name="captcha_answer" type="text" required maxlength="12" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="captcha-hint<?= isset($fieldErrors['captcha']) ? ' error-captcha' : '' ?>"<?= isset($fieldErrors['captcha']) ? ' aria-invalid="true"' : '' ?>>
+          <input type="hidden" name="captcha_token" value="<?= $e($challenge['token'] ?? '') ?>" data-captcha-token>
+          <?php if (isset($fieldErrors['captcha'])): ?><p class="field__error" id="error-captcha"><?= $e($k['errors']['captcha']) ?></p><?php endif; ?>
+        </div>
+        <?php endif; ?>
         <div class="field field--trap" aria-hidden="true">
           <label for="contact-website"><?= $e($k['fields']['website']) ?></label>
           <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">

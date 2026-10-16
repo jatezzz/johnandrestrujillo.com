@@ -296,11 +296,19 @@
       "org": "Empresa o proyecto",
       "optional": "opcional",
       "message": "Mensaje",
-      "website": "Deja este campo vacío"
+      "website": "Deja este campo vacío",
+      "captcha": "Escribe los caracteres de la imagen"
+    },
+    "captcha": {
+      "hint": "Letras y números; mayúsculas o minúsculas da igual.",
+      "alt": "Imagen de verificación con caracteres distorsionados",
+      "new": "Otra imagen",
+      "show": "Mostrar la imagen de verificación",
+      "loading": "Cargando la imagen…"
     },
     "submit": "Enviar mensaje",
     "sent": "Mensaje enviado. Gracias, te respondo por correo.",
-    "privacy": "Sin cookies ni rastreo. Uso tus datos solo para responderte.",
+    "privacy": "Sin cookies. Cuento visitas y errores de forma anónima, sin perfiles, para que el sitio funcione bien, y uso tus datos solo para responderte.",
     "unavailable": "El formulario no está disponible ahora. Puedes encontrarme en GitHub:",
     "elsewhere": "En otros sitios",
     "errors": {
@@ -312,7 +320,8 @@
       "expired": "El formulario caducó. Recarga la página y envíalo de nuevo.",
       "rate": "Demasiados mensajes desde esta conexión. Intenta de nuevo en una hora.",
       "failed": "No se pudo enviar el mensaje. Intenta de nuevo en unos minutos.",
-      "unavailable": "El formulario no está disponible ahora."
+      "unavailable": "El formulario no está disponible ahora.",
+      "captcha": "Los caracteres no coinciden. Inténtalo de nuevo con la nueva imagen."
     }
   },
   "footer": {

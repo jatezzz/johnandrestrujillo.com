@@ -52,7 +52,7 @@ $other = $c['ui']['other_lang'];
 <script src="<?= $e($asset('js/site.js')) ?>" defer></script>
 <script type="application/ld+json"><?= $json_ld ?></script>
 </head>
-<body>
+<body data-status="<?= (int) $status ?>"<?php if ($site['metrics']): ?> data-metrics="on"<?php endif; ?>>
 <a class="skip" href="#main"><?= $e($c['ui']['skip']) ?></a>
 <?php if ($site['staging']): ?>
 <p class="stage-banner"><?= $e($c['ui']['staging']) ?><?php if ($site['revision'] !== ''): ?>: <span class="num"><?= $e($site['revision']) ?></span><?php endif; ?></p>

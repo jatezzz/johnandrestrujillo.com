@@ -1,0 +1,8 @@
+# Staging image: the shared host's PHP 8.2 with GD + FreeType (the contact-form image check needs it).
+FROM php:8.2-apache
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libfreetype6-dev libpng-dev libjpeg62-turbo-dev \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install -j"$(nproc)" gd \
+ && rm -rf /var/lib/apt/lists/* \
+ && a2enmod rewrite headers

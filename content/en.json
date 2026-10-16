@@ -296,11 +296,19 @@
       "org": "Company or project",
       "optional": "optional",
       "message": "Message",
-      "website": "Leave this field empty"
+      "website": "Leave this field empty",
+      "captcha": "Type the characters in the image"
+    },
+    "captcha": {
+      "hint": "Letters and numbers; capitals don’t matter.",
+      "alt": "Verification image with distorted characters",
+      "new": "New image",
+      "show": "Show the verification image",
+      "loading": "Loading the image…"
     },
     "submit": "Send message",
     "sent": "Message sent. Thanks, I’ll answer by email.",
-    "privacy": "No cookies and no tracking. I use your details only to answer you.",
+    "privacy": "No cookies. I count visits and errors anonymously, without profiles, to keep the site working, and I use your details only to answer you.",
     "unavailable": "The form is offline right now. You can find me on GitHub:",
     "elsewhere": "Elsewhere",
     "errors": {
@@ -312,7 +320,8 @@
       "expired": "This form is out of date. Reload the page and send it again.",
       "rate": "Too many messages from this connection. Try again in an hour.",
       "failed": "The message couldn’t be sent. Try again in a few minutes.",
-      "unavailable": "The form is offline right now."
+      "unavailable": "The form is offline right now.",
+      "captcha": "The characters didn’t match. Try again with the new image."
     }
   },
   "footer": {
