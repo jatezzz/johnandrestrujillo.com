@@ -17,7 +17,8 @@ declare(strict_types=1);
  * Checks:
  *   terms     tracked files, commit messages and rendered pages contain no entry
  *   images    no tracked image carries EXIF, XMP, IPTC or text metadata (GPS, camera, author)
- *   authors   every commit is authored by an allowed address
+ *   authors   every commit is authored by an allowed address and has no co-author trailer
+ *             (AI assistance is disclosed once, in the README)
  *   links     rendered pages link only to allowed external hosts
  *   --fetch   linked external pages (one hop) contain no entry
  *   --overlap FILE  report long phrases shared with the pages listed in FILE
@@ -32,7 +33,6 @@ require $root . '/src/bootstrap.php';
 const ALLOWED_HOSTS = ['github.com', 'schema.org', 'www.sitemaps.org', 'www.w3.org'];
 const DEFAULT_AUTHORS = ['34223334+jatezzz@users.noreply.github.com'];
 const ALLOWED_COMMITTERS = ['noreply@github.com'];
-const ALLOWED_COAUTHORS = ['noreply@anthropic.com'];
 
 $options = getopt('', ['terms-file:', 'fetch', 'overlap:', 'allow-missing-terms', 'skip-authors', 'help']);
 if (isset($options['help'])) {
@@ -310,15 +310,13 @@ if (!isset($options['skip-authors'])) {
             $bad++;
             $fail("commit {$short}: committer address is not an allowed one");
         }
-        foreach (array_filter(explode("\x1e", $coauthors)) as $coauthor) {
-            if (!preg_match('/<([^>]+)>/', $coauthor, $email) || !in_array(strtolower($email[1]), array_merge($allowed, ALLOWED_COAUTHORS), true)) {
-                $bad++;
-                $fail("commit {$short}: co-author address is not an allowed one");
-            }
+        if (trim($coauthors) !== '') {
+            $bad++;
+            $fail("commit {$short}: has a co-author trailer (this repository records the author only)");
         }
     }
     if ($bad === 0) {
-        $info(count($commits) . ' commits with allowed author, committer and co-author addresses');
+        $info(count($commits) . ' commits with an allowed author and committer, and no co-author trailers');
     }
 }
 

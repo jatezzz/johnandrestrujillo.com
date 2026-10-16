@@ -7,6 +7,12 @@ The page is laid out like a component datasheet. The chip at the top has one pin
 capability; selecting a pin lists the projects and years where I used it, so every claim
 on the page points at its evidence.
 
+## How it's made
+
+I write this site with Claude Code, an AI coding assistant, under my direction. Every change runs
+the tests and the publication guard below, and nothing goes live until I approve it. Commits record
+me as the author; this note is the disclosure.
+
 ## Stack
 
 - **PHP 8.2, no framework, no dependencies.** The host is shared PHP hosting: no Node, no
@@ -52,7 +58,7 @@ to send.
 
 - any tracked file, commit message, branch name or rendered page contains an entry from a
   private term list (passed as a CI secret, never committed, never printed);
-- a commit was authored from an address other than the allowed one;
+- a commit was authored from an address other than the allowed one, or carries a co-author trailer;
 - a page links to an external host outside a short allow-list;
 - with `--fetch`, a linked page contains an entry from the list (one hop).
 
