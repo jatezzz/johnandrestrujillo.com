@@ -1,0 +1,38 @@
+# Staging candidate: the same PHP version and limits as the shared host, so a
+# change that would break production breaks here first.
+#
+#   docker compose -f docker/compose.staging.yml up -d
+#
+# Config lives outside the repository (STAGE_CONFIG_DIR/local.php); see
+# config/config.example.php. Outgoing mail is written to a log, never sent.
+name: portfolio-staging
+
+services:
+  web:
+    image: php:8.2-apache
+    restart: unless-stopped
+    ports:
+      - "${STAGE_PORT:-8096}:80"
+    environment:
+      PORTFOLIO_CONFIG: /srv/config/local.php
+    volumes:
+      - ..:/var/www/site:ro
+      - ./php.ini:/usr/local/etc/php/conf.d/zz-portfolio.ini:ro
+      - ./apache-site.conf:/etc/apache2/sites-available/000-default.conf:ro
+      - ./apache-hardening.conf:/etc/apache2/conf-enabled/zz-hardening.conf:ro
+      - ${STAGE_CONFIG_DIR:-../../portfolio-staging-config}:/srv/config:ro
+      - var:/srv/var
+    command: ["bash", "-c", "a2enmod -q rewrite headers && install -d -o www-data -g www-data -m 0700 /srv/var && exec apache2-foreground"]
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 128
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  var:

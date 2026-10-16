@@ -1,0 +1,4 @@
+# Prepended to public/.htaccess when deploying to the shared host, which picks
+# the PHP version per directory through this handler.
+AddHandler x-httpd-php82 .php
+

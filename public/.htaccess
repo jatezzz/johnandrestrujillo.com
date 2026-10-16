@@ -1,0 +1,28 @@
+# Portable Apache 2.4 rules. The shared host also needs its PHP version selector;
+# deploy/htaccess.head is prepended to this file at deploy time for that.
+# Security headers for pages are set in PHP (src/App.php), not here, so no
+# response ever carries two copies of the same header.
+
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/svg+xml .svg
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|woff2|svg|png|jpg|webp|ico|txt)$">
+    Header set X-Content-Type-Options "nosniff"
+  </FilesMatch>
+  # Asset URLs carry a content hash (?v=...), so they never change in place.
+  <FilesMatch "\.(css|js|woff2|svg|png|jpg|webp|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
