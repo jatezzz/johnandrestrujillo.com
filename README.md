@@ -80,6 +80,11 @@ to send.
 - Production is an rsync of `public/` to the host's web root (with `deploy/htaccess.head`
   prepended to `.htaccess`) and of the rest to a `site/` folder beside it. The front
   controller finds the app in either layout.
+- `tools/deploy.sh` does that publish from the last commit; it is a dry run unless `DRY_RUN=0`.
+  `deploy/Jenkinsfile` runs the lint, the tests and the guard first, and publishes only from
+  `main` when started by hand with `DRY_RUN` off.
+- Files a publish replaces or removes are kept in `deploy-backups/<stamp>/` on the host. To undo
+  a publish, copy that folder's `site/` and `public_html/` back over the live ones.
 
 ## License
 

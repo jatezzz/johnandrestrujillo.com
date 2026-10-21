@@ -1,0 +1,75 @@
+// Checks and publishes the site. Runs only when started by hand: starting it with DRY_RUN off is the
+// approval to publish. Everything runs in docker/Dockerfile.ci (PHP 8.2, the host's version).
+//
+// Jenkins credentials:
+//   portfolio-hosting-ssh      SSH username with private key: the hosting account
+//   portfolio-hosting-host     secret text: the hosting's SSH host name
+//   portfolio-forbidden-terms  secret file: the guard's private term list (never printed)
+pipeline {
+  agent { label 'compute-node' }
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+  }
+  parameters {
+    booleanParam(name: 'DRY_RUN', defaultValue: true,
+      description: 'On: run the checks and show what would change. Off: publish (main only).')
+  }
+  environment {
+    CI_IMAGE = 'portfolio-ci:local'
+  }
+  stages {
+    stage('Image') {
+      steps {
+        sh 'docker build -q -t "$CI_IMAGE" -f docker/Dockerfile.ci docker'
+      }
+    }
+    stage('Checks') {
+      steps {
+        withCredentials([file(credentialsId: 'portfolio-forbidden-terms', variable: 'TERMS_FILE')]) {
+          sh '''
+            set -e
+            docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp \
+              -v "$WORKSPACE:/src" -v "$TERMS_FILE:/run/terms.txt:ro" -w /src "$CI_IMAGE" sh -ec '
+                git config --global --add safe.directory /src
+                find . -name "*.php" -not -path "./.git/*" -print0 | xargs -0 -n1 php -l >/dev/null
+                php tests/run.php
+                php tools/guard.php --terms-file /run/terms.txt --fetch
+              '
+          '''
+        }
+      }
+    }
+    stage('Publish') {
+      steps {
+        script {
+          if (!params.DRY_RUN && env.GIT_BRANCH != 'origin/main') {
+            error("Publishing is allowed from main only (this build is ${env.GIT_BRANCH}).")
+          }
+        }
+        withCredentials([
+          sshUserPrivateKey(credentialsId: 'portfolio-hosting-ssh', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER'),
+          string(credentialsId: 'portfolio-hosting-host', variable: 'SSH_HOST'),
+        ]) {
+          // ssh refuses to run for a user id it cannot look up, hence the agent's /etc/passwd.
+          sh '''
+            set -e
+            docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp \
+              -e DEPLOY_TARGET="$SSH_USER@$SSH_HOST" -e DRY_RUN="$( [ "$DRY_RUN" = true ] && echo 1 || echo 0 )" \
+              -e DEPLOY_SSH_KEY=/run/key -e DEPLOY_KNOWN_HOSTS=/src/.known_hosts \
+              -v /etc/passwd:/etc/passwd:ro -v "$WORKSPACE:/src" -v "$SSH_KEY:/run/key:ro" -w /src "$CI_IMAGE" sh -ec '
+                git config --global --add safe.directory /src
+                tools/deploy.sh
+              '
+          '''
+        }
+      }
+    }
+  }
+  post {
+    always {
+      sh 'rm -f "$WORKSPACE/.known_hosts"'
+    }
+  }
+}

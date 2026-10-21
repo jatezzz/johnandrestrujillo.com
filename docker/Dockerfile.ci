@@ -1,0 +1,8 @@
+# Checks and deploy image: PHP 8.2 CLI with GD + FreeType (the captcha tests need it), plus git for the
+# publication guard and rsync/ssh for tools/deploy.sh.
+FROM php:8.2-cli
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libfreetype6-dev libpng-dev libjpeg62-turbo-dev git rsync openssh-client \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install -j"$(nproc)" gd \
+ && rm -rf /var/lib/apt/lists/*
