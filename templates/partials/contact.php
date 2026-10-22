@@ -35,7 +35,7 @@ $invalid = static function (string $field) use ($fieldErrors): string {
       <?php if ($form['sent']): ?>
       <p class="notice notice--ok" role="status"><?= $e($k['sent']) ?></p>
       <?php elseif (!$site['form_enabled']): ?>
-      <p class="notice"><?= $e($k['unavailable']) ?> <a href="<?= $e($site['github_url']) ?>">GitHub</a></p>
+      <p class="notice"><?= $e($k['unavailable']) ?> <a href="<?= $e($site['github_url']) ?>">GitHub</a>.</p>
       <?php else: ?>
       <?php if ($errors !== []): ?>
       <div class="notice notice--error" role="alert">

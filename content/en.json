@@ -309,7 +309,7 @@
     "submit": "Send message",
     "sent": "Message sent. Thanks, I’ll answer by email.",
     "privacy": "No cookies. I count visits and errors anonymously, without profiles, to keep the site working, and I use your details only to answer you.",
-    "unavailable": "The form is offline right now. You can find me on GitHub:",
+    "unavailable": "The form is offline right now. In the meantime, you can find me on",
     "elsewhere": "Elsewhere",
     "errors": {
       "summary": "Check the highlighted fields.",
