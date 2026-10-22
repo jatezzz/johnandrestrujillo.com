@@ -432,6 +432,37 @@ svg {
   }
 }
 
+.hero__person {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.75rem;
+}
+
+.hero__person img {
+  width: 5.5rem;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.hero__person figcaption {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.hero__name {
+  font-weight: 700;
+}
+
+.hero__role {
+  color: var(--graphite);
+  font-size: 0.95rem;
+}
+
 .hero__title {
   margin: 0 0 1.4rem;
   font-size: var(--step-3);

@@ -10,6 +10,13 @@ $hero = $c['hero'];
 ?>
 <section class="hero wrap" aria-labelledby="hero-title">
   <div class="hero__text">
+    <figure class="hero__person">
+      <img src="<?= $e($asset('img/john.webp')) ?>" width="120" height="150" alt="<?= $e($c['person']['name']) ?>">
+      <figcaption>
+        <span class="hero__name"><?= $e($c['person']['name']) ?></span>
+        <span class="hero__role"><?= $e($c['person']['role']) ?>, <?= $e($c['person']['location']) ?></span>
+      </figcaption>
+    </figure>
     <h1 class="hero__title" id="hero-title">
       <?php foreach ($hero['title_lines'] as $line): ?>
       <span class="hero__line"><?= $m($line) ?></span>
