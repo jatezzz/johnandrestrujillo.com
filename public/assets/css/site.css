@@ -850,39 +850,8 @@ svg {
   max-width: 70ch;
 }
 
-.case + .case:not(.case--compact) {
-  margin-top: 4rem;
-  padding-top: 3rem;
-  border-top: 1.5px solid var(--ink);
-}
-
-.case__sources {
-  margin-top: 2.25rem;
-}
-
-.demo {
-  display: grid;
-  gap: 1.25rem;
-  align-items: center;
-  margin: 2.25rem 0 0;
-}
-
-@media (min-width: 40rem) {
-  .demo {
-    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
-    gap: 2rem;
-  }
-}
-
 .demo__frame {
   position: relative;
-  width: 100%;
-  max-width: 15rem;
-  aspect-ratio: 9 / 20;
-  overflow: hidden;
-  border: 1.5px solid var(--ink);
-  border-radius: calc(var(--radius) * 2);
-  background: var(--ink);
 }
 
 .demo__frame--playing {
@@ -923,27 +892,147 @@ svg {
   outline-offset: -4px;
 }
 
-.demo__caption {
+/* ---------- Projects: screens first, then the stack behind them ---------- */
+
+.project {
   display: grid;
-  gap: 0.6rem;
-  max-width: 52ch;
+  gap: 1.75rem 3rem;
+  padding-block: 2.5rem;
 }
 
-.demo__title {
+.project + .project {
+  border-top: 1.5px solid var(--ink);
+}
+
+@media (max-width: 61.99rem) {
+  .project__body {
+    order: -1;
+  }
+}
+
+@media (min-width: 62rem) {
+  .project {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: start;
+  }
+}
+
+.project__media {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.shot {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.shot--lead.shot--browser,
+.shot--lead.shot--plain:not(.shot--portrait) {
+  flex-basis: 100%;
+}
+
+.shot--phone,
+.shot--portrait {
+  flex: 0 1 12rem;
+}
+
+.shot--portrait.shot--plain {
+  flex-basis: 15rem;
+}
+
+.shot__frame {
+  overflow: hidden;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.shot__frame img,
+.shot__frame video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.shot--browser .shot__frame::before {
+  content: "";
+  display: block;
+  height: 0.85rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.shot--phone .shot__frame {
+  border: 0.35rem solid var(--ink);
+  border-radius: 1.4rem;
+  background: var(--ink);
+}
+
+.shot figcaption {
+  margin-top: 0.5rem;
+  color: var(--graphite);
+  font-size: 0.875rem;
+}
+
+.shot__note {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.project__title {
+  margin: 0.3rem 0 0.75rem;
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.project__text {
+  margin: 0;
+  font-size: 1.0625rem;
+}
+
+.stack {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.25rem 0 0;
+}
+
+.stack__row {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule);
+}
+
+.stack__row dt {
   font-weight: 700;
 }
 
-.demo__note {
-  color: var(--graphite);
-  font-size: 0.95rem;
+.stack__row dd {
+  margin: 0;
 }
 
-.case__links {
-  margin: 0;
-  padding-left: 1.25rem;
+.project__note {
+  margin: 1rem 0 0;
+  color: var(--graphite);
+  font-size: 0.9rem;
+}
+
+.project__links {
   display: grid;
-  gap: 0.4rem;
-  max-width: 70ch;
+  gap: 0.35rem;
+  margin: 1.25rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.project__details {
+  grid-column: 1 / -1;
+  margin-top: 0;
 }
 
 .flow {

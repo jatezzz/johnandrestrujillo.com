@@ -1,5 +1,5 @@
 // Progressive enhancements: metrics, the theme toggle, the contact-form image check,
-// the capability pins and the demo videos. Without this file the page still works: each pin links to
+// the capability pins and the project videos. Without this file the page still works: each pin links to
 // its evidence list, the form offers a link that loads the image check, and a demo opens on YouTube.
 (() => {
   'use strict';
@@ -216,6 +216,23 @@
       move(pin, event.key);
     });
   });
+
+  // ---- Short screen recordings: play muted while on screen, never with reduced motion ----
+  const clips = document.querySelectorAll('video[data-autoplay]');
+  if (clips.length && 'IntersectionObserver' in window && !(reducedMotion && reducedMotion.matches)) {
+    const watcher = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const clip = entry.target;
+        if (entry.isIntersecting) {
+          clip.preload = 'auto';
+          clip.play().catch(() => {});
+        } else {
+          clip.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+    clips.forEach((clip) => watcher.observe(clip));
+  }
 
   // ---- Demo videos: the YouTube player loads only when the visitor presses play ----
   document.querySelectorAll('[data-youtube]').forEach((frame) => {

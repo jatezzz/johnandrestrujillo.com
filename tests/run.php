@@ -211,6 +211,13 @@ test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', f
     }
 });
 
+test('every asset a page references exists', function (): void {
+    foreach (['/', '/es/'] as $path) {
+        $html = app()->handle('GET', $path)->body;
+        expect(!str_contains($html, '?v=missing'), "{$path}: references an asset that is not in public/assets");
+    }
+});
+
 test('HTML: heading levels never skip', function (): void {
     foreach (['/', '/es/'] as $path) {
         $doc = dom(app()->handle('GET', $path)->body);

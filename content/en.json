@@ -34,7 +34,7 @@
   },
   "hero": {
     "title_lines": ["Mobile engineer since {2015}.", "These days I also build AI systems."],
-    "lede": "I’m a senior software engineer in Quito, Ecuador, and I work remotely. Since 2024 I’ve designed and run a production AI platform that turns recorded meetings into decisions, action items and risks. I build it with a small team and AI coding agents; I review their code and approve every release. Alongside it I still build iOS and Android apps, and I’ve shipped them for banking, health, high-volume restaurant ordering, Web3 and an online art marketplace.",
+    "lede": "I’m a senior software engineer in Quito, Ecuador, working remotely. I build the apps people use, and the backend and AI that run behind them.",
     "cta_contact": "Write to me"
   },
   "pinout": {
@@ -63,90 +63,249 @@
   ],
   "work": {
     "title": "Work",
-    "cases": [
-    {
-      "id": "ai-platform",
-      "period": "2024 – present",
-      "title": "AI meeting-intelligence platform",
-      "summary": "A multi-tenant B2B product, in English and Spanish, that records meetings and extracts decisions, action items and risks. Each one links to the moment in the recording that supports it. It has been in daily production use in real client meetings since June 2025.",
-      "role": "I designed the architecture and built it with a small team and Claude Code agents: backend, AI pipeline, web app, Chrome extension, iOS companion app and infrastructure. I review, test and approve the generated code and every production release.",
-      "flow_title": "How a recording becomes decisions",
-      "flow": [
-        {"name": "Capture", "detail": "Chrome extension (Manifest V3), iOS app (SwiftUI), cloud-browser rooms over WebRTC"},
-        {"name": "Upload", "detail": "Chunked, resumable uploads; server-side recovery of interrupted recordings"},
-        {"name": "Transcribe", "detail": "Checkpointed Gemini transcription, speaker detection, voice-presence gate"},
-        {"name": "Extract", "detail": "Decisions, actions and risks with source links, behind an evidence gate"},
-        {"name": "Serve", "detail": "FastAPI, Celery workers on two hosts, MySQL, Redis, ChromaDB, MCP server"},
-        {"name": "Use", "detail": "Next.js web app, Slack and tracker integrations, per-person daily status"}
-      ],
-      "rail_label": "Platform",
-      "rail": "Terraform on Google Cloud, blue/green Docker releases through Jenkins, Prometheus and Grafana alerts, OpenBao for secrets.",
-      "specs_caption": "In numbers, measured in October 2026",
-      "specs_head": ["Parameter", "Value", "Conditions"],
-      "specs": [
-        ["Meetings processed", "~1,580", "since June 2025"],
-        ["Recorded audio", "~390 h", "~190 h in the last 30 days"],
-        ["Action items extracted", "10,000+", "plus 1,300+ notes"],
-        ["Backend", "4,200+ commits", "~2,500 Python files, ~940 test files"],
-        ["Web app", "2,400+ commits", "~1,600 TypeScript files, ~220 test files"],
-        ["Chrome extension", "230+ commits", "50+ test files"]
-      ],
-      "decisions_title": "Design decisions",
-      "decisions": [
-        {"title": "Evidence gate on extraction", "text": "Extraction runs behind an evidence gate that prefers under-claiming: each decision, action and risk links to its source in the recording."},
-        {"title": "Silent screen recordings", "text": "A voice-presence check sends recordings without speech to a structured visual summary (timestamped steps, on-screen text and results) instead of producing a hallucinated transcript."},
-        {"title": "Recovering interrupted recordings", "text": "The server rebuilds interrupted live recordings from the streamed WebM segments, including segments that arrive without a header, and reprocesses the audio automatically."},
-        {"title": "Release gates", "text": "Blue/green Docker deployments go through host-health admission, deploy locks and exact-commit authorization. Images are built on remote compute nodes and pulled by digest."},
-        {"title": "Reviewing AI agents’ work", "text": "I review the agents’ code, designs and incident write-ups every day and leave written feedback. A change ships only with passing tests and evidence from production; the agent’s own report doesn’t count as evidence."}
-      ]
-    },
-    {
-      "id": "code-on-the-go",
-      "period": "Mar 2025 – Oct 2026",
-      "title": "An AI agent inside a phone-based IDE",
-      "summary": "Code on the Go is an open-source Android IDE from the nonprofit App Dev for All: people write, build and run Android apps on the phone itself, without a laptop. I built its AI agent, which reads, edits, builds and debugs the user’s project on the same device, with Google Gemini or a Llama model running on the phone.",
-      "role": "Software engineer on the core team, listed on App Dev for All’s team page. Second most active of 56 contributors, with 420 commits to the default branch; 31 of them are on the agent, its on-device model and the plugin API that now carries the AI features.",
-      "video": {
-        "youtube_id": "VMNVMmK0nE4",
-        "poster": "img/cotg-gemini-demo.webp",
-        "poster_alt": "Code on the Go’s Agent tab on a phone, with Gemini selected and the prompt “Analyze just the activities into the selected directory”.",
-        "title": "Demo: the Gemini agent in Code on the Go",
-        "text": "The agent analyzing an Android project on the phone, from the Agent tab of the IDE. Published by App Dev for All with my article.",
-        "play": "Play the demo",
-        "note": "The video plays from YouTube (privacy-enhanced mode) only after you press play."
+    "intro": "Four projects: what people see on screen, and what runs behind it.",
+    "front_label": "Frontend",
+    "back_label": "Backend",
+    "details_label": "How it’s built",
+    "links_label": "Code and sources",
+    "projects": [
+      {
+        "id": "ai-platform",
+        "kicker": "2024 – present · my product, built with a small team",
+        "title": "AI meeting-intelligence platform",
+        "text": "Records meetings and turns them into decisions, tasks and risks, each linked to the moment it was said. In daily use with real clients since June 2025.",
+        "front": "Next.js and React web app, a Chrome extension (Manifest V3) and an iOS app in SwiftUI",
+        "back": "Python and FastAPI, Celery workers, MySQL, Redis, Gemini transcription, Terraform on Google Cloud",
+        "note": "Screens shown with sample data and without the product’s name.",
+        "media": [
+          {
+            "type": "image",
+            "src": "img/work/platform-web.webp",
+            "width": 960,
+            "height": 540,
+            "frame": "browser",
+            "alt": "The web app: a list of recorded meetings and, for the selected one, its decisions, actions and risks with the time each was said.",
+            "caption": "Web app"
+          },
+          {
+            "type": "image",
+            "src": "img/work/platform-extension.webp",
+            "width": 960,
+            "height": 600,
+            "frame": "browser",
+            "alt": "The Chrome extension’s panel recording a Google Meet call, with a stop button.",
+            "caption": "Chrome extension in a call"
+          },
+          {
+            "type": "image",
+            "src": "img/work/platform-decisions.webp",
+            "width": 960,
+            "height": 540,
+            "frame": "browser",
+            "alt": "A meeting’s page with four items labeled decision, action and risk, each with an owner and a play-source link.",
+            "caption": "Decisions linked to the recording"
+          }
+        ],
+        "details": {
+          "flow_title": "How a recording becomes decisions",
+          "flow": [
+            {"name": "Capture", "detail": "Chrome extension (Manifest V3), iOS app (SwiftUI), cloud-browser rooms over WebRTC"},
+            {"name": "Upload", "detail": "Chunked, resumable uploads; server-side recovery of interrupted recordings"},
+            {"name": "Transcribe", "detail": "Checkpointed Gemini transcription, speaker detection, voice-presence gate"},
+            {"name": "Extract", "detail": "Decisions, actions and risks with source links, behind an evidence gate"},
+            {"name": "Serve", "detail": "FastAPI, Celery workers on two hosts, MySQL, Redis, ChromaDB, MCP server"},
+            {"name": "Use", "detail": "Next.js web app, Slack and tracker integrations, per-person daily status"}
+          ],
+          "rail_label": "Platform",
+          "rail": "Terraform on Google Cloud, blue/green Docker releases through Jenkins, Prometheus and Grafana alerts, OpenBao for secrets.",
+          "specs_caption": "In numbers, measured in October 2026",
+          "specs_head": ["Parameter", "Value", "Conditions"],
+          "specs": [
+            ["Meetings processed", "~1,580", "since June 2025"],
+            ["Recorded audio", "~390 h", "~190 h in the last 30 days"],
+            ["Action items extracted", "10,000+", "plus 1,300+ notes"],
+            ["Backend", "4,200+ commits", "~2,500 Python files, ~940 test files"],
+            ["Web app", "2,400+ commits", "~1,600 TypeScript files, ~220 test files"],
+            ["Chrome extension", "230+ commits", "50+ test files"]
+          ],
+          "decisions_title": "Design decisions",
+          "decisions": [
+            {
+              "title": "Evidence gate on extraction",
+              "text": "Extraction runs behind an evidence gate that prefers under-claiming: each decision, action and risk links to its source in the recording."
+            },
+            {
+              "title": "Silent screen recordings",
+              "text": "A voice-presence check sends recordings without speech to a structured visual summary (timestamped steps, on-screen text and results) instead of producing a hallucinated transcript."
+            },
+            {
+              "title": "Recovering interrupted recordings",
+              "text": "The server rebuilds interrupted live recordings from the streamed WebM segments, including segments that arrive without a header, and reprocesses the audio automatically."
+            },
+            {
+              "title": "Release gates",
+              "text": "Blue/green Docker deployments go through host-health admission, deploy locks and exact-commit authorization. Images are built on remote compute nodes and pulled by digest."
+            },
+            {
+              "title": "Reviewing AI agents’ work",
+              "text": "I review the agents’ code, designs and incident write-ups every day and leave written feedback. A change ships only with passing tests and evidence from production; the agent’s own report doesn’t count as evidence."
+            }
+          ]
+        },
+        "links": []
       },
-      "flow_title": "How an instruction becomes a working build",
-      "flow": [
-        {"name": "Ask", "detail": "An instruction in plain language, such as “add Retrofit and sync the project”"},
-        {"name": "Plan", "detail": "The planner reads the project and picks the tools and their order"},
-        {"name": "Act", "detail": "The executor drives the IDE: read and edit files, add dependencies, sync Gradle, run the app"},
-        {"name": "Check", "detail": "A critic reviews each result; a failed build goes back to the planner with its log"}
-      ],
-      "rail_label": "On the device",
-      "rail": "The IDE, Gradle and the agent run on the same phone. The model is Gemini through its API, or a Llama model loaded on demand from the app’s assets.",
-      "specs_caption": "In numbers, from the public repository in October 2026",
-      "specs_head": ["Parameter", "Value", "Conditions"],
-      "specs": [
-        ["Contributor rank", "2nd of 56", "by commits"],
-        ["My commits", "420", "Mar 2025 – Oct 2026, default branch"],
-        ["Agent and AI commits", "31", "agent, on-device model, plugin API"],
-        ["Agent package", "17 of 23 commits", "before the move to plugins"],
-        ["Repository", "477 stars", "94 forks, GPL-3.0"]
-      ],
-      "decisions_title": "Design decisions",
-      "decisions": [
-        {"title": "A critic before the developer", "text": "A second model checks every tool result, and a failed build goes back to the planner with its log. On a small screen, each round trip the agent fixes on its own is one less context switch for the developer."},
-        {"title": "A model that runs on the phone", "text": "A Llama model runs on the device. It loads on demand from the app’s assets, so the base install stays small, and requests wait in a queue while the inference engine starts."},
-        {"title": "AI as plugins", "text": "I moved the AI features out of the app into plugins, with contracts for agent tools, LLM inference, embeddings and prompt templates, so new models and tools ship without changing the IDE."},
-        {"title": "Limits on the agent", "text": "Sub-agents can no longer loop forever, chat sessions save safely when the agent’s folder is missing, and the agent reads the real build log instead of a summary."}
-      ],
-      "links_title": "Sources",
-      "links": [
-        {"label": "My article on the App Dev for All blog: “Gemini with Code on the Go” (March 2026)", "url": "https://appdevforall.org/gemini-with-code-on-the-go-integrating-an-ai-agent-into-a-mobile-first-ide/"},
-        {"label": "Code on the Go on GitHub", "url": "https://github.com/appdevforall/CodeOnTheGo"},
-        {"label": "My commits", "url": "https://github.com/appdevforall/CodeOnTheGo/commits?author=jatezzz"}
-      ]
-    }
+      {
+        "id": "code-on-the-go",
+        "kicker": "Mar 2025 – Oct 2026 · App Dev for All (nonprofit) · open source",
+        "title": "Code on the Go: an AI agent inside a phone-based IDE",
+        "text": "An Android IDE that runs on the phone. I built its AI agent: you ask in plain language, and it reads, edits, builds and fixes your project on the device.",
+        "front": "Android screens in Kotlin: the agent chat, the plugin manager and sketch-to-layout",
+        "back": "The agent (planner, executor and critic), a Llama model running on the phone, and the plugin API",
+        "media": [
+          {
+            "type": "youtube",
+            "youtube_id": "VMNVMmK0nE4",
+            "poster": "img/work/cotg-gemini-demo.webp",
+            "width": 432,
+            "height": 960,
+            "frame": "phone",
+            "alt": "Code on the Go’s Agent tab on a phone, with Gemini selected and the prompt “Analyze just the activities into the selected directory”.",
+            "caption": "Demo: the Gemini agent in Code on the Go",
+            "play": "Play the demo",
+            "note": "The video plays from YouTube (privacy-enhanced mode) only after you press play."
+          },
+          {
+            "type": "image",
+            "src": "img/work/cotg-sketch-to-ui.webp",
+            "width": 768,
+            "height": 432,
+            "frame": "plain",
+            "alt": "A hand-drawn screen, the Android XML generated from it, and the resulting app screen.",
+            "caption": "Sketch to UI: a drawing becomes a layout"
+          },
+          {
+            "type": "image",
+            "src": "img/work/cotg-plugins.webp",
+            "width": 254,
+            "height": 535,
+            "frame": "phone",
+            "alt": "The plugin manager listing Sketch to UI, Template Manager, Keystore Generator, Custom Snippets and Layout Editor.",
+            "caption": "The features ship as plugins"
+          }
+        ],
+        "details": {
+          "flow_title": "How an instruction becomes a working build",
+          "flow": [
+            {"name": "Ask", "detail": "An instruction in plain language, such as “add Retrofit and sync the project”"},
+            {"name": "Plan", "detail": "The planner reads the project and picks the tools and their order"},
+            {"name": "Act", "detail": "The executor drives the IDE: read and edit files, add dependencies, sync Gradle, run the app"},
+            {"name": "Check", "detail": "A critic reviews each result; a failed build goes back to the planner with its log"}
+          ],
+          "rail_label": "On the device",
+          "rail": "The IDE, Gradle and the agent run on the same phone. The model is Gemini through its API, or a Llama model loaded on demand from the app’s assets.",
+          "specs_caption": "In numbers, from the public repository in October 2026",
+          "specs_head": ["Parameter", "Value", "Conditions"],
+          "specs": [
+            ["Contributor rank", "2nd of 56", "by commits"],
+            ["My commits", "420", "Mar 2025 – Oct 2026, default branch"],
+            ["Agent and AI commits", "31", "agent, on-device model, plugin API"],
+            ["Agent package", "17 of 23 commits", "before the move to plugins"],
+            ["Repository", "477 stars", "94 forks, GPL-3.0"]
+          ],
+          "decisions_title": "Design decisions",
+          "decisions": [
+            {
+              "title": "A critic before the developer",
+              "text": "A second model checks every tool result, and a failed build goes back to the planner with its log. On a small screen, each round trip the agent fixes on its own is one less context switch for the developer."
+            },
+            {
+              "title": "A model that runs on the phone",
+              "text": "A Llama model runs on the device. It loads on demand from the app’s assets, so the base install stays small, and requests wait in a queue while the inference engine starts."
+            },
+            {
+              "title": "AI as plugins",
+              "text": "I moved the AI features out of the app into plugins, with contracts for agent tools, LLM inference, embeddings and prompt templates, so new models and tools ship without changing the IDE."
+            },
+            {
+              "title": "Limits on the agent",
+              "text": "Sub-agents can no longer loop forever, chat sessions save safely when the agent’s folder is missing, and the agent reads the real build log instead of a summary."
+            }
+          ]
+        },
+        "links": [
+          {
+            "label": "My article on the App Dev for All blog: “Gemini with Code on the Go” (March 2026)",
+            "url": "https://appdevforall.org/gemini-with-code-on-the-go-integrating-an-ai-agent-into-a-mobile-first-ide/"
+          },
+          {"label": "Code on the Go on GitHub", "url": "https://github.com/appdevforall/CodeOnTheGo"},
+          {"label": "My commits", "url": "https://github.com/appdevforall/CodeOnTheGo/commits?author=jatezzz"}
+        ]
+      },
+      {
+        "id": "dimension-keeper",
+        "kicker": "2024 · personal project · open source",
+        "title": "Dimension Keeper: a mobile app and its serverless API",
+        "text": "A character catalog with search, favorites and editing. I built both ends: the Flutter app and the API it calls.",
+        "front": "Flutter, with Provider for state and integration tests",
+        "back": "API Gateway, six Lambda functions in JavaScript, DynamoDB and IAM roles, deployed with CloudFormation",
+        "media": [
+          {
+            "type": "video",
+            "src": "img/work/dk-app.mp4",
+            "poster": "img/work/dk-app.webp",
+            "width": 296,
+            "height": 640,
+            "frame": "phone",
+            "alt": "The Flutter app: browsing characters, opening one and editing it.",
+            "caption": "The app in use"
+          }
+        ],
+        "details": {
+          "flow_title": "How a request flows",
+          "flow": [
+            {"name": "App", "detail": "Flutter screens call the REST API"},
+            {"name": "API Gateway", "detail": "Routes for list, get, add, update and delete"},
+            {"name": "Lambda", "detail": "Six JavaScript functions, one per route"},
+            {"name": "DynamoDB", "detail": "Custom characters, with IAM roles per function"}
+          ]
+        },
+        "links": [
+          {"label": "The Flutter app on GitHub", "url": "https://github.com/jatezzz/dimension-keeper-mobile"},
+          {"label": "The API on GitHub", "url": "https://github.com/jatezzz/dimsension-keeper-backend"}
+        ]
+      },
+      {
+        "id": "allcatpics",
+        "kicker": "2024 · personal project · open source",
+        "title": "AllCatPics: from a paper sketch to a native app",
+        "text": "I drew the screens by hand first, then built the app in native Swift. I rebuilt the same app in React Native to compare both approaches.",
+        "front": "Native Swift for iOS 15 and later, and the same app in React Native with TypeScript",
+        "media": [
+          {
+            "type": "image",
+            "src": "img/work/cats-sketch.webp",
+            "width": 560,
+            "height": 778,
+            "frame": "plain",
+            "alt": "Hand-drawn wireframes of the cat photo app on grid paper.",
+            "caption": "The paper sketch"
+          },
+          {
+            "type": "image",
+            "src": "img/work/cats-app.webp",
+            "width": 432,
+            "height": 935,
+            "frame": "phone",
+            "alt": "The finished iOS app: a grid of cat photos with names.",
+            "caption": "The finished app"
+          }
+        ],
+        "details": {},
+        "links": [
+          {"label": "The Swift app on GitHub", "url": "https://github.com/jatezzz/allcatpics"},
+          {"label": "The React Native version on GitHub", "url": "https://github.com/jatezzz/all-cat-pics-rn"}
+        ]
+      }
     ],
     "mobile": {
       "period": "2015 – today",
@@ -165,7 +324,8 @@
         "role": "Senior Software Engineer",
         "context": "independent, remote",
         "period": "Oct 2024 – present",
-        "lead": 6,
+        "lead": 3,
+        "lead": 3,
         "highlights": [
           {"text": "Designed the architecture and built the platform end to end with a small team and Claude Code agents: backend, web app, Chrome extension, iOS companion app and infrastructure.", "tags": []},
           {"text": "Built chunked, checkpointed Google Gemini transcription with speaker detection, and extraction of decisions, actions and risks with source links behind an evidence gate that prefers under-claiming.", "tags": ["llm", "python"]},
@@ -207,6 +367,7 @@
         "role": "Senior Native Mobile Developer",
         "context": "software development firm, remote",
         "period": "Oct 2024 – present",
+        "lead": 3,
         "highlights": [
           {"text": "Migrated legacy Android XML layouts to Jetpack Compose with ViewModel/MVVM patterns for maintainable state and UI behavior.", "tags": ["kotlin"]},
           {"text": "Built and maintained native and cross-platform features across iOS and Android: Swift native modules, Kotlin, Flutter, and React Native features with native bridges.", "tags": ["swift", "kotlin", "flutter"]},
