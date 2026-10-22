@@ -187,7 +187,12 @@ if ($terms !== []) {
             continue;
         }
         if (str_contains($data, "\0")) {
-            // Binary (images, PDFs): metadata is stored as plain text, so scan printable runs.
+            // Raster images are covered by the metadata check below (they must carry none);
+            // scanning their compressed bytes only finds short terms by chance.
+            if (preg_match('/\.(png|jpe?g|webp|gif|avif)$/i', $path)) {
+                continue;
+            }
+            // Other binaries (PDFs, video): metadata is stored as plain text, so scan printable runs.
             preg_match_all('/[\x20-\x7E]{4,}/', $data, $runs);
             $report($path . ' (metadata)', implode("\n", $runs[0]));
             continue;
