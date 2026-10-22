@@ -47,6 +47,9 @@ pipeline {
           if (!params.DRY_RUN && env.GIT_BRANCH != 'origin/main') {
             error("Publishing is allowed from main only (this build is ${env.GIT_BRANCH}).")
           }
+          // Publish only when DRY_RUN is explicitly off. On a job's first build the parameter is not yet
+          // in the environment, and reading it there as a string published instead of dry-running.
+          env.DEPLOY_DRY_RUN = (params.DRY_RUN == false) ? '0' : '1'
         }
         withCredentials([
           sshUserPrivateKey(credentialsId: 'portfolio-hosting-ssh', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER'),
@@ -56,7 +59,7 @@ pipeline {
           sh '''
             set -e
             docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp \
-              -e DEPLOY_TARGET="$SSH_USER@$SSH_HOST" -e DRY_RUN="$( [ "$DRY_RUN" = true ] && echo 1 || echo 0 )" \
+              -e DEPLOY_TARGET="$SSH_USER@$SSH_HOST" -e DRY_RUN="$DEPLOY_DRY_RUN" \
               -e DEPLOY_SSH_KEY=/run/key -e DEPLOY_KNOWN_HOSTS=/src/.known_hosts \
               -v /etc/passwd:/etc/passwd:ro -v "$WORKSPACE:/src" -v "$SSH_KEY:/run/key:ro" -w /src "$CI_IMAGE" sh -ec '
                 git config --global --add safe.directory /src
