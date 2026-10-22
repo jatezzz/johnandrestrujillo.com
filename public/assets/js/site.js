@@ -247,7 +247,6 @@
       player.referrerPolicy = 'strict-origin-when-cross-origin';
       player.allowFullscreen = true;
       frame.replaceChildren(player);
-      frame.classList.add('demo__frame--playing');
       player.focus();
     });
   });

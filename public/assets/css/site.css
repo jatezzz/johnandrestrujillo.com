@@ -850,11 +850,9 @@ svg {
   max-width: 70ch;
 }
 
+/* Same box before and after play: the YouTube Short player is 9:16, so the poster is cropped to it. */
 .demo__frame {
   position: relative;
-}
-
-.demo__frame--playing {
   aspect-ratio: 9 / 16;
 }
 
@@ -866,8 +864,7 @@ svg {
   border: 0;
 }
 
-.demo__play img {
-  width: 100%;
+.demo__frame .demo__play img {
   height: 100%;
   object-fit: cover;
 }
