@@ -57,6 +57,7 @@ final class App
                 '/e' => $this->beacon($method, $body, $server),
                 '/robots.txt' => $this->robots(),
                 '/sitemap.xml' => $this->sitemap(),
+                '/llms.txt' => $this->llms(),
                 '/healthz' => Response::text("ok\n")->withHeader('Cache-Control', 'no-store'),
                 '/og/en', '/og/es' => $this->card(substr($path, 4), $path),
                 default => $this->notFound($path),
@@ -166,6 +167,57 @@ final class App
         return Response::text($body)->withHeader('Cache-Control', $this->cacheControl(true));
     }
 
+    /**
+     * A plain-text summary for AI assistants that search the web (the llms.txt convention):
+     * who he is, the projects with their front end and back end, and where to reach him.
+     */
+    private function llms(): Response
+    {
+        $c = Content::load($this->root, 'en');
+        $base = $this->config['base_url'];
+        $p = $c['person'];
+        $lines = [
+            "# {$p['name']}",
+            '',
+            "> {$c['hero']['lede']}",
+            '',
+            "Skills: " . implode(', ', $p['knows_about']) . '.',
+            '',
+            '## Projects',
+            '',
+        ];
+        foreach ($c['work']['projects'] as $project) {
+            $lines[] = "### {$project['title']}";
+            $lines[] = '';
+            $lines[] = "{$project['kicker']}. {$project['text']}";
+            $lines[] = "- {$c['work']['front_label']}: {$project['front']}";
+            if (!empty($project['back'])) {
+                $lines[] = "- {$c['work']['back_label']}: {$project['back']}";
+            }
+            foreach ($project['links'] ?? [] as $link) {
+                $lines[] = "- [{$link['label']}]({$link['url']})";
+            }
+            $lines[] = '';
+        }
+        $lines[] = '## Experience';
+        $lines[] = '';
+        foreach ($c['experience']['items'] as $item) {
+            $lines[] = "- {$item['title']}: {$item['role']}, {$item['context']} ({$item['period']})";
+        }
+        $lines[] = '';
+        $lines[] = '## Links';
+        $lines[] = '';
+        $lines[] = "- [Portfolio, English]({$base}/)";
+        $lines[] = "- [Portafolio, español]({$base}/es/)";
+        foreach (array_filter([$this->config['github_url'], $this->config['linkedin_url']]) as $url) {
+            $lines[] = "- <{$url}>";
+        }
+        $lines[] = "- Contact: {$base}/#contact";
+
+        return Response::text(implode("\n", $lines) . "\n", 200, 'text/markdown; charset=utf-8')
+            ->withHeader('Cache-Control', $this->cacheControl(true));
+    }
+
     private function sitemap(): Response
     {
         $base = $this->config['base_url'];
@@ -269,7 +321,14 @@ final class App
                 'homeLocation' => ['@type' => 'Place', 'name' => $c['person']['location']],
                 'knowsLanguage' => ['en', 'es'],
                 'knowsAbout' => $c['person']['knows_about'],
-                'sameAs' => array_values(array_filter([$this->config['github_url'], $this->config['linkedin_url']])),
+                'sameAs' => array_values(array_filter(array_merge([$this->config['github_url'], $this->config['linkedin_url']], $c['person']['profiles']))),
+                'subjectOf' => array_map(static fn (array $a): array => [
+                    '@type' => 'Article',
+                    'headline' => $a['headline'],
+                    'url' => $a['url'],
+                    'datePublished' => $a['date'],
+                    'publisher' => ['@type' => 'Organization', 'name' => $a['publisher']],
+                ], $c['person']['articles']),
             ],
         ];
 

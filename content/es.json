@@ -4,8 +4,8 @@
   "updated": "2026-10-22",
   "updated_label": "22 oct 2026",
   "meta": {
-    "title": "John Andrés Trujillo, ingeniero de software sénior",
-    "description": "Ingeniero de software sénior en Quito, Ecuador. Apps iOS y Android desde 2015 y, desde 2024, una plataforma de IA en producción: backend en Python, pipeline de IA, app web, extensión de navegador, app iOS e infraestructura en la nube.",
+    "title": "John Andrés Trujillo, ingeniero móvil sénior: iOS, Android e IA",
+    "description": "Ingeniero móvil sénior en Quito, Ecuador, con trabajo remoto. iOS y Android nativo desde 2015, además de Flutter, React Native, backend y agentes de IA.",
     "og_alt": "John Andrés Trujillo, ingeniero móvil desde 2015 que también construye sistemas de IA, junto al dibujo de un chip con un pin por capacidad."
   },
   "ui": {
@@ -28,13 +28,15 @@
   },
   "person": {
     "name": "John Andrés Trujillo",
-    "role": "Ingeniero de software sénior",
+    "role": "Ingeniero móvil sénior",
     "location": "Quito, Ecuador",
-    "knows_about": ["iOS", "Android", "Swift", "Kotlin", "Python", "Pipelines con LLM", "Ingeniería de plataforma"]
+    "profiles": ["https://appdevforall.org/author/john-trujillo/"],
+    "articles": [{"headline": "Gemini with Code on the Go: A fully-functional developer’s agent", "url": "https://appdevforall.org/gemini-with-code-on-the-go-integrating-an-ai-agent-into-a-mobile-first-ide/", "publisher": "App Dev for All", "date": "2026-03-09"}],
+    "knows_about": ["iOS", "Android", "Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "Flutter", "React Native", "Desarrollo de apps móviles", "Agentes de IA", "Integración de LLM", "Google Gemini", "LLM en el dispositivo", "Python", "FastAPI", "AWS Lambda", "Google Cloud"]
   },
   "hero": {
     "title_lines": ["Ingeniero móvil desde {2015}.", "Hoy también construyo sistemas de IA."],
-    "lede": "Soy ingeniero de software sénior en Quito, Ecuador, y trabajo de forma remota. Construyo las apps que la gente usa, y el backend y la IA que corren detrás.",
+    "lede": "Soy ingeniero móvil sénior en Quito, Ecuador, y trabajo de forma remota. Construyo las apps que la gente usa, y el backend y la IA que corren detrás.",
     "cta_contact": "Escríbeme"
   },
   "pinout": {

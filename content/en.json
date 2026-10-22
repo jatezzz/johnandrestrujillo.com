@@ -4,8 +4,8 @@
   "updated": "2026-10-22",
   "updated_label": "22 Oct 2026",
   "meta": {
-    "title": "John Andrés Trujillo, Senior Software Engineer",
-    "description": "Senior software engineer in Quito, Ecuador. iOS and Android apps since 2015, and since 2024 a production AI platform: Python backend, AI pipeline, web app, browser extension, iOS app and cloud infrastructure.",
+    "title": "John Andrés Trujillo, Senior Mobile Engineer: iOS, Android and AI",
+    "description": "Senior mobile engineer in Quito, Ecuador, working remotely. Native iOS and Android since 2015, plus Flutter, React Native, backends and AI agents.",
     "og_alt": "John Andrés Trujillo, mobile engineer since 2015 who also builds AI systems, next to a chip drawing with one pin per capability."
   },
   "ui": {
@@ -28,13 +28,15 @@
   },
   "person": {
     "name": "John Andrés Trujillo",
-    "role": "Senior Software Engineer",
+    "role": "Senior Mobile Engineer",
     "location": "Quito, Ecuador",
-    "knows_about": ["iOS", "Android", "Swift", "Kotlin", "Python", "LLM pipelines", "Platform engineering"]
+    "profiles": ["https://appdevforall.org/author/john-trujillo/"],
+    "articles": [{"headline": "Gemini with Code on the Go: A fully-functional developer’s agent", "url": "https://appdevforall.org/gemini-with-code-on-the-go-integrating-an-ai-agent-into-a-mobile-first-ide/", "publisher": "App Dev for All", "date": "2026-03-09"}],
+    "knows_about": ["iOS", "Android", "Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "Flutter", "React Native", "Mobile app development", "AI agents", "LLM integration", "Google Gemini", "On-device LLMs", "Python", "FastAPI", "AWS Lambda", "Google Cloud"]
   },
   "hero": {
     "title_lines": ["Mobile engineer since {2015}.", "These days I also build AI systems."],
-    "lede": "I’m a senior software engineer in Quito, Ecuador, working remotely. I build the apps people use, and the backend and AI that run behind them.",
+    "lede": "I’m a senior mobile engineer in Quito, Ecuador, working remotely. I build the apps people use, and the backend and AI that run behind them.",
     "cta_contact": "Write to me"
   },
   "pinout": {

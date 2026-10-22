@@ -211,6 +211,13 @@ test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', f
     }
 });
 
+test('llms.txt summarizes the profile for AI assistants', function (): void {
+    $r = app()->handle('GET', '/llms.txt');
+    expect($r->status === 200 && str_starts_with((string) $r->header('Content-Type'), 'text/markdown'), 'llms.txt is served as markdown');
+    expect(str_starts_with($r->body, '# John Andrés Trujillo'), 'llms.txt starts with the name');
+    expect(str_contains($r->body, '## Projects') && str_contains($r->body, 'Code on the Go'), 'llms.txt lists the projects');
+});
+
 test('every asset a page references exists', function (): void {
     foreach (['/', '/es/'] as $path) {
         $html = app()->handle('GET', $path)->body;
