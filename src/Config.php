@@ -16,7 +16,7 @@ final class Config
         'form_secret' => '',
         'var_dir' => '',
         'github_url' => 'https://github.com/jatezzz',
-        'linkedin_url' => '',
+        'linkedin_url' => 'https://www.linkedin.com/in/john-andres-trujillo/',
         'source_url' => '',
         'revision' => '',
         'metrics_mode' => 'off',        // off | log | posthog

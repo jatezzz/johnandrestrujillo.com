@@ -30,7 +30,7 @@ declare(strict_types=1);
 $root = dirname(__DIR__);
 require $root . '/src/bootstrap.php';
 
-const ALLOWED_HOSTS = ['github.com', 'schema.org', 'www.sitemaps.org', 'www.w3.org'];
+const ALLOWED_HOSTS = ['github.com', 'www.linkedin.com', 'schema.org', 'www.sitemaps.org', 'www.w3.org'];
 const DEFAULT_AUTHORS = ['34223334+jatezzz@users.noreply.github.com'];
 const ALLOWED_COMMITTERS = ['noreply@github.com'];
 
