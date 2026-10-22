@@ -30,7 +30,7 @@ declare(strict_types=1);
 $root = dirname(__DIR__);
 require $root . '/src/bootstrap.php';
 
-const ALLOWED_HOSTS = ['appdevforall.org', 'github.com', 'www.linkedin.com', 'schema.org', 'www.sitemaps.org', 'www.w3.org'];
+const ALLOWED_HOSTS = ['appdevforall.org', 'github.com', 'www.linkedin.com', 'www.youtube.com', 'schema.org', 'www.sitemaps.org', 'www.w3.org'];
 // Linked pages the one-hop check reads. LinkedIn is linked but not read: it serves sign-in walls to robots.
 const FETCHED_HOSTS = ['appdevforall.org', 'github.com'];
 const DEFAULT_AUTHORS = ['34223334+jatezzz@users.noreply.github.com'];

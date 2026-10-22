@@ -300,7 +300,7 @@ final class App
             'Cross-Origin-Opener-Policy' => 'same-origin',
             'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
             'Content-Security-Policy' => "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
-                . "font-src 'self'; connect-src 'self'; manifest-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+                . "font-src 'self'; connect-src 'self'; manifest-src 'self'; frame-src https://www.youtube-nocookie.com; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
         ];
         if ($this->config['env'] === 'production' && str_starts_with($this->config['base_url'], 'https://')) {
             $headers['Strict-Transport-Security'] = 'max-age=31536000';

@@ -106,6 +106,15 @@
       "title": "An AI agent inside a phone-based IDE",
       "summary": "Code on the Go is an open-source Android IDE from the nonprofit App Dev for All: people write, build and run Android apps on the phone itself, without a laptop. I built its AI agent, which reads, edits, builds and debugs the user’s project on the same device, with Google Gemini or a Llama model running on the phone.",
       "role": "Software engineer on the core team, listed on App Dev for All’s team page. Second most active of 56 contributors, with 420 commits to the default branch; 31 of them are on the agent, its on-device model and the plugin API that now carries the AI features.",
+      "video": {
+        "youtube_id": "VMNVMmK0nE4",
+        "poster": "img/cotg-gemini-demo.webp",
+        "poster_alt": "Code on the Go’s Agent tab on a phone, with Gemini selected and the prompt “Analyze just the activities into the selected directory”.",
+        "title": "Demo: the Gemini agent in Code on the Go",
+        "text": "The agent analyzing an Android project on the phone, from the Agent tab of the IDE. Published by App Dev for All with my article.",
+        "play": "Play the demo",
+        "note": "The video plays from YouTube (privacy-enhanced mode) only after you press play."
+      },
       "flow_title": "How an instruction becomes a working build",
       "flow": [
         {"name": "Ask", "detail": "An instruction in plain language, such as “add Retrofit and sync the project”"},

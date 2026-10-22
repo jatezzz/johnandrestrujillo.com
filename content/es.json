@@ -106,6 +106,15 @@
       "title": "Un agente de IA dentro de un IDE que corre en el teléfono",
       "summary": "Code on the Go es un IDE de Android de código abierto de la organización sin fines de lucro App Dev for All: con él se escriben, compilan y ejecutan apps de Android en el propio teléfono, sin laptop. Construí su agente de IA, que lee, edita, compila y depura el proyecto del usuario en el mismo dispositivo, con Google Gemini o con un modelo Llama que corre en el teléfono.",
       "role": "Ingeniero de software del equipo principal, en la página del equipo de App Dev for All. Segundo contribuyente más activo de 56, con 420 commits en la rama principal; 31 de ellos son del agente, su modelo en el dispositivo y la API de plugins que hoy lleva las funciones de IA.",
+      "video": {
+        "youtube_id": "VMNVMmK0nE4",
+        "poster": "img/cotg-gemini-demo.webp",
+        "poster_alt": "La pestaña Agent de Code on the Go en un teléfono, con Gemini seleccionado y la instrucción «Analyze just the activities into the selected directory».",
+        "title": "Demo: el agente Gemini en Code on the Go",
+        "text": "El agente analiza un proyecto de Android en el teléfono, desde la pestaña Agent del IDE. Lo publicó App Dev for All junto con mi artículo.",
+        "play": "Ver la demo",
+        "note": "El video se reproduce desde YouTube (modo de privacidad mejorada) solo después de presionar play."
+      },
       "flow_title": "Cómo una instrucción se convierte en una compilación que funciona",
       "flow": [
         {"name": "Pedir", "detail": "Una instrucción en lenguaje natural, como «agrega Retrofit y sincroniza el proyecto»"},

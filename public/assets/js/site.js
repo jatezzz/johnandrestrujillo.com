@@ -1,6 +1,6 @@
-// Progressive enhancements: metrics, the theme toggle, the contact-form image check
-// and the capability pins. Without this file the page still works: each pin links to
-// its evidence list, and the form offers a link that loads the image check.
+// Progressive enhancements: metrics, the theme toggle, the contact-form image check,
+// the capability pins and the demo videos. Without this file the page still works: each pin links to
+// its evidence list, the form offers a link that loads the image check, and a demo opens on YouTube.
 (() => {
   'use strict';
 
@@ -214,6 +214,24 @@
       if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       event.preventDefault();
       move(pin, event.key);
+    });
+  });
+
+  // ---- Demo videos: the YouTube player loads only when the visitor presses play ----
+  document.querySelectorAll('[data-youtube]').forEach((frame) => {
+    const play = frame.querySelector('.demo__play');
+    if (!play) return;
+    play.addEventListener('click', (event) => {
+      event.preventDefault();
+      const player = document.createElement('iframe');
+      player.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(frame.dataset.youtube)}?autoplay=1&rel=0&playsinline=1`;
+      player.title = frame.dataset.title;
+      player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      player.referrerPolicy = 'strict-origin-when-cross-origin';
+      player.allowFullscreen = true;
+      frame.replaceChildren(player);
+      frame.classList.add('demo__frame--playing');
+      player.focus();
     });
   });
 })();

@@ -18,6 +18,22 @@ $mobile = $w['mobile'];
       <p><?= $e($case['role']) ?></p>
     </div>
 
+    <?php if (!empty($case['video'])): $v = $case['video']; ?>
+    <figure class="demo">
+      <div class="demo__frame" data-youtube="<?= $e($v['youtube_id']) ?>" data-title="<?= $e($v['title']) ?>">
+        <a class="demo__play" href="https://www.youtube.com/shorts/<?= $e($v['youtube_id']) ?>">
+          <img src="<?= $e($asset($v['poster'])) ?>" width="432" height="960" loading="lazy" alt="<?= $e($v['poster_alt']) ?>">
+          <span class="demo__button"><?= $e($v['play']) ?></span>
+        </a>
+      </div>
+      <figcaption class="demo__caption">
+        <span class="demo__title"><?= $e($v['title']) ?></span>
+        <span><?= $e($v['text']) ?></span>
+        <span class="demo__note"><?= $e($v['note']) ?></span>
+      </figcaption>
+    </figure>
+    <?php endif; ?>
+
     <figure class="flow">
       <figcaption class="flow__caption"><?= $e($case['flow_title']) ?></figcaption>
       <ol class="flow__stages">
