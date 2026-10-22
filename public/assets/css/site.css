@@ -819,6 +819,24 @@ svg {
   max-width: 70ch;
 }
 
+.case + .case:not(.case--compact) {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1.5px solid var(--ink);
+}
+
+.case__sources {
+  margin-top: 2.25rem;
+}
+
+.case__links {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.4rem;
+  max-width: 70ch;
+}
+
 .flow {
   margin: 2.25rem 0;
   padding: 1.25rem;

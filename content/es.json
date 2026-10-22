@@ -1,8 +1,8 @@
 {
   "lang": "es",
   "locale": "es_EC",
-  "updated": "2026-10-16",
-  "updated_label": "16 oct 2026",
+  "updated": "2026-10-22",
+  "updated_label": "22 oct 2026",
   "meta": {
     "title": "John Andrés Trujillo, ingeniero de software sénior",
     "description": "Ingeniero de software sénior en Quito, Ecuador. Apps iOS y Android desde 2015 y, desde 2024, una plataforma de IA en producción: backend en Python, pipeline de IA, app web, extensión de navegador, app iOS e infraestructura en la nube.",
@@ -63,7 +63,9 @@
   ],
   "work": {
     "title": "Trabajo",
-    "case": {
+    "cases": [
+    {
+      "id": "ai-platform",
       "period": "2024 – presente",
       "title": "Plataforma de inteligencia de reuniones con IA",
       "summary": "Un producto B2B multi-tenant, en inglés y español, que graba reuniones y extrae decisiones, tareas y riesgos. Cada uno enlaza al momento de la grabación que lo respalda. Está en uso diario en producción, en reuniones reales con clientes, desde junio de 2025.",
@@ -98,6 +100,45 @@
         {"title": "Revisión del trabajo de los agentes de IA", "text": "Reviso cada día el código, los diseños y los informes de incidentes de los agentes y les dejo comentarios por escrito. Un cambio sale a producción solo con pruebas que pasan y evidencia de producción; el reporte del propio agente no cuenta como evidencia."}
       ]
     },
+    {
+      "id": "code-on-the-go",
+      "period": "mar 2025 – oct 2026",
+      "title": "Un agente de IA dentro de un IDE que corre en el teléfono",
+      "summary": "Code on the Go es un IDE de Android de código abierto de la organización sin fines de lucro App Dev for All: con él se escriben, compilan y ejecutan apps de Android en el propio teléfono, sin laptop. Construí su agente de IA, que lee, edita, compila y depura el proyecto del usuario en el mismo dispositivo, con Google Gemini o con un modelo Llama que corre en el teléfono.",
+      "role": "Ingeniero de software del equipo principal, en la página del equipo de App Dev for All. Segundo contribuyente más activo de 56, con 420 commits en la rama principal; 31 de ellos son del agente, su modelo en el dispositivo y la API de plugins que hoy lleva las funciones de IA.",
+      "flow_title": "Cómo una instrucción se convierte en una compilación que funciona",
+      "flow": [
+        {"name": "Pedir", "detail": "Una instrucción en lenguaje natural, como «agrega Retrofit y sincroniza el proyecto»"},
+        {"name": "Planear", "detail": "El planificador lee el proyecto y elige las herramientas y su orden"},
+        {"name": "Actuar", "detail": "El ejecutor maneja el IDE: lee y edita archivos, agrega dependencias, sincroniza Gradle, ejecuta la app"},
+        {"name": "Revisar", "detail": "Un crítico revisa cada resultado; una compilación fallida vuelve al planificador con su log"}
+      ],
+      "rail_label": "En el dispositivo",
+      "rail": "El IDE, Gradle y el agente corren en el mismo teléfono. El modelo es Gemini por su API, o un modelo Llama que se carga a pedido desde los recursos de la app.",
+      "specs_caption": "En números, según el repositorio público en octubre de 2026",
+      "specs_head": ["Parámetro", "Valor", "Condiciones"],
+      "specs": [
+        ["Puesto entre contribuyentes", "2.º de 56", "por commits"],
+        ["Mis commits", "420", "mar 2025 – oct 2026, rama principal"],
+        ["Commits del agente y de IA", "31", "agente, modelo en el dispositivo, API de plugins"],
+        ["Paquete del agente", "17 de 23 commits", "antes de pasar a plugins"],
+        ["Repositorio", "477 estrellas", "94 forks, GPL-3.0"]
+      ],
+      "decisions_title": "Decisiones de diseño",
+      "decisions": [
+        {"title": "Un crítico antes que el desarrollador", "text": "Un segundo modelo revisa cada resultado de las herramientas, y una compilación fallida vuelve al planificador con su log. En una pantalla pequeña, cada vuelta que el agente corrige solo es un cambio de contexto menos para el desarrollador."},
+        {"title": "Un modelo que corre en el teléfono", "text": "Un modelo Llama corre en el dispositivo. Se carga a pedido desde los recursos de la app, para que la instalación base siga siendo liviana, y las solicitudes esperan en cola mientras arranca el motor de inferencia."},
+        {"title": "La IA como plugins", "text": "Saqué las funciones de IA de la app y las pasé a plugins, con contratos para herramientas del agente, inferencia de LLM, embeddings y plantillas de prompts, para que nuevos modelos y herramientas salgan sin cambiar el IDE."},
+        {"title": "Límites para el agente", "text": "Los subagentes ya no pueden entrar en bucles infinitos, las sesiones de chat se guardan bien aunque falte la carpeta del agente, y el agente lee el log real de compilación en lugar de un resumen."}
+      ],
+      "links_title": "Fuentes",
+      "links": [
+        {"label": "Mi artículo en el blog de App Dev for All: «Gemini with Code on the Go» (marzo de 2026, en inglés)", "url": "https://appdevforall.org/gemini-with-code-on-the-go-integrating-an-ai-agent-into-a-mobile-first-ide/"},
+        {"label": "Code on the Go en GitHub", "url": "https://github.com/appdevforall/CodeOnTheGo"},
+        {"label": "Mis commits", "url": "https://github.com/appdevforall/CodeOnTheGo/commits?author=jatezzz"}
+      ]
+    }
+    ],
     "mobile": {
       "period": "2015 – hoy",
       "title": "iOS y Android nativo",
@@ -134,6 +175,21 @@
           {"text": "Construí un estado diario por persona que concilia datos de Jira, Azure DevOps, Notion, Plane y GitHub con Slack y la evidencia de las reuniones.", "tags": ["python"]},
           {"text": "Implementé despliegues sin caída, división de tráfico, scripts de reversión, sondas de salud en Cloud Run y un modo de horario de oficina que escala a cero para reducir el costo ocioso.", "tags": ["iac", "ops"]},
           {"text": "Agregué alertas con Prometheus y Grafana, triaje de fallos con Sentry/GlitchTip y una automatización deduplicada de GlitchTip a Jira, y gestión de secretos con OpenBao (compatible con Vault).", "tags": ["ops", "sec"]}
+        ]
+      },
+      {
+        "id": "code-on-the-go",
+        "title": "Code on the Go, un IDE de Android de código abierto que corre en el teléfono",
+        "role": "Ingeniero de software",
+        "context": "App Dev for All (sin fines de lucro), remoto",
+        "period": "mar 2025 – oct 2026",
+        "highlights": [
+          {"text": "Construí el agente de IA del IDE: un planificador, un ejecutor que maneja las herramientas del propio IDE (archivos, dependencias, sincronización de Gradle, compilar y ejecutar) y un crítico que devuelve las compilaciones fallidas con su log.", "tags": ["llm", "kotlin"]},
+          {"text": "Agregué inferencia en el dispositivo con un modelo Llama que se carga a pedido desde los recursos de la app, junto a Google Gemini por su API.", "tags": ["llm"]},
+          {"text": "Pasé las funciones de IA a plugins y diseñé los contratos de la API de plugins para herramientas del agente, inferencia de LLM, embeddings, plantillas de prompts y compilaciones rápidas.", "tags": ["llm", "kotlin"]},
+          {"text": "Trabajé en el módulo que convierte el boceto de una pantalla en un layout de Android: limpieza del OCR, una gramática de interfaz y lectura de atributos de widgets.", "tags": ["kotlin"]},
+          {"text": "Corregí cierres inesperados, ANR y errores de hilos encontrados en teléfonos reales, y adapté el editor y la navegación a pantallas grandes, mouse y teclado.", "tags": ["kotlin"]},
+          {"text": "Escribí el artículo del proyecto sobre el agente Gemini para el blog de App Dev for All (marzo de 2026).", "tags": []}
         ]
       },
       {

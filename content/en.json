@@ -1,8 +1,8 @@
 {
   "lang": "en",
   "locale": "en_US",
-  "updated": "2026-10-16",
-  "updated_label": "16 Oct 2026",
+  "updated": "2026-10-22",
+  "updated_label": "22 Oct 2026",
   "meta": {
     "title": "John Andrés Trujillo, Senior Software Engineer",
     "description": "Senior software engineer in Quito, Ecuador. iOS and Android apps since 2015, and since 2024 a production AI platform: Python backend, AI pipeline, web app, browser extension, iOS app and cloud infrastructure.",
@@ -63,7 +63,9 @@
   ],
   "work": {
     "title": "Work",
-    "case": {
+    "cases": [
+    {
+      "id": "ai-platform",
       "period": "2024 – present",
       "title": "AI meeting-intelligence platform",
       "summary": "A multi-tenant B2B product, in English and Spanish, that records meetings and extracts decisions, action items and risks. Each one links to the moment in the recording that supports it. It has been in daily production use in real client meetings since June 2025.",
@@ -98,6 +100,45 @@
         {"title": "Reviewing AI agents’ work", "text": "I review the agents’ code, designs and incident write-ups every day and leave written feedback. A change ships only with passing tests and evidence from production; the agent’s own report doesn’t count as evidence."}
       ]
     },
+    {
+      "id": "code-on-the-go",
+      "period": "Mar 2025 – Oct 2026",
+      "title": "An AI agent inside a phone-based IDE",
+      "summary": "Code on the Go is an open-source Android IDE from the nonprofit App Dev for All: people write, build and run Android apps on the phone itself, without a laptop. I built its AI agent, which reads, edits, builds and debugs the user’s project on the same device, with Google Gemini or a Llama model running on the phone.",
+      "role": "Software engineer on the core team, listed on App Dev for All’s team page. Second most active of 56 contributors, with 420 commits to the default branch; 31 of them are on the agent, its on-device model and the plugin API that now carries the AI features.",
+      "flow_title": "How an instruction becomes a working build",
+      "flow": [
+        {"name": "Ask", "detail": "An instruction in plain language, such as “add Retrofit and sync the project”"},
+        {"name": "Plan", "detail": "The planner reads the project and picks the tools and their order"},
+        {"name": "Act", "detail": "The executor drives the IDE: read and edit files, add dependencies, sync Gradle, run the app"},
+        {"name": "Check", "detail": "A critic reviews each result; a failed build goes back to the planner with its log"}
+      ],
+      "rail_label": "On the device",
+      "rail": "The IDE, Gradle and the agent run on the same phone. The model is Gemini through its API, or a Llama model loaded on demand from the app’s assets.",
+      "specs_caption": "In numbers, from the public repository in October 2026",
+      "specs_head": ["Parameter", "Value", "Conditions"],
+      "specs": [
+        ["Contributor rank", "2nd of 56", "by commits"],
+        ["My commits", "420", "Mar 2025 – Oct 2026, default branch"],
+        ["Agent and AI commits", "31", "agent, on-device model, plugin API"],
+        ["Agent package", "17 of 23 commits", "before the move to plugins"],
+        ["Repository", "477 stars", "94 forks, GPL-3.0"]
+      ],
+      "decisions_title": "Design decisions",
+      "decisions": [
+        {"title": "A critic before the developer", "text": "A second model checks every tool result, and a failed build goes back to the planner with its log. On a small screen, each round trip the agent fixes on its own is one less context switch for the developer."},
+        {"title": "A model that runs on the phone", "text": "A Llama model runs on the device. It loads on demand from the app’s assets, so the base install stays small, and requests wait in a queue while the inference engine starts."},
+        {"title": "AI as plugins", "text": "I moved the AI features out of the app into plugins, with contracts for agent tools, LLM inference, embeddings and prompt templates, so new models and tools ship without changing the IDE."},
+        {"title": "Limits on the agent", "text": "Sub-agents can no longer loop forever, chat sessions save safely when the agent’s folder is missing, and the agent reads the real build log instead of a summary."}
+      ],
+      "links_title": "Sources",
+      "links": [
+        {"label": "My article on the App Dev for All blog: “Gemini with Code on the Go” (March 2026)", "url": "https://appdevforall.org/gemini-with-code-on-the-go-integrating-an-ai-agent-into-a-mobile-first-ide/"},
+        {"label": "Code on the Go on GitHub", "url": "https://github.com/appdevforall/CodeOnTheGo"},
+        {"label": "My commits", "url": "https://github.com/appdevforall/CodeOnTheGo/commits?author=jatezzz"}
+      ]
+    }
+    ],
     "mobile": {
       "period": "2015 – today",
       "title": "Native iOS and Android",
@@ -134,6 +175,21 @@
           {"text": "Built per-person daily status that reconciles Jira, Azure DevOps, Notion, Plane and GitHub data with Slack and meeting evidence.", "tags": ["python"]},
           {"text": "Implemented zero-downtime deployments, traffic splitting, rollback scripts, Cloud Run health probes and a scale-to-zero office-hours mode to reduce idle cost.", "tags": ["iac", "ops"]},
           {"text": "Added Prometheus and Grafana alerting, Sentry/GlitchTip crash triage with deduplicated GlitchTip-to-Jira automation, and OpenBao (Vault-compatible) secrets management.", "tags": ["ops", "sec"]}
+        ]
+      },
+      {
+        "id": "code-on-the-go",
+        "title": "Code on the Go, an open-source Android IDE that runs on the phone",
+        "role": "Software Engineer",
+        "context": "App Dev for All (nonprofit), remote",
+        "period": "Mar 2025 – Oct 2026",
+        "highlights": [
+          {"text": "Built the IDE’s AI agent: a planner, an executor that drives the IDE’s own tools (files, dependencies, Gradle sync, build and run) and a critic that sends failed builds back with their logs.", "tags": ["llm", "kotlin"]},
+          {"text": "Added on-device inference with a Llama model loaded on demand from the app’s assets, alongside Google Gemini through its API.", "tags": ["llm"]},
+          {"text": "Moved the AI features into plugins and designed the plugin API’s contracts for agent tools, LLM inference, embeddings, prompt templates and quick builds.", "tags": ["llm", "kotlin"]},
+          {"text": "Worked on the module that turns a sketch of a screen into an Android layout: OCR clean-up, a UI grammar and widget attribute parsing.", "tags": ["kotlin"]},
+          {"text": "Fixed crashes, ANRs and threading bugs found on real phones, and adapted the editor and navigation to large screens, mouse and keyboard.", "tags": ["kotlin"]},
+          {"text": "Wrote the project’s article on the Gemini agent for the App Dev for All blog (March 2026).", "tags": []}
         ]
       },
       {

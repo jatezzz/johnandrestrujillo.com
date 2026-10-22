@@ -30,7 +30,9 @@ declare(strict_types=1);
 $root = dirname(__DIR__);
 require $root . '/src/bootstrap.php';
 
-const ALLOWED_HOSTS = ['github.com', 'www.linkedin.com', 'schema.org', 'www.sitemaps.org', 'www.w3.org'];
+const ALLOWED_HOSTS = ['appdevforall.org', 'github.com', 'www.linkedin.com', 'schema.org', 'www.sitemaps.org', 'www.w3.org'];
+// Linked pages the one-hop check reads. LinkedIn is linked but not read: it serves sign-in walls to robots.
+const FETCHED_HOSTS = ['appdevforall.org', 'github.com'];
 const DEFAULT_AUTHORS = ['34223334+jatezzz@users.noreply.github.com'];
 const ALLOWED_COMMITTERS = ['noreply@github.com'];
 
@@ -335,7 +337,7 @@ foreach ($pages as $path => $body) {
             $fail('unexpected external host ' . safe($host, $terms) . ' on ' . $path);
             continue;
         }
-        if ($host === 'github.com') {
+        if (in_array($host, FETCHED_HOSTS, true)) {
             $external[rtrim($url, '/.,')] = true;
         }
     }

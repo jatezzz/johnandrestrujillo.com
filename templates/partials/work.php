@@ -4,15 +4,15 @@
  * @var callable $e
  */
 $w = $c['work'];
-$case = $w['case'];
 $mobile = $w['mobile'];
 ?>
 <section class="section wrap" id="work" aria-labelledby="work-title">
   <h2 class="section__title" id="work-title"><?= $e($w['title']) ?></h2>
 
-  <article class="case" aria-labelledby="case-title">
+  <?php foreach ($w['cases'] as $case): ?>
+  <article class="case" id="case-<?= $e($case['id']) ?>" aria-labelledby="case-<?= $e($case['id']) ?>-title">
     <p class="case__kicker num"><?= $e($case['period']) ?></p>
-    <h3 class="case__title" id="case-title"><?= $e($case['title']) ?></h3>
+    <h3 class="case__title" id="case-<?= $e($case['id']) ?>-title"><?= $e($case['title']) ?></h3>
     <div class="case__intro">
       <p class="case__summary"><?= $e($case['summary']) ?></p>
       <p><?= $e($case['role']) ?></p>
@@ -56,7 +56,19 @@ $mobile = $w['mobile'];
         </dl>
       </div>
     </div>
+
+    <?php if (!empty($case['links'])): ?>
+    <div class="case__sources">
+      <h4 class="decisions__title"><?= $e($case['links_title']) ?></h4>
+      <ul class="case__links">
+        <?php foreach ($case['links'] as $link): ?>
+        <li><a href="<?= $e($link['url']) ?>"><?= $e($link['label']) ?></a></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+    <?php endif; ?>
   </article>
+  <?php endforeach; ?>
 
   <article class="case case--compact" aria-labelledby="mobile-title">
     <p class="case__kicker num"><?= $e($mobile['period']) ?></p>
