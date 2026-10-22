@@ -162,7 +162,7 @@
         "title": "Code on the Go: an AI agent inside a phone-based IDE",
         "text": "An Android IDE that runs on the phone. I built its AI agent: you ask in plain language, and it reads, edits, builds and fixes your project on the device.",
         "front": "Android screens in Kotlin: the agent chat, the plugin manager and sketch-to-layout",
-        "back": "The agent (planner, executor and critic), a Llama model running on the phone, and the plugin API",
+        "back": "An AI Core plugin that routes between local GGUF models (llama.cpp), Gemini and OpenAI, with MCP tools, vector search and speech-to-text; the agent’s planner, executor and critic",
         "media": [
           {
             "type": "youtube",
@@ -209,10 +209,11 @@
           "specs_head": ["Parameter", "Value", "Conditions"],
           "specs": [
             ["Contributor rank", "2nd of 56", "by commits"],
+            ["My merged pull requests", "288", "plugin architecture, AI, critical bugs, performance"],
             ["My commits", "420", "Mar 2025 – Oct 2026, default branch"],
             ["Agent and AI commits", "31", "agent, on-device model, plugin API"],
             ["Agent package", "17 of 23 commits", "before the move to plugins"],
-            ["Repository", "477 stars", "94 forks, GPL-3.0"]
+            ["Repository", "480 stars", "94 forks, GPL-3.0"]
           ],
           "decisions_title": "Design decisions",
           "decisions": [
@@ -351,16 +352,17 @@
       {
         "id": "code-on-the-go",
         "title": "Code on the Go, an open-source Android IDE that runs on the phone",
-        "role": "Software Engineer",
-        "context": "App Dev for All (nonprofit), remote",
+        "role": "Senior Android Developer",
+        "context": "App Dev for All (nonprofit), full-time, remote",
         "period": "Mar 2025 – Oct 2026",
         "highlights": [
           {"text": "Built the IDE’s AI agent: a planner, an executor that drives the IDE’s own tools (files, dependencies, Gradle sync, build and run) and a critic that sends failed builds back with their logs.", "tags": ["llm", "kotlin"]},
-          {"text": "Added on-device inference with a Llama model loaded on demand from the app’s assets, alongside Google Gemini through its API.", "tags": ["llm"]},
+          {"text": "Designed a modular AI Core plugin that routes between on-device GGUF models (llama.cpp), Google Gemini and OpenAI, with MCP tools, inline code suggestions, vector search and speech-to-text.", "tags": ["llm"]},
+          {"text": "Helped bring offline Llama inference into the agent, loaded on demand from the app’s assets, and fixed memory leaks on low-end phones.", "tags": ["llm", "kotlin"]},
           {"text": "Moved the AI features into plugins and designed the plugin API’s contracts for agent tools, LLM inference, embeddings, prompt templates and quick builds.", "tags": ["llm", "kotlin"]},
-          {"text": "Worked on the module that turns a sketch of a screen into an Android layout: OCR clean-up, a UI grammar and widget attribute parsing.", "tags": ["kotlin"]},
+          {"text": "Took over the on-device Sketch to UI module (YOLOv8) and shipped it as its own plugin: a hand-drawn screen becomes an Android layout, with OCR clean-up, a UI grammar and widget attribute parsing.", "tags": ["kotlin"]},
           {"text": "Fixed crashes, ANRs and threading bugs found on real phones, and adapted the editor and navigation to large screens, mouse and keyboard.", "tags": ["kotlin"]},
-          {"text": "Wrote the project’s article on the Gemini agent for the App Dev for All blog (March 2026).", "tags": []}
+          {"text": "Wrote the project’s article on the Gemini agent for the App Dev for All blog (March 2026) and the tablet wiki.", "tags": []}
         ]
       },
       {
@@ -407,7 +409,7 @@
         "title": "Client engagements for a software consultancy",
         "role": "Senior Native Mobile Developer",
         "context": "consultancy, remote",
-        "period": "Feb 2019 – Oct 2024",
+        "period": "Feb 2019 – Dec 2024",
         "engagements": [
           {
             "id": "health",

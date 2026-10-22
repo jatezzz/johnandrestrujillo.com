@@ -162,7 +162,7 @@
         "title": "Code on the Go: un agente de IA dentro de un IDE que corre en el teléfono",
         "text": "Un IDE de Android que corre en el teléfono. Construí su agente de IA: le pides algo en lenguaje natural y lee, edita, compila y corrige tu proyecto en el mismo dispositivo.",
         "front": "Pantallas de Android en Kotlin: el chat del agente, el gestor de plugins y el boceto a layout",
-        "back": "El agente (planificador, ejecutor y crítico), un modelo Llama que corre en el teléfono y la API de plugins",
+        "back": "Un plugin AI Core que enruta entre modelos GGUF locales (llama.cpp), Gemini y OpenAI, con herramientas MCP, búsqueda vectorial y voz a texto; el planificador, ejecutor y crítico del agente",
         "media": [
           {
             "type": "youtube",
@@ -209,10 +209,11 @@
           "specs_head": ["Parámetro", "Valor", "Condiciones"],
           "specs": [
             ["Puesto entre contribuyentes", "2.º de 56", "por commits"],
+            ["Mis pull requests aceptados", "288", "arquitectura de plugins, IA, errores críticos, rendimiento"],
             ["Mis commits", "420", "mar 2025 – oct 2026, rama principal"],
             ["Commits del agente y de IA", "31", "agente, modelo en el dispositivo, API de plugins"],
             ["Paquete del agente", "17 de 23 commits", "antes de pasar a plugins"],
-            ["Repositorio", "477 estrellas", "94 forks, GPL-3.0"]
+            ["Repositorio", "480 estrellas", "94 forks, GPL-3.0"]
           ],
           "decisions_title": "Decisiones de diseño",
           "decisions": [
@@ -351,16 +352,17 @@
       {
         "id": "code-on-the-go",
         "title": "Code on the Go, un IDE de Android de código abierto que corre en el teléfono",
-        "role": "Ingeniero de software",
-        "context": "App Dev for All (sin fines de lucro), remoto",
+        "role": "Desarrollador Android sénior",
+        "context": "App Dev for All (sin fines de lucro), tiempo completo, remoto",
         "period": "mar 2025 – oct 2026",
         "highlights": [
           {"text": "Construí el agente de IA del IDE: un planificador, un ejecutor que maneja las herramientas del propio IDE (archivos, dependencias, sincronización de Gradle, compilar y ejecutar) y un crítico que devuelve las compilaciones fallidas con su log.", "tags": ["llm", "kotlin"]},
-          {"text": "Agregué inferencia en el dispositivo con un modelo Llama que se carga a pedido desde los recursos de la app, junto a Google Gemini por su API.", "tags": ["llm"]},
+          {"text": "Diseñé un plugin AI Core modular que enruta entre modelos GGUF en el dispositivo (llama.cpp), Google Gemini y OpenAI, con herramientas MCP, sugerencias de código en línea, búsqueda vectorial y voz a texto.", "tags": ["llm"]},
+          {"text": "Ayudé a llevar la inferencia offline con Llama al agente, cargada a pedido desde los recursos de la app, y corregí fugas de memoria en teléfonos de gama baja.", "tags": ["llm", "kotlin"]},
           {"text": "Pasé las funciones de IA a plugins y diseñé los contratos de la API de plugins para herramientas del agente, inferencia de LLM, embeddings, plantillas de prompts y compilaciones rápidas.", "tags": ["llm", "kotlin"]},
-          {"text": "Trabajé en el módulo que convierte el boceto de una pantalla en un layout de Android: limpieza del OCR, una gramática de interfaz y lectura de atributos de widgets.", "tags": ["kotlin"]},
+          {"text": "Tomé el módulo Sketch to UI en el dispositivo (YOLOv8) y lo entregué como plugin propio: una pantalla dibujada a mano se vuelve un layout de Android, con limpieza del OCR, una gramática de interfaz y lectura de atributos de widgets.", "tags": ["kotlin"]},
           {"text": "Corregí cierres inesperados, ANR y errores de hilos encontrados en teléfonos reales, y adapté el editor y la navegación a pantallas grandes, mouse y teclado.", "tags": ["kotlin"]},
-          {"text": "Escribí el artículo del proyecto sobre el agente Gemini para el blog de App Dev for All (marzo de 2026).", "tags": []}
+          {"text": "Escribí el artículo del proyecto sobre el agente Gemini para el blog de App Dev for All (marzo de 2026) y la wiki para tablets.", "tags": []}
         ]
       },
       {
@@ -407,7 +409,7 @@
         "title": "Proyectos para clientes de una consultora de software",
         "role": "Desarrollador móvil nativo sénior",
         "context": "consultora, remoto",
-        "period": "feb 2019 – oct 2024",
+        "period": "feb 2019 – dic 2024",
         "engagements": [
           {
             "id": "health",
