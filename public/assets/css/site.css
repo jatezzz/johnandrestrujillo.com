@@ -485,6 +485,31 @@ svg {
   font-size: 1.125rem;
 }
 
+.hero__proof {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 54ch;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--graphite);
+}
+
+.hero__proof li {
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.hero__proof li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--accent);
+}
+
 .hero__actions {
   display: flex;
   flex-wrap: wrap;

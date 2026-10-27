@@ -37,6 +37,14 @@
   "hero": {
     "title_lines": ["Mobile engineer since {2015}.", "These days I also build AI systems."],
     "lede": "I’m a senior mobile engineer in Quito, Ecuador, working remotely. I build the apps people use, and the backend and AI that run behind them.",
+    "proof": {
+      "label": "In short",
+      "items": [
+        "10+ years shipping software, 7+ on iOS in production",
+        "Long engagements: almost 6 years with one firm, 3 with another",
+        "My AI platform has been in daily client use since June 2025"
+      ]
+    },
     "cta_contact": "Write to me"
   },
   "pinout": {

@@ -37,6 +37,14 @@
   "hero": {
     "title_lines": ["Ingeniero móvil desde {2015}.", "Hoy también construyo sistemas de IA."],
     "lede": "Soy ingeniero móvil sénior en Quito, Ecuador, y trabajo de forma remota. Construyo las apps que la gente usa, y el backend y la IA que corren detrás.",
+    "proof": {
+      "label": "En resumen",
+      "items": [
+        "Más de 10 años entregando software, más de 7 en iOS en producción",
+        "Relaciones largas: casi 6 años con una firma y 3 con otra",
+        "Mi plataforma de IA la usan clientes a diario desde junio de 2025"
+      ]
+    },
     "cta_contact": "Escríbeme"
   },
   "pinout": {

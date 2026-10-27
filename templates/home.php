@@ -23,6 +23,11 @@ $hero = $c['hero'];
       <?php endforeach; ?>
     </h1>
     <p class="hero__lede"><?= $e($hero['lede']) ?></p>
+    <ul class="hero__proof" aria-label="<?= $e($hero['proof']['label']) ?>">
+      <?php foreach ($hero['proof']['items'] as $item): ?>
+      <li><?= $e($item) ?></li>
+      <?php endforeach; ?>
+    </ul>
     <p class="hero__actions">
       <a class="button button--primary" href="#contact"><?= $e($hero['cta_contact']) ?></a>
     </p>
