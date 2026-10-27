@@ -209,7 +209,7 @@ final class App
         $lines[] = '';
         $lines[] = "- [Portfolio, English]({$base}/)";
         $lines[] = "- [Portafolio, español]({$base}/es/)";
-        foreach (array_filter([$this->config['github_url'], $this->config['linkedin_url']]) as $url) {
+        foreach (array_filter([$this->config['github_url'], $this->config['linkedin_url'], $this->config['instagram_url'], $this->config['tiktok_url']]) as $url) {
             $lines[] = "- <{$url}>";
         }
         $lines[] = "- Contact: {$base}/#contact";
@@ -281,6 +281,8 @@ final class App
             'site' => [
                 'github_url' => $this->config['github_url'],
                 'linkedin_url' => $this->config['linkedin_url'],
+                'instagram_url' => $this->config['instagram_url'],
+                'tiktok_url' => $this->config['tiktok_url'],
                 'source_url' => $this->config['source_url'],
                 'staging' => $this->config['env'] !== 'production',
                 'revision' => $this->config['revision'],
@@ -321,7 +323,7 @@ final class App
                 'homeLocation' => ['@type' => 'Place', 'name' => $c['person']['location']],
                 'knowsLanguage' => ['en', 'es'],
                 'knowsAbout' => $c['person']['knows_about'],
-                'sameAs' => array_values(array_filter(array_merge([$this->config['github_url'], $this->config['linkedin_url']], $c['person']['profiles']))),
+                'sameAs' => array_values(array_filter(array_merge([$this->config['github_url'], $this->config['linkedin_url'], $this->config['instagram_url'], $this->config['tiktok_url']], $c['person']['profiles']))),
                 'subjectOf' => array_map(static fn (array $a): array => [
                     '@type' => 'Article',
                     'headline' => $a['headline'],

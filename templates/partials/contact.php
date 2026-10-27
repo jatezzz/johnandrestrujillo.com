@@ -24,9 +24,15 @@ $invalid = static function (string $field) use ($fieldErrors): string {
       <p class="muted"><?= $e($k['privacy']) ?></p>
       <h3 class="side-heading"><?= $e($k['elsewhere']) ?></h3>
       <ul class="plain-list">
-        <li><a href="<?= $e($site['github_url']) ?>">GitHub</a></li>
+        <li><a href="<?= $e($site['github_url']) ?>" rel="me">GitHub</a></li>
         <?php if ($site['linkedin_url'] !== ''): ?>
-        <li><a href="<?= $e($site['linkedin_url']) ?>">LinkedIn</a></li>
+        <li><a href="<?= $e($site['linkedin_url']) ?>" rel="me">LinkedIn</a></li>
+        <?php endif; ?>
+        <?php if ($site['instagram_url'] !== ''): ?>
+        <li><a href="<?= $e($site['instagram_url']) ?>" rel="me">Instagram</a></li>
+        <?php endif; ?>
+        <?php if ($site['tiktok_url'] !== ''): ?>
+        <li><a href="<?= $e($site['tiktok_url']) ?>" rel="me">TikTok</a></li>
         <?php endif; ?>
       </ul>
     </div>

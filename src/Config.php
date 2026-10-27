@@ -17,6 +17,8 @@ final class Config
         'var_dir' => '',
         'github_url' => 'https://github.com/jatezzz',
         'linkedin_url' => 'https://www.linkedin.com/in/john-andres-trujillo/',
+        'instagram_url' => 'https://www.instagram.com/johnandrestrujillo/',
+        'tiktok_url' => 'https://www.tiktok.com/@johnandrestrujillo',
         'source_url' => '',
         'revision' => '',
         'metrics_mode' => 'off',        // off | log | posthog
