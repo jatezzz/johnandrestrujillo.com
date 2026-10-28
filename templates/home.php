@@ -35,6 +35,7 @@ $hero = $c['hero'];
       <a class="button" href="<?= $e($site['linkedin_url']) ?>" rel="me" data-magnetic data-cta="linkedin" data-loc="hero">LinkedIn</a>
       <?php endif; ?>
       <a class="button" href="<?= $e($site['github_url']) ?>" rel="me" data-magnetic data-cta="github" data-loc="hero">GitHub</a>
+      <a class="button" href="<?= $e($asset('cv/john-andres-trujillo-cv.pdf')) ?>" type="application/pdf" data-magnetic data-cta="cv" data-loc="hero"><?= $e($hero['cta_cv']) ?></a>
     </p>
     <table class="spec-sheet">
       <caption><?= $e($hero['facts']['label']) ?></caption>

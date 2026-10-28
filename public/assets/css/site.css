@@ -1752,19 +1752,15 @@ svg {
   margin: 1.5rem 0 0;
 }
 
-/* Phones: "Write to me" across, the two profiles side by side under it. */
+/* Phones: "Write to me" across, the profiles and the CV sharing the rows under it. */
 @media (max-width: 40rem) {
-  .hero__actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
   .hero__actions .button {
+    flex: 1 1 auto;
     justify-content: center;
   }
 
   .hero__actions .button--primary {
-    grid-column: 1 / -1;
+    flex-basis: 100%;
   }
 
   .spec-sheet th {
