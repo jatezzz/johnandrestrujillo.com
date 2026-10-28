@@ -48,7 +48,18 @@
         "My AI platform has been in daily client use since June 2025"
       ]
     },
-    "cta_contact": "Write to me"
+    "cta_contact": "Write to me",
+    "facts": {
+      "label": "Spec sheet",
+      "rows": [
+        ["Now", "Senior native mobile developer at a software development firm since Oct 2024, and building my own AI meeting-intelligence platform"],
+        ["Since", "2015, with 7+ years on iOS in production"],
+        ["Platforms", "iOS (Swift, SwiftUI), Android (Kotlin, Jetpack Compose), Flutter, React Native"],
+        ["Based in", "Quito, Ecuador, working remotely"],
+        ["English", "Professional working proficiency (B2+)"],
+        ["Education", "Master of Engineering in Cybersecurity; Engineer’s degree in Electronics, Automation and Control"]
+      ]
+    }
   },
   "pinout": {
     "title": "Capabilities",
@@ -76,10 +87,14 @@
   ],
   "work": {
     "title": "Work",
-    "intro": "Four projects: what people see on screen, and what runs behind it.",
+    "intro": "Ten years of native apps, and two projects up close: what people see on screen and what runs behind it.",
     "front_label": "Frontend",
     "back_label": "Backend",
     "details_label": "How it’s built",
+    "case_link": "Read the case study",
+    "case_path": "/work/",
+    "case_back": "Back to the portfolio",
+    "case_did": "What I did",
     "links_label": "Code and sources",
     "projects": [
       {
@@ -254,71 +269,6 @@
           {"label": "Code on the Go on GitHub", "url": "https://github.com/appdevforall/CodeOnTheGo"},
           {"label": "My commits", "url": "https://github.com/appdevforall/CodeOnTheGo/commits?author=jatezzz"}
         ]
-      },
-      {
-        "id": "dimension-keeper",
-        "kicker": "2024 · personal project · open source",
-        "title": "Dimension Keeper: a mobile app and its serverless API",
-        "text": "A character catalog with search, favorites and editing. I built both ends: the Flutter app and the API it calls.",
-        "front": "Flutter, with Provider for state and integration tests",
-        "back": "API Gateway, six Lambda functions in JavaScript, DynamoDB and IAM roles, deployed with CloudFormation",
-        "media": [
-          {
-            "type": "video",
-            "src": "img/work/dk-app.mp4",
-            "poster": "img/work/dk-app.webp",
-            "width": 296,
-            "height": 640,
-            "frame": "phone",
-            "alt": "The Flutter app: browsing characters, opening one and editing it.",
-            "caption": "The app in use"
-          }
-        ],
-        "details": {
-          "flow_title": "How a request flows",
-          "flow": [
-            {"name": "App", "detail": "Flutter screens call the REST API"},
-            {"name": "API Gateway", "detail": "Routes for list, get, add, update and delete"},
-            {"name": "Lambda", "detail": "Six JavaScript functions, one per route"},
-            {"name": "DynamoDB", "detail": "Custom characters, with IAM roles per function"}
-          ]
-        },
-        "links": [
-          {"label": "The Flutter app on GitHub", "url": "https://github.com/jatezzz/dimension-keeper-mobile"},
-          {"label": "The API on GitHub", "url": "https://github.com/jatezzz/dimsension-keeper-backend"}
-        ]
-      },
-      {
-        "id": "allcatpics",
-        "kicker": "2024 · personal project · open source",
-        "title": "AllCatPics: from a paper sketch to a native app",
-        "text": "I drew the screens by hand first, then built the app in native Swift. I rebuilt the same app in React Native to compare both approaches.",
-        "front": "Native Swift for iOS 15 and later, and the same app in React Native with TypeScript",
-        "media": [
-          {
-            "type": "image",
-            "src": "img/work/cats-sketch.webp",
-            "width": 560,
-            "height": 778,
-            "frame": "plain",
-            "alt": "Hand-drawn wireframes of the cat photo app on grid paper.",
-            "caption": "The paper sketch"
-          },
-          {
-            "type": "image",
-            "src": "img/work/cats-app.webp",
-            "width": 432,
-            "height": 935,
-            "frame": "phone",
-            "alt": "The finished iOS app: a grid of cat photos with names.",
-            "caption": "The finished app"
-          }
-        ],
-        "details": {},
-        "links": [
-          {"label": "The Swift app on GitHub", "url": "https://github.com/jatezzz/allcatpics"},
-          {"label": "The React Native version on GitHub", "url": "https://github.com/jatezzz/all-cat-pics-rn"}
-        ]
       }
     ],
     "mobile": {
@@ -338,8 +288,6 @@
         "role": "Senior Software Engineer",
         "context": "independent, remote",
         "period": "Oct 2024 – present",
-        "lead": 3,
-        "lead": 3,
         "highlights": [
           {"text": "Designed the architecture and built the platform end to end with a small team and Claude Code agents: backend, web app, Chrome extension, iOS companion app and infrastructure.", "tags": []},
           {"text": "Built chunked, checkpointed Google Gemini transcription with speaker detection, and extraction of decisions, actions and risks with source links behind an evidence gate that prefers under-claiming.", "tags": ["llm", "python"]},
@@ -382,7 +330,6 @@
         "role": "Senior Native Mobile Developer",
         "context": "software development firm, remote",
         "period": "Oct 2024 – present",
-        "lead": 3,
         "highlights": [
           {"text": "Migrated legacy Android XML layouts to Jetpack Compose with ViewModel/MVVM patterns for maintainable state and UI behavior.", "tags": ["kotlin"]},
           {"text": "Built and maintained native and cross-platform features across iOS and Android: Swift native modules, Kotlin, Flutter, and React Native features with native bridges.", "tags": ["swift", "kotlin", "flutter"]},
@@ -498,7 +445,7 @@
     "stars_many": "{n} stars",
     "repos": [
       {"name": "flashcard", "url": "https://github.com/jatezzz/flashcard", "lang": "Kotlin", "stars": 6, "tags": ["kotlin"], "desc": "Kotlin Multiplatform flashcard app with a vertical, short-video-style feed."},
-      {"name": "dimsension-keeper-backend", "url": "https://github.com/jatezzz/dimsension-keeper-backend", "lang": "JavaScript", "stars": 0, "tags": ["iac"], "desc": "Serverless API on AWS Lambda, API Gateway and DynamoDB, deployed with CloudFormation."},
+      {"name": "dimension-keeper-backend", "url": "https://github.com/jatezzz/dimension-keeper-backend", "lang": "JavaScript", "stars": 0, "tags": ["iac"], "desc": "Serverless API on AWS Lambda, API Gateway and DynamoDB, deployed with CloudFormation."},
       {"name": "dimension-keeper-mobile", "url": "https://github.com/jatezzz/dimension-keeper-mobile", "lang": "Dart", "stars": 0, "tags": ["flutter"], "desc": "Flutter client for that API: a character catalog with search and favorites."},
       {"name": "allcatpics", "url": "https://github.com/jatezzz/allcatpics", "lang": "Swift", "stars": 0, "tags": ["swift"], "desc": "Cat-photo browser in native Swift; the same app also exists in React Native."},
       {"name": "all-cat-pics-rn", "url": "https://github.com/jatezzz/all-cat-pics-rn", "lang": "TypeScript", "stars": 0, "tags": ["flutter"], "desc": "The same cat-photo app in React Native and TypeScript, for comparison."},

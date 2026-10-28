@@ -4,6 +4,7 @@
  * @var \Portfolio\View $view
  * @var callable $e
  * @var callable $m
+ * @var array<string, mixed> $site
  */
 $vars = get_defined_vars();
 $hero = $c['hero'];
@@ -29,8 +30,20 @@ $hero = $c['hero'];
       <?php endforeach; ?>
     </ul>
     <p class="hero__actions">
-      <a class="button button--primary" href="#contact" data-magnetic><?= $e($hero['cta_contact']) ?></a>
+      <a class="button button--primary" href="#contact" data-magnetic data-cta="write" data-loc="hero"><?= $e($hero['cta_contact']) ?></a>
+      <?php if ($site['linkedin_url'] !== ''): ?>
+      <a class="button" href="<?= $e($site['linkedin_url']) ?>" rel="me" data-magnetic data-cta="linkedin" data-loc="hero">LinkedIn</a>
+      <?php endif; ?>
+      <a class="button" href="<?= $e($site['github_url']) ?>" rel="me" data-magnetic data-cta="github" data-loc="hero">GitHub</a>
     </p>
+    <table class="spec-sheet">
+      <caption><?= $e($hero['facts']['label']) ?></caption>
+      <tbody>
+        <?php foreach ($hero['facts']['rows'] as [$name, $value]): ?>
+        <tr><th scope="row"><?= $e($name) ?></th><td><?= $e($value) ?></td></tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
   </div>
   <?= $view->partial('pinout', $vars) ?>
 </section>
@@ -41,7 +54,7 @@ $hero = $c['hero'];
 <?= $view->partial('education', $vars) ?>
 <?= $view->partial('contact', $vars) ?>
 <div class="dock" data-dock hidden>
-  <a class="button button--primary dock__cta" href="#contact"><?= $e($hero['cta_contact']) ?></a>
+  <a class="button button--primary dock__cta" href="#contact" data-cta="write" data-loc="bottom_bar"><?= $e($hero['cta_contact']) ?></a>
   <button class="button dock__share" type="button" data-share data-copied="<?= $e($c['ui']['share_copied']) ?>" hidden>
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v7.5h14V12"/></svg>
     <span data-share-label><?= $e($c['ui']['share']) ?></span>

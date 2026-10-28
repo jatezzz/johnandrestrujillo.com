@@ -139,6 +139,24 @@ test('home pages render in each language with alternates', function (): void {
     }
 });
 
+test('case pages render in each language with their own alternates', function (): void {
+    foreach (['/work/ai-platform/' => ['en', '/es/trabajo/ai-platform/'], '/es/trabajo/code-on-the-go/' => ['es', '/work/code-on-the-go/']] as $path => [$lang, $other]) {
+        $r = app()->handle('GET', $path);
+        expect($r->status === 200, "{$path}: status {$r->status}");
+        expect(str_contains($r->body, '<html lang="' . $lang . '">'), "{$path}: wrong lang attribute");
+        expect(str_contains($r->body, 'rel="canonical" href="https://example.test' . $path . '"'), "{$path}: wrong canonical");
+        expect(str_contains($r->body, 'href="https://example.test' . $other . '"'), "{$path}: missing the other language's alternate");
+        expect(str_contains($r->body, 'class="lang-switch" data-magnetic href="' . $other . '"'), "{$path}: language switch should open the same case");
+        expect(str_contains($r->body, '<meta property="og:type" content="article">'), "{$path}: og:type should be article");
+    }
+    $r = app()->handle('GET', '/work/ai-platform');
+    expect($r->status === 301 && $r->header('Location') === '/work/ai-platform/', 'a case without the trailing slash redirects');
+    expect(app()->handle('GET', '/work/unknown/')->status === 404, 'an unknown case is a 404');
+    expect(app()->handle('POST', '/work/ai-platform/')->status === 405, 'POST to a case is 405');
+    $home = app()->handle('GET', '/')->body;
+    expect(str_contains($home, 'href="/work/ai-platform/"'), 'the home page links to each case');
+});
+
 test('redirects, 404s and method checks', function (): void {
     $r = app()->handle('GET', '/es');
     expect($r->status === 301 && $r->header('Location') === '/es/', '/es should redirect to /es/');
@@ -174,13 +192,14 @@ test('robots.txt and sitemap.xml', function (): void {
     expect(str_contains($closed, 'Disallow: /'), 'staging robots.txt disallows everything');
     $sitemap = app()->handle('GET', '/sitemap.xml');
     expect(simplexml_load_string($sitemap->body) !== false, 'sitemap is valid XML');
-    expect(substr_count($sitemap->body, '<loc>') === 2, 'sitemap lists both languages');
+    expect(substr_count($sitemap->body, '<loc>') === 6, 'sitemap lists the home and the two case pages in both languages');
+    expect(str_contains($sitemap->body, '<loc>https://example.test/es/trabajo/code-on-the-go/</loc>'), 'sitemap lists the Spanish case pages');
 });
 
 // ---------- HTML hygiene ----------
 
 test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', function (): void {
-    foreach (['/', '/es/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/'] as $path) {
         $html = app()->handle('GET', $path)->body;
         $doc = dom($html);
         $xpath = new DOMXPath($doc);
@@ -219,14 +238,14 @@ test('llms.txt summarizes the profile for AI assistants', function (): void {
 });
 
 test('every asset a page references exists', function (): void {
-    foreach (['/', '/es/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/work/code-on-the-go/', '/es/trabajo/ai-platform/'] as $path) {
         $html = app()->handle('GET', $path)->body;
         expect(!str_contains($html, '?v=missing'), "{$path}: references an asset that is not in public/assets");
     }
 });
 
 test('HTML: heading levels never skip', function (): void {
-    foreach (['/', '/es/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/'] as $path) {
         $doc = dom(app()->handle('GET', $path)->body);
         $previous = 0;
         foreach ((new DOMXPath($doc))->query('//h1|//h2|//h3|//h4|//h5|//h6') as $heading) {

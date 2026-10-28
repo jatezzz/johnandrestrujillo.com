@@ -1,7 +1,8 @@
 <?php
 /**
- * Skill groups, then one evidence list per pin. The evidence lists are the no-JS
- * target of each pin and the source site.js copies into the panel beside the chip.
+ * Skill groups, then one evidence list per pin, folded: the same lines are in Experience.
+ * The evidence lists are the no-JS target of each pin (a link opens its fold) and the
+ * source site.js copies into the panel beside the chip.
  *
  * @var array<string, mixed> $c
  * @var array<string, list<array{title: string, period: string, lines: list<string>}>> $evidence
@@ -23,7 +24,8 @@ $s = $c['skills'];
     <?php endforeach; ?>
   </dl>
 
-  <h3 class="evidence-index__title"><?= $e($s['evidence_title']) ?></h3>
+  <details class="more evidence-index__more" id="capability-index" data-evidence-index>
+  <summary class="evidence-index__title"><?= $e($s['evidence_title']) ?></summary>
   <div class="evidence-index">
     <?php foreach ($c['pins'] as $pin): ?>
     <details class="evidence" id="pin-<?= $e($pin['id']) ?>">
@@ -45,4 +47,5 @@ $s = $c['skills'];
     </details>
     <?php endforeach; ?>
   </div>
+  </details>
 </section>

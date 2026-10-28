@@ -11,6 +11,11 @@
  * @var string $og_image
  * @var bool $touch_icon
  * @var string $body
+ * @var string $home where the section links point: '' on the home page, else '/' or '/es/'
+ * @var string $switch_url the same page in the other language
+ * @var string $page_title
+ * @var string $page_description
+ * @var string $og_type
  */
 $other = $c['ui']['other_lang'];
 ?><!doctype html>
@@ -18,8 +23,8 @@ $other = $c['ui']['other_lang'];
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?= $e($c['meta']['title']) ?></title>
-<meta name="description" content="<?= $e($c['meta']['description']) ?>">
+<title><?= $e($page_title) ?></title>
+<meta name="description" content="<?= $e($page_description) ?>">
 <link rel="canonical" href="<?= $e($canonical) ?>">
 <link rel="alternate" hreflang="en" href="<?= $e($urls['en']) ?>">
 <link rel="alternate" hreflang="es" href="<?= $e($urls['es']) ?>">
@@ -27,9 +32,9 @@ $other = $c['ui']['other_lang'];
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F5F7F6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A2018" media="(prefers-color-scheme: dark)">
-<meta property="og:type" content="profile">
-<meta property="og:title" content="<?= $e($c['meta']['title']) ?>">
-<meta property="og:description" content="<?= $e($c['meta']['description']) ?>">
+<meta property="og:type" content="<?= $e($og_type) ?>">
+<meta property="og:title" content="<?= $e($page_title) ?>">
+<meta property="og:description" content="<?= $e($page_description) ?>">
 <meta property="og:url" content="<?= $e($canonical) ?>">
 <meta property="og:locale" content="<?= $e($c['locale']) ?>">
 <?php if ($og_image !== ''): ?>
@@ -67,12 +72,12 @@ $other = $c['ui']['other_lang'];
     <nav class="masthead__nav" aria-label="<?= $e($c['ui']['nav_label']) ?>">
       <ul>
         <?php foreach ($c['ui']['nav'] as $item): ?>
-        <li><a href="#<?= $e($item['id']) ?>"><?= $e($item['label']) ?></a></li>
+        <li><a href="<?= $e($home) ?>#<?= $e($item['id']) ?>"><?= $e($item['label']) ?></a></li>
         <?php endforeach; ?>
       </ul>
     </nav>
     <div class="masthead__tools">
-      <a class="lang-switch" data-magnetic href="<?= $e($other['url']) ?>" hreflang="<?= $e($other['code']) ?>" lang="<?= $e($other['code']) ?>"><?= $e($other['label']) ?></a>
+      <a class="lang-switch" data-magnetic href="<?= $e($switch_url) ?>" hreflang="<?= $e($other['code']) ?>" lang="<?= $e($other['code']) ?>"><?= $e($other['label']) ?></a>
       <button class="theme-toggle" type="button" data-theme-toggle data-magnetic aria-pressed="false" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></svg>
         <span class="sr-only"><?= $e($c['ui']['theme']) ?></span>

@@ -32,10 +32,11 @@
       // no referrer
     }
     const width = window.innerWidth;
+    const viewport = width < 640 ? 'phone' : width < 1024 ? 'tablet' : 'desktop';
     send('$pageview', {
       lang: root.lang,
       theme: root.getAttribute('data-theme') || 'system',
-      viewport: width < 640 ? 'phone' : width < 1024 ? 'tablet' : 'desktop',
+      viewport,
       $referring_domain: referrer,
       status: document.body.dataset.status || '200',
     });
@@ -77,6 +78,54 @@
     };
     window.addEventListener('error', (e) => reportError('Error', e.message, e.filename, e.lineno));
     window.addEventListener('unhandledrejection', (e) => reportError('UnhandledRejection', e.reason && e.reason.message ? e.reason.message : e.reason));
+
+    // How far down people read: the deepest point, in screens (comparable when the page length changes).
+    let deepest = 0;
+    window.addEventListener('scroll', () => { deepest = Math.max(deepest, window.scrollY + window.innerHeight); }, { passive: true });
+    let depthSent = false;
+    const sendDepth = () => {
+      if (depthSent) return;
+      depthSent = true;
+      const seen = Math.max(deepest, window.innerHeight);
+      send('scroll_depth', {
+        max_pct: Math.min(100, Math.round((seen / document.documentElement.scrollHeight) * 100)),
+        max_screens: Number((seen / window.innerHeight).toFixed(1)),
+        viewport,
+      });
+    };
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') sendDepth(); });
+    window.addEventListener('pagehide', sendDepth);
+
+    // Which sections were on screen: once each, when the section crosses the line 40% down the viewport.
+    const sections = document.querySelectorAll('main > section[id], main > .hero');
+    if (sections.length && 'IntersectionObserver' in window) {
+      const reached = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          reached.unobserve(entry.target);
+          send('section_viewed', { section: entry.target.id || 'hero', viewport });
+        });
+      }, { rootMargin: '-40% 0px -59% 0px' });
+      sections.forEach((section) => reached.observe(section));
+    }
+
+    // Calls to action, by what they are and where they sit (hero, bottom bar, project card, case page).
+    document.addEventListener('click', (event) => {
+      const cta = event.target.closest ? event.target.closest('[data-cta]') : null;
+      if (cta) send('cta_click', { cta: cta.dataset.cta, loc: cta.dataset.loc || '', viewport });
+    });
+
+    // The contact form, first touch (the server counts the messages sent).
+    const form = document.querySelector('form[action="/contact"]');
+    if (form) form.addEventListener('focusin', () => send('contact_started', { viewport }), { once: true });
+
+    // Which folded details people open.
+    document.addEventListener('toggle', (event) => {
+      const details = event.target;
+      if (!(details instanceof HTMLDetailsElement) || details.dataset.printing) return;
+      const owner = details.id ? details : details.closest('[id]');
+      send('disclosure_toggled', { id: owner ? owner.id : 'page', state: details.open ? 'open' : 'closed' });
+    }, true);
 
     // Which external links people follow (host and path only).
     document.addEventListener('click', (event) => {
@@ -353,5 +402,29 @@
       }, { root: gallery, threshold: 0.6 });
       shots.forEach((shot) => watcher.observe(shot));
     }
+  });
+
+  // ---- Folded details: open the ones a link points into, and print everything ----
+  const unfold = () => {
+    const target = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    for (let node = target; node; node = node.parentElement) {
+      if (node instanceof HTMLDetailsElement) node.open = true;
+    }
+  };
+  unfold();
+  window.addEventListener('hashchange', unfold);
+  const folded = [];
+  window.addEventListener('beforeprint', () => {
+    document.querySelectorAll('details:not([open])').forEach((details) => {
+      details.dataset.printing = 'true';
+      details.open = true;
+      folded.push(details);
+    });
+  });
+  window.addEventListener('afterprint', () => {
+    const restored = folded.splice(0);
+    restored.forEach((details) => { details.open = false; });
+    // the toggle events are queued; drop the marker only after they have run
+    setTimeout(() => restored.forEach((details) => { delete details.dataset.printing; }), 0);
   });
 })();

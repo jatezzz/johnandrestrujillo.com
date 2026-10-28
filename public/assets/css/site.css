@@ -869,9 +869,9 @@ svg {
 }
 
 .case--compact {
-  margin-top: 3rem;
-  padding-top: 2.5rem;
-  border-top: 1px dashed var(--rule);
+  margin-bottom: 0.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px dashed var(--rule);
 }
 
 .case--compact .case__summary {
@@ -1381,10 +1381,17 @@ svg {
   margin: 0;
 }
 
+.evidence-index__more {
+  margin-top: 3.25rem;
+}
+
 .evidence-index__title {
-  margin: 3.25rem 0 1rem;
   font-size: 1.2rem;
   font-weight: 800;
+}
+
+.evidence-index__more[open] > .evidence-index {
+  margin-top: 1rem;
 }
 
 .evidence-index {
@@ -1696,6 +1703,131 @@ svg {
 
 .colophon p {
   margin: 0;
+}
+
+/* ---------- Spec sheet (hero) and case pages ---------- */
+
+/* The datasheet's "key specifications" table: what a recruiter checks first, in six rows. */
+.spec-sheet {
+  width: 100%;
+  margin-top: 2.25rem;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.spec-sheet caption {
+  margin-bottom: 0.5rem;
+  color: var(--graphite);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.spec-sheet th,
+.spec-sheet td {
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.spec-sheet tr:last-child th,
+.spec-sheet tr:last-child td {
+  border-bottom: 1px solid var(--rule);
+}
+
+.spec-sheet th {
+  width: 6.5rem;
+  padding-right: 1rem;
+  color: var(--graphite);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.project__case {
+  margin: 1.5rem 0 0;
+}
+
+/* Phones: "Write to me" across, the two profiles side by side under it. */
+@media (max-width: 40rem) {
+  .hero__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero__actions .button {
+    justify-content: center;
+  }
+
+  .hero__actions .button--primary {
+    grid-column: 1 / -1;
+  }
+
+  .spec-sheet th {
+    width: 5.5rem;
+  }
+}
+
+.case-study {
+  padding-block: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(3rem, 2rem + 4vw, 5.5rem);
+}
+
+.case-study__back {
+  margin: 0 0 1.75rem;
+  font-size: 0.95rem;
+}
+
+.case-study__head {
+  max-width: 52rem;
+  margin-bottom: 2rem;
+}
+
+.case-study__title {
+  margin: 0.4rem 0 1rem;
+  font-size: var(--step-3);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.case-study__lede {
+  margin: 0;
+  font-size: var(--step-1);
+}
+
+.case-study > .stack,
+.case-study > .project__note {
+  max-width: 52rem;
+}
+
+.case-study > .stack {
+  margin-top: 2rem;
+}
+
+.case-study__section {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.case-study__section > .highlights {
+  max-width: 52rem;
+}
+
+.case-study > .project__links {
+  margin-top: 2.5rem;
+}
+
+.case-study__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 3rem 0 0;
 }
 
 /* ---------- Motion (motion.js and the browser's own scroll and view timelines) ----------

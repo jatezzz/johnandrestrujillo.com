@@ -20,14 +20,14 @@ $showAll = $c['ui']['show_all'];
         <h3 class="role__title"><?= $e($item['title']) ?></h3>
         <p class="role__meta"><?= $e($item['role']) ?>, <?= $e($item['context']) ?></p>
         <?php if (!empty($item['highlights'])): ?>
-        <?= $view->partial('highlights', ['items' => $item['highlights'], 'lead' => (int) ($item['lead'] ?? 0), 'showAll' => $showAll]) ?>
+        <?= $view->partial('highlights', ['items' => $item['highlights'], 'lead' => (int) ($item['lead'] ?? 1), 'showAll' => $showAll]) ?>
         <?php endif; ?>
         <?php if (!empty($item['engagements'])): ?>
         <ol class="engagements">
           <?php foreach ($item['engagements'] as $engagement): ?>
           <li class="engagement">
             <h4 class="engagement__title"><?= $e($engagement['title']) ?> <span class="engagement__period num"><?= $e($engagement['period']) ?></span></h4>
-            <?= $view->partial('highlights', ['items' => $engagement['highlights'], 'lead' => 0, 'showAll' => $showAll]) ?>
+            <?= $view->partial('highlights', ['items' => $engagement['highlights'], 'lead' => -1, 'showAll' => $showAll]) ?>
           </li>
           <?php endforeach; ?>
         </ol>

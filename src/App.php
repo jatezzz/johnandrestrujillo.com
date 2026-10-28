@@ -60,7 +60,7 @@ final class App
                 '/llms.txt' => $this->llms(),
                 '/healthz' => Response::text("ok\n")->withHeader('Cache-Control', 'no-store'),
                 '/og/en', '/og/es' => $this->card(substr($path, 4), $path),
-                default => $this->notFound($path),
+                default => $this->study($method, $path) ?? $this->notFound($path),
             };
         } catch (\Throwable $error) {
             error_log(sprintf('portfolio: %s: %s at %s:%d', $error::class, $error->getMessage(), $error->getFile(), $error->getLine()));
@@ -147,6 +147,62 @@ final class App
             ->withHeader('Cache-Control', 'no-store');
     }
 
+    /**
+     * A project's case page: /work/<id>/ in English and /es/trabajo/<id>/ in Spanish, for each
+     * project in Work. Null when the path is not one, so the caller answers 404.
+     */
+    private function study(string $method, string $path): ?Response
+    {
+        if (preg_match('#^/(work|es/trabajo)/([a-z0-9-]+)(/?)$#', $path, $m) !== 1) {
+            return null;
+        }
+        $lang = $m[1] === 'work' ? 'en' : 'es';
+        $c = Content::load($this->root, $lang);
+        $project = null;
+        foreach ($c['work']['projects'] as $candidate) {
+            if ($candidate['id'] === $m[2]) {
+                $project = $candidate;
+            }
+        }
+        if ($project === null) {
+            return null;
+        }
+        if ($m[3] === '') {
+            return Response::redirect($path . '/', 301);
+        }
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'GET, HEAD');
+        }
+        $role = null;
+        foreach ($c['experience']['items'] as $item) {
+            if ($item['id'] === $project['id']) {
+                $role = $item;
+            }
+        }
+        $paths = self::casePaths($project['id']);
+        $urls = array_map(fn (string $p): string => $this->config['base_url'] . $p, $paths);
+
+        $html = $this->page($lang, 'case', [
+            'p' => $project,
+            'role' => $role,
+            'urls' => $urls,
+            'canonical' => $urls[$lang],
+            'switch_url' => $paths[$lang === 'en' ? 'es' : 'en'],
+            'page_title' => $project['title'] . ' | ' . $c['person']['name'],
+            'page_description' => $project['text'],
+            'og_type' => 'article',
+            'json_ld' => $this->caseJsonLd($c, $project, $lang, $urls),
+        ]);
+
+        return Response::html($html)->withHeader('Cache-Control', $this->cacheControl(true));
+    }
+
+    /** @return array{en: string, es: string} */
+    private static function casePaths(string $id): array
+    {
+        return ['en' => '/work/' . $id . '/', 'es' => '/es/trabajo/' . $id . '/'];
+    }
+
     /** Anonymous metrics posted by site.js (see Metrics). */
     private function beacon(string $method, string $body, array $server): Response
     {
@@ -194,6 +250,7 @@ final class App
             if (!empty($project['back'])) {
                 $lines[] = "- {$c['work']['back_label']}: {$project['back']}";
             }
+            $lines[] = "- [{$c['work']['case_link']}]({$base}" . self::casePaths($project['id'])['en'] . ')';
             foreach ($project['links'] ?? [] as $link) {
                 $lines[] = "- [{$link['label']}]({$link['url']})";
             }
@@ -222,15 +279,20 @@ final class App
     {
         $base = $this->config['base_url'];
         $updated = Content::load($this->root, 'en')['updated'];
-        $urls = ['en' => $base . '/', 'es' => $base . '/es/'];
+        $pages = [['en' => $base . '/', 'es' => $base . '/es/']];
+        foreach (Content::load($this->root, 'en')['work']['projects'] as $project) {
+            $pages[] = array_map(static fn (string $p): string => $base . $p, self::casePaths($project['id']));
+        }
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
             . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
-        foreach ($urls as $url) {
-            $xml .= "  <url>\n    <loc>" . View::e($url) . "</loc>\n    <lastmod>" . View::e($updated) . "</lastmod>\n";
-            foreach ($urls as $alt => $altUrl) {
-                $xml .= '    <xhtml:link rel="alternate" hreflang="' . $alt . '" href="' . View::e($altUrl) . '"/>' . "\n";
+        foreach ($pages as $urls) {
+            foreach ($urls as $url) {
+                $xml .= "  <url>\n    <loc>" . View::e($url) . "</loc>\n    <lastmod>" . View::e($updated) . "</lastmod>\n";
+                foreach ($urls as $alt => $altUrl) {
+                    $xml .= '    <xhtml:link rel="alternate" hreflang="' . $alt . '" href="' . View::e($altUrl) . '"/>' . "\n";
+                }
+                $xml .= "  </url>\n";
             }
-            $xml .= "  </url>\n";
         }
         $xml .= "</urlset>\n";
 
@@ -273,6 +335,11 @@ final class App
         $contact = new Contact($this->config);
 
         $vars += [
+            'home' => $template === 'home' ? '' : ($lang === 'es' ? '/es/' : '/'),
+            'switch_url' => $c['ui']['other_lang']['url'],
+            'page_title' => $c['meta']['title'],
+            'page_description' => $c['meta']['description'],
+            'og_type' => 'profile',
             'status' => 200,
             'c' => $c,
             'lang' => $lang,
@@ -297,7 +364,7 @@ final class App
             'evidence' => Content::evidence($c),
             'sides' => Content::pinSides($c),
         ];
-        $vars['json_ld'] = $this->jsonLd($c, $lang, $urls);
+        $vars['json_ld'] ??= $this->jsonLd($c, $lang, $urls);
         $vars['body'] = $this->view->render($template, $vars);
 
         return $this->view->render('layout', $vars);
@@ -332,6 +399,34 @@ final class App
                     'publisher' => ['@type' => 'Organization', 'name' => $a['publisher']],
                 ], $c['person']['articles']),
             ],
+        ];
+
+        return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP);
+    }
+
+    /**
+     * @param array<string, mixed> $c
+     * @param array<string, mixed> $project
+     * @param array<string, string> $urls
+     */
+    private function caseJsonLd(array $c, array $project, string $lang, array $urls): string
+    {
+        $base = $this->config['base_url'];
+        $data = [
+            '@context' => 'https://schema.org',
+            '@type' => 'CreativeWork',
+            'name' => $project['title'],
+            'description' => $project['text'],
+            'url' => $urls[$lang],
+            'inLanguage' => $lang,
+            'dateModified' => $c['updated'],
+            'author' => [
+                '@type' => 'Person',
+                'name' => $c['person']['name'],
+                'jobTitle' => $c['person']['role'],
+                'url' => $base . '/',
+            ],
+            'isPartOf' => ['@type' => 'ProfilePage', 'url' => $base . ($lang === 'es' ? '/es/' : '/')],
         ];
 
         return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP);

@@ -29,6 +29,13 @@ final class Metrics
         'outbound_click' => ['$pathname', 'host', 'path'],
         'theme_changed' => ['$pathname', 'theme'],
         'captcha_refreshed' => ['$pathname'],
+        // What gets read and what gets used, to decide what the page keeps (JOHN-15).
+        'section_viewed' => ['$pathname', 'section', 'viewport'],
+        'scroll_depth' => ['$pathname', 'max_pct', 'max_screens', 'viewport'],
+        'cta_click' => ['$pathname', 'cta', 'loc', 'viewport'],
+        'contact_started' => ['$pathname', 'viewport'],
+        'disclosure_toggled' => ['$pathname', 'id', 'state'],
+        'shared' => ['$pathname', 'method'],
     ];
     private const MAX_PER_HOUR = 300;
     private const BOTS = '/bot|crawl|spider|slurp|headless|lighthouse|preview|facebookexternalhit|embedly|curl|wget|python|go-http|java\//i';
