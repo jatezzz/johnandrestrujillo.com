@@ -515,6 +515,7 @@
   },
   "footer": {
     "colophon": "Tipografía Atkinson Hyperlegible, diseñada por el Braille Institute para lectores con baja visión.",
+    "colophon_color": "Color: una paleta tonal de Material 3 a partir de una sola semilla, sobre una grilla de 8 puntos. Las barras flotantes usan los materiales de Apple y se vuelven sólidas con Reducir transparencia o Aumentar contraste.",
     "source": "Código fuente",
     "updated": "Actualizado"
   }

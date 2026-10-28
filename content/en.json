@@ -515,6 +515,7 @@
   },
   "footer": {
     "colophon": "Set in Atkinson Hyperlegible, a typeface the Braille Institute designed for low-vision readers.",
+    "colophon_color": "Colour: a Material 3 tonal palette from one seed, on an 8-point grid. Floating bars use Apple’s materials and turn solid with Reduce Transparency or Increase Contrast.",
     "source": "Source code",
     "updated": "Updated"
   }

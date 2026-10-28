@@ -30,8 +30,8 @@ $other = $c['ui']['other_lang'];
 <link rel="alternate" hreflang="es" href="<?= $e($urls['es']) ?>">
 <link rel="alternate" hreflang="x-default" href="<?= $e($urls['en']) ?>">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F5F7F6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0A2018" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F5FBF5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#02170F" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="<?= $e($og_type) ?>">
 <meta property="og:title" content="<?= $e($page_title) ?>">
 <meta property="og:description" content="<?= $e($page_description) ?>">
@@ -92,6 +92,7 @@ $other = $c['ui']['other_lang'];
   <div class="colophon__inner">
     <p>© <span class="num"><?= $e(substr($c['updated'], 0, 4)) ?></span> <?= $e($c['person']['name']) ?></p>
     <p><?= $e($c['footer']['colophon']) ?></p>
+    <p><?= $e($c['footer']['colophon_color']) ?></p>
     <p><?= $e($c['footer']['updated']) ?> <span class="num"><?= $e($c['updated_label']) ?></span>.</p>
     <?php if ($site['source_url'] !== ''): ?>
     <p><a href="<?= $e($site['source_url']) ?>"><?= $e($c['footer']['source']) ?></a></p>
