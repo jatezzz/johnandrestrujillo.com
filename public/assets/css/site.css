@@ -51,6 +51,7 @@
   --pkg-outline: transparent;
   --lead-fill: var(--surface);
   --lead-line: var(--ink);
+  --glare: var(--lit);
 
   --font-body: "Atkinson Next", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "Atkinson Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -91,6 +92,7 @@
     --pkg-outline: var(--silk);
     --lead-fill: var(--pad);
     --lead-line: var(--pad);
+    --glare: var(--silk);
     color-scheme: dark;
   }
 }
@@ -117,6 +119,7 @@
   --pkg-outline: var(--silk);
   --lead-fill: var(--pad);
   --lead-line: var(--pad);
+  --glare: var(--silk);
   color-scheme: dark;
 }
 
@@ -1695,6 +1698,211 @@ svg {
   margin: 0;
 }
 
+/* ---------- Motion (motion.js and the browser's own scroll and view timelines) ----------
+ * Everything below is an enhancement: without support, or with reduced motion, the page is the same page
+ * standing still. Pointer effects are set by motion.js only for a mouse or trackpad.
+ */
+
+/* Magnetic controls move with `translate`, so their own transforms stay theirs. */
+[data-magnetic] {
+  will-change: translate;
+}
+
+/* The masthead stays on screen on wide screens; a gold trace marks the section in view. */
+.masthead {
+  position: relative;
+}
+
+.masthead__nav ul {
+  position: relative;
+}
+
+.masthead__nav a[aria-current="location"] {
+  color: var(--ink);
+}
+
+.masthead__trace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--pad);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.masthead__trace.is-on {
+  opacity: 1;
+}
+
+@media (min-width: 62rem) {
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+    backdrop-filter: blur(10px) saturate(1.2);
+  }
+
+  main [id] {
+    scroll-margin-top: 4.75rem;
+  }
+}
+
+/* The chip: tilt and glare follow the pointer (custom properties set by motion.js). */
+.pinout__body {
+  transform: perspective(60rem) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+}
+
+.package::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), color-mix(in srgb, var(--glare) 24%, transparent), transparent 55%);
+  opacity: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.pinout__body.is-live .package::after {
+  opacity: 1;
+}
+
+/* Pins near the pointer take charge: the lead glows and the name turns to the accent. */
+.pin__link {
+  --charge: 0;
+}
+
+.pin__lead {
+  box-shadow: 0 0 calc(var(--charge) * 14px) calc(var(--charge) * 2px) color-mix(in srgb, var(--lit) calc(var(--charge) * 85%), transparent);
+}
+
+.pin__link:not([aria-current="true"]) .pin__label {
+  color: color-mix(in srgb, var(--accent) calc(var(--charge) * 100%), var(--ink));
+}
+
+/* The evidence panel: a signal runs along the top edge when a pin is picked. */
+.evidence-panel {
+  position: relative;
+}
+
+.evidence-panel::before {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 30%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--silk), transparent);
+  opacity: 0;
+  content: "";
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pinout__body {
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .pinout__body.is-live {
+    transition-duration: 0.12s;
+  }
+
+  .package::after {
+    transition: opacity 0.3s ease;
+  }
+
+  .pin__lead,
+  .pin__label {
+    transition: box-shadow 0.25s ease, color 0.25s ease, background-color 0.2s ease;
+  }
+
+  .masthead__trace {
+    transition: translate 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease;
+  }
+
+  .evidence-panel.is-signal::before {
+    animation: signal 0.8s cubic-bezier(0.3, 0, 0.2, 1);
+  }
+
+  /* EN ↔ ES: the two pages cross-fade and the shared parts stay in place (cross-document View Transitions). */
+  @view-transition {
+    navigation: auto;
+  }
+
+  .brand {
+    view-transition-name: brand;
+  }
+
+  .package {
+    view-transition-name: chip;
+  }
+
+  .hero__person img {
+    view-transition-name: portrait;
+  }
+}
+
+/* the 30%-wide pulse travels the whole edge without leaving the panel: 0 → 70% of the panel = 233% of itself */
+@keyframes signal {
+  0% { opacity: 0; translate: 0 0; }
+  15%,
+  85% { opacity: 1; }
+  100% { opacity: 0; translate: 233% 0; }
+}
+
+/* Theme switch: the new theme spreads from the button (site.js); the named parts must not cross-fade on their own. */
+.theme-switching .brand,
+.theme-switching .package,
+.theme-switching .hero__person img {
+  view-transition-name: none;
+}
+
+.theme-switching::view-transition-old(root),
+.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scroll-driven: reading progress along the masthead, and sections that rise into place as they enter. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 62rem) {
+    .masthead::after {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent);
+      transform-origin: left center;
+      content: "";
+      animation: progress linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .section__head,
+    .section > .section__title,
+    .project {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+@keyframes progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes rise {
+  from { opacity: 0; translate: 0 1.25rem; }
+  to { opacity: 1; translate: 0 0; }
+}
+
 /* ---------- Print ---------- */
 
 @media print {
@@ -1720,6 +1928,21 @@ svg {
 
   .section {
     padding-block: 1.5rem;
+  }
+
+  .masthead {
+    position: static;
+  }
+
+  .masthead::after,
+  .masthead__trace {
+    display: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
   }
 
   a {

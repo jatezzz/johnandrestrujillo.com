@@ -24,15 +24,15 @@ $invalid = static function (string $field) use ($fieldErrors): string {
       <p class="muted"><?= $e($k['privacy']) ?></p>
       <h3 class="side-heading"><?= $e($k['elsewhere']) ?></h3>
       <ul class="plain-list">
-        <li><a href="<?= $e($site['github_url']) ?>" rel="me">GitHub</a></li>
+        <li><a href="<?= $e($site['github_url']) ?>" rel="me" data-magnetic>GitHub</a></li>
         <?php if ($site['linkedin_url'] !== ''): ?>
-        <li><a href="<?= $e($site['linkedin_url']) ?>" rel="me">LinkedIn</a></li>
+        <li><a href="<?= $e($site['linkedin_url']) ?>" rel="me" data-magnetic>LinkedIn</a></li>
         <?php endif; ?>
         <?php if ($site['instagram_url'] !== ''): ?>
-        <li><a href="<?= $e($site['instagram_url']) ?>" rel="me">Instagram</a></li>
+        <li><a href="<?= $e($site['instagram_url']) ?>" rel="me" data-magnetic>Instagram</a></li>
         <?php endif; ?>
         <?php if ($site['tiktok_url'] !== ''): ?>
-        <li><a href="<?= $e($site['tiktok_url']) ?>" rel="me">TikTok</a></li>
+        <li><a href="<?= $e($site['tiktok_url']) ?>" rel="me" data-magnetic>TikTok</a></li>
         <?php endif; ?>
       </ul>
     </div>
@@ -89,7 +89,7 @@ $invalid = static function (string $field) use ($fieldErrors): string {
           <label for="contact-website"><?= $e($k['fields']['website']) ?></label>
           <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
         </div>
-        <button class="button button--primary" type="submit"><?= $e($k['submit']) ?></button>
+        <button class="button button--primary" type="submit" data-magnetic><?= $e($k['submit']) ?></button>
       </form>
       <?php endif; ?>
     </div>

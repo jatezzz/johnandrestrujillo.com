@@ -139,16 +139,36 @@
   if (toggle) {
     const sync = () => toggle.setAttribute('aria-pressed', String(currentTheme() === 'dark'));
     toggle.hidden = false;
-    toggle.addEventListener('click', () => {
-      const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    const apply = (next) => {
       root.setAttribute('data-theme', next);
-      send('theme_changed', { theme: next });
       try {
         localStorage.setItem('theme', next);
       } catch (error) {
         // Not saved; the choice lasts until the page is closed.
       }
       sync();
+    };
+    toggle.addEventListener('click', () => {
+      const next = currentTheme() === 'dark' ? 'light' : 'dark';
+      send('theme_changed', { theme: next });
+      if (!document.startViewTransition || (reducedMotion && reducedMotion.matches)) {
+        apply(next);
+        return;
+      }
+      // The new theme spreads from the button as a circle (View Transitions API).
+      const box = toggle.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
+      const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      root.classList.add('theme-switching');
+      const transition = document.startViewTransition(() => apply(next));
+      transition.ready.then(() => {
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 560, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
+        );
+      }).catch(() => {});
+      transition.finished.finally(() => root.classList.remove('theme-switching'));
     });
     if (prefersDark && prefersDark.addEventListener) prefersDark.addEventListener('change', sync);
     sync();
@@ -157,65 +177,65 @@
   // ---- Pins: show where each capability was used ----
   const panel = document.getElementById('evidence-panel');
   const pins = Array.from(document.querySelectorAll('.pin__link'));
-  if (!panel || pins.length === 0) return;
+  if (panel && pins.length) {
+    const status = panel.querySelector('[data-status]');
+    const content = panel.querySelector('[data-content]');
+    panel.hidden = false;
 
-  const status = panel.querySelector('[data-status]');
-  const content = panel.querySelector('[data-content]');
-  panel.hidden = false;
+    const select = (pin) => {
+      const source = document.getElementById('pin-' + pin.dataset.pin);
+      const body = source && source.querySelector('.evidence__body');
+      if (!body) return false;
 
-  const select = (pin) => {
-    const source = document.getElementById('pin-' + pin.dataset.pin);
-    const body = source && source.querySelector('.evidence__body');
-    if (!body) return false;
+      pins.forEach((other) => other.removeAttribute('aria-current'));
+      pin.setAttribute('aria-current', 'true');
 
-    pins.forEach((other) => other.removeAttribute('aria-current'));
-    pin.setAttribute('aria-current', 'true');
+      const title = document.createElement('p');
+      title.className = 'evidence-panel__title';
+      const label = document.createElement('span');
+      label.className = 'label';
+      label.textContent = pin.querySelector('.pin__label').textContent;
+      title.append(label, ' ' + pin.dataset.name);
+      content.replaceChildren(title, body.cloneNode(true));
 
-    const title = document.createElement('p');
-    title.className = 'evidence-panel__title';
-    const label = document.createElement('span');
-    label.className = 'label';
-    label.textContent = pin.querySelector('.pin__label').textContent;
-    title.append(label, ' ' + pin.dataset.name);
-    content.replaceChildren(title, body.cloneNode(true));
+      const count = Number(pin.dataset.count);
+      const template = count === 1 ? panel.dataset.statusOne : panel.dataset.statusMany;
+      status.textContent = template.replace('{name}', pin.dataset.name).replace('{n}', String(count));
+      send('pin_selected', { pin: pin.dataset.pin });
+      return true;
+    };
 
-    const count = Number(pin.dataset.count);
-    const template = count === 1 ? panel.dataset.statusOne : panel.dataset.statusMany;
-    status.textContent = template.replace('{name}', pin.dataset.name).replace('{n}', String(count));
-    send('pin_selected', { pin: pin.dataset.pin });
-    return true;
-  };
-
-  // Arrow keys move along a side (up/down) or across the chip (left/right).
-  const move = (from, key) => {
-    const side = from.dataset.side;
-    let target;
-    if (key === 'ArrowUp' || key === 'ArrowDown') {
-      const column = pins.filter((pin) => pin.dataset.side === side);
-      const index = column.indexOf(from) + (key === 'ArrowDown' ? 1 : -1);
-      target = column[(index + column.length) % column.length];
-    } else {
-      const other = side === 'left' ? 'right' : 'left';
-      target = pins.find((pin) => pin.dataset.side === other && pin.dataset.row === from.dataset.row);
-    }
-    if (target) target.focus();
-  };
-
-  pins.forEach((pin) => {
-    pin.setAttribute('aria-controls', 'evidence-panel');
-    pin.addEventListener('click', (event) => {
-      if (!select(pin)) return;
-      event.preventDefault();
-      if (singleColumn && singleColumn.matches) {
-        panel.scrollIntoView({ block: 'nearest', behavior: reducedMotion && reducedMotion.matches ? 'auto' : 'smooth' });
+    // Arrow keys move along a side (up/down) or across the chip (left/right).
+    const move = (from, key) => {
+      const side = from.dataset.side;
+      let target;
+      if (key === 'ArrowUp' || key === 'ArrowDown') {
+        const column = pins.filter((pin) => pin.dataset.side === side);
+        const index = column.indexOf(from) + (key === 'ArrowDown' ? 1 : -1);
+        target = column[(index + column.length) % column.length];
+      } else {
+        const other = side === 'left' ? 'right' : 'left';
+        target = pins.find((pin) => pin.dataset.side === other && pin.dataset.row === from.dataset.row);
       }
+      if (target) target.focus();
+    };
+
+    pins.forEach((pin) => {
+      pin.setAttribute('aria-controls', 'evidence-panel');
+      pin.addEventListener('click', (event) => {
+        if (!select(pin)) return;
+        event.preventDefault();
+        if (singleColumn && singleColumn.matches) {
+          panel.scrollIntoView({ block: 'nearest', behavior: reducedMotion && reducedMotion.matches ? 'auto' : 'smooth' });
+        }
+      });
+      pin.addEventListener('keydown', (event) => {
+        if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+        event.preventDefault();
+        move(pin, event.key);
+      });
     });
-    pin.addEventListener('keydown', (event) => {
-      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-      event.preventDefault();
-      move(pin, event.key);
-    });
-  });
+  }
 
   // ---- Short screen recordings: play muted while on screen, never with reduced motion ----
   const clips = document.querySelectorAll('video[data-autoplay]');

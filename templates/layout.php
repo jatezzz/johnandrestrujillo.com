@@ -50,6 +50,7 @@ $other = $c['ui']['other_lang'];
 <link rel="stylesheet" href="<?= $e($asset('css/site.css')) ?>">
 <script src="<?= $e($asset('js/theme.js')) ?>"></script>
 <script src="<?= $e($asset('js/site.js')) ?>" defer></script>
+<script src="<?= $e($asset('js/motion.js')) ?>" defer></script>
 <script type="application/ld+json"><?= $json_ld ?></script>
 </head>
 <body data-status="<?= (int) $status ?>"<?php if ($site['metrics']): ?> data-metrics="on"<?php endif; ?>>
@@ -71,8 +72,8 @@ $other = $c['ui']['other_lang'];
       </ul>
     </nav>
     <div class="masthead__tools">
-      <a class="lang-switch" href="<?= $e($other['url']) ?>" hreflang="<?= $e($other['code']) ?>" lang="<?= $e($other['code']) ?>"><?= $e($other['label']) ?></a>
-      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" hidden>
+      <a class="lang-switch" data-magnetic href="<?= $e($other['url']) ?>" hreflang="<?= $e($other['code']) ?>" lang="<?= $e($other['code']) ?>"><?= $e($other['label']) ?></a>
+      <button class="theme-toggle" type="button" data-theme-toggle data-magnetic aria-pressed="false" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></svg>
         <span class="sr-only"><?= $e($c['ui']['theme']) ?></span>
       </button>

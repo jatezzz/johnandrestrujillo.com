@@ -29,7 +29,7 @@ $hero = $c['hero'];
       <?php endforeach; ?>
     </ul>
     <p class="hero__actions">
-      <a class="button button--primary" href="#contact"><?= $e($hero['cta_contact']) ?></a>
+      <a class="button button--primary" href="#contact" data-magnetic><?= $e($hero['cta_contact']) ?></a>
     </p>
   </div>
   <?= $view->partial('pinout', $vars) ?>
