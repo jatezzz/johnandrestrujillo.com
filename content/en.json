@@ -22,6 +22,9 @@
     "other_lang": {"code": "es", "label": "Español", "url": "/es/"},
     "staging": "Staging candidate, not public",
     "show_all": "Show all {n}",
+    "share": "Share",
+    "share_copied": "Link copied",
+    "gallery": "Screens of {title}. Swipe for more.",
     "not_found_title": "This page doesn’t exist",
     "not_found_body": "The link may be old or mistyped. Everything on this site is on one page.",
     "not_found_home": "Go to the home page"

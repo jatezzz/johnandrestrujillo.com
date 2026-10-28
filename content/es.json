@@ -22,6 +22,9 @@
     "other_lang": {"code": "en", "label": "English", "url": "/"},
     "staging": "Candidato en staging, no público",
     "show_all": "Ver los {n}",
+    "share": "Compartir",
+    "share_copied": "Enlace copiado",
+    "gallery": "Pantallas de {title}. Desliza para ver más.",
     "not_found_title": "Esta página no existe",
     "not_found_body": "Puede que el enlace sea antiguo o tenga un error. Todo el sitio está en una sola página.",
     "not_found_home": "Ir al inicio"

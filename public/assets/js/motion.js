@@ -1,7 +1,7 @@
 // Motion layer, on top of a page that already works without it: controls that lean toward the pointer, the chip
 // that tilts and powers the pins the pointer comes near, a signal along the evidence panel when a pin is picked,
-// and the masthead trace that follows the section on screen. Pointer effects run only with a mouse or trackpad and
-// never with reduced motion. Nothing here adds content; screen readers get the same page.
+// the masthead trace that follows the section on screen, and on phones a masthead that steps aside while reading.
+// Pointer effects run only with a mouse or trackpad and never with reduced motion. Nothing here adds content; screen readers get the same page.
 (() => {
   'use strict';
 
@@ -137,6 +137,10 @@
       trace.style.width = `${current.offsetWidth}px`;
       trace.style.translate = `${current.offsetLeft}px ${current.offsetTop + current.offsetHeight}px`;
       trace.classList.add('is-on');
+      // on phones the links are one row that scrolls sideways: keep the current one in it
+      if (nav.scrollWidth > nav.clientWidth) {
+        nav.scrollTo({ left: current.offsetLeft - 16, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+      }
     };
     const mark = (id) => {
       const next = links.find((link) => link.hash === `#${id}`) || null;
@@ -158,4 +162,30 @@
     window.addEventListener('resize', place, { passive: true });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
   }
+
+  // ---- Phones: the masthead steps aside while reading down and comes back on the first scroll up ----
+  const masthead = document.querySelector('.masthead');
+  const narrow = query('(max-width: 61.99rem)');
+  if (masthead) {
+    let lastY = window.scrollY;
+    let ticking = false;
+    const SLACK = 8; // px of scroll ignored, so a shaky thumb does not flicker it
+    const check = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const delta = y - lastY;
+      if (Math.abs(delta) < SLACK) return;
+      const hide = narrow.matches && delta > 0 && y > masthead.offsetHeight && !masthead.contains(document.activeElement);
+      masthead.classList.toggle('is-hidden', hide);
+      lastY = y;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(check);
+      }
+    }, { passive: true });
+    masthead.addEventListener('focusin', () => masthead.classList.remove('is-hidden'));
+  }
+
 })();

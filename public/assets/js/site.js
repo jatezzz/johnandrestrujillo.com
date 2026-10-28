@@ -270,4 +270,88 @@
       player.focus();
     });
   });
+
+  // ---- Phones: a bar in thumb reach with "Write to me" and Share, between the hero button and the form ----
+  const dock = document.querySelector('[data-dock]');
+  const heroAction = document.querySelector('.hero__actions');
+  const contact = document.getElementById('contact');
+  if (dock && heroAction && contact && 'IntersectionObserver' in window) {
+    let heroPassed = false;
+    let atContact = false;
+    const update = () => {
+      const show = heroPassed && !atContact;
+      dock.classList.toggle('is-shown', show);
+      dock.inert = !show;
+    };
+    dock.hidden = false;
+    update();
+    new IntersectionObserver(([entry]) => {
+      heroPassed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      update();
+    }).observe(heroAction);
+    new IntersectionObserver(([entry]) => {
+      atContact = entry.isIntersecting;
+      update();
+    }, { rootMargin: '0px 0px -25% 0px' }).observe(contact);
+  }
+
+  // Share: the phone's own share sheet, or copy the link where there is none.
+  const share = document.querySelector('[data-share]');
+  if (share && (navigator.share || (navigator.clipboard && window.isSecureContext))) {
+    const label = share.querySelector('[data-share-label]');
+    const canonical = document.querySelector('link[rel="canonical"]');
+    const url = canonical ? canonical.href : location.href;
+    share.hidden = false;
+    share.addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({ title: document.title, url })
+          .then(() => send('shared', { method: 'sheet' }))
+          .catch(() => {}); // closed without sharing
+        return;
+      }
+      navigator.clipboard.writeText(url).then(() => {
+        const text = label.textContent;
+        label.textContent = share.dataset.copied;
+        share.setAttribute('aria-live', 'polite');
+        setTimeout(() => { label.textContent = text; share.removeAttribute('aria-live'); }, 2000);
+        send('shared', { method: 'copy' });
+      }).catch(() => {});
+    });
+  }
+
+  // ---- Project screens: a swipeable row on phones, with a dot per screen ----
+  document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+    const shots = Array.from(gallery.children);
+    const dots = document.createElement('div');
+    dots.className = 'gallery__dots';
+    dots.setAttribute('aria-hidden', 'true');
+    shots.forEach(() => dots.append(document.createElement('span')));
+    gallery.after(dots);
+
+    const sync = () => {
+      const scrollable = gallery.scrollWidth > gallery.clientWidth + 1;
+      dots.hidden = !scrollable;
+      if (scrollable) {
+        // a scrollable region must be reachable and named for keyboard and screen reader users
+        gallery.setAttribute('role', 'region');
+        gallery.setAttribute('aria-label', gallery.dataset.gallery);
+        gallery.tabIndex = 0;
+      } else {
+        gallery.removeAttribute('role');
+        gallery.removeAttribute('aria-label');
+        gallery.removeAttribute('tabindex');
+      }
+    };
+    sync();
+    window.addEventListener('resize', sync, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      const watcher = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          dots.children[shots.indexOf(entry.target)].classList.toggle('is-on', entry.isIntersecting);
+        });
+      }, { root: gallery, threshold: 0.6 });
+      shots.forEach((shot) => watcher.observe(shot));
+    }
+  });
 })();

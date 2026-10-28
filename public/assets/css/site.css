@@ -1708,9 +1708,22 @@ svg {
   will-change: translate;
 }
 
-/* The masthead stays on screen on wide screens; a gold trace marks the section in view. */
+/* The masthead stays on screen (on phones it steps aside while reading down); a gold trace marks the section in view. */
 .masthead {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--paper) 95%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+}
+
+.masthead.is-hidden {
+  translate: 0 -100%;
+}
+
+main [id] {
+  scroll-margin-top: 7.5rem;
 }
 
 .masthead__nav ul {
@@ -1736,17 +1749,145 @@ svg {
 }
 
 @media (min-width: 62rem) {
-  .masthead {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: color-mix(in srgb, var(--paper) 88%, transparent);
-    -webkit-backdrop-filter: blur(10px) saturate(1.2);
-    backdrop-filter: blur(10px) saturate(1.2);
-  }
-
   main [id] {
     scroll-margin-top: 4.75rem;
+  }
+}
+
+/* Phones: the section links are one row that scrolls sideways, fading out at the edge. */
+@media (max-width: 61.99rem) {
+  .masthead__inner {
+    padding-bottom: 0.35rem;
+  }
+
+  .masthead__nav ul {
+    flex-wrap: nowrap;
+    gap: 1.4rem;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 0 2.5rem 0.4rem var(--gutter);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+  }
+
+  .masthead__nav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .masthead__nav li {
+    flex: none;
+  }
+
+  .masthead__nav a {
+    display: inline-block;
+    padding-block: 0.3rem;
+    white-space: nowrap;
+  }
+}
+
+/* Phones: "Write to me" and Share in thumb reach, from the hero button to the form (site.js). */
+.dock {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.7rem var(--gutter) max(0.7rem, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--paper) 95%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+  translate: 0 110%;
+}
+
+.dock.is-shown {
+  translate: 0 0;
+}
+
+.dock__cta {
+  flex: 1;
+  justify-content: center;
+}
+
+.dock__share {
+  gap: 0.45rem;
+}
+
+.dock__share svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (min-width: 62rem) {
+  .dock {
+    display: none;
+  }
+}
+
+/* Phones: a project's screens become a row to swipe, the next one peeking in; a dot per screen. */
+@media (max-width: 61.99rem) {
+  .project__media--gallery {
+    flex-wrap: nowrap;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: var(--gutter);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .project__media--gallery::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project__media--gallery .shot {
+    flex: 0 0 84%;
+    scroll-snap-align: start;
+  }
+
+  .project__media--gallery .shot--phone,
+  .project__media--gallery .shot--portrait {
+    flex-basis: min(62%, 15rem);
+  }
+
+  .project__media--gallery:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 4px;
+  }
+}
+
+.gallery__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: -0.75rem;
+}
+
+.gallery__dots span {
+  width: 0.45rem;
+  height: 0.45rem;
+  border: 1.5px solid var(--field);
+  border-radius: 50%;
+}
+
+.gallery__dots span.is-on {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+@media (min-width: 62rem) {
+  .gallery__dots {
+    display: none;
   }
 }
 
@@ -1818,6 +1959,23 @@ svg {
     transition: box-shadow 0.25s ease, color 0.25s ease, background-color 0.2s ease;
   }
 
+  .masthead,
+  .dock {
+    transition: translate 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* a press that answers the thumb */
+  .button,
+  .pin__label {
+    transition-property: background-color, box-shadow, color, scale;
+    transition-duration: 0.2s, 0.25s, 0.25s, 0.12s;
+  }
+
+  .button:active,
+  .pin__link:active .pin__label {
+    scale: 0.96;
+  }
+
   .masthead__trace {
     transition: translate 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease;
   }
@@ -1867,7 +2025,7 @@ svg {
 
 /* Scroll-driven: reading progress along the masthead, and sections that rise into place as they enter. */
 @supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) and (min-width: 62rem) {
+  @media (prefers-reduced-motion: no-preference) {
     .masthead::after {
       position: absolute;
       bottom: -1px;
@@ -1935,8 +2093,10 @@ svg {
   }
 
   .masthead::after,
-  .masthead__trace {
-    display: none;
+  .masthead__trace,
+  .dock,
+  .gallery__dots {
+    display: none !important;
   }
 
   *,

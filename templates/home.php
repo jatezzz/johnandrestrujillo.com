@@ -40,3 +40,10 @@ $hero = $c['hero'];
 <?= $view->partial('code', $vars) ?>
 <?= $view->partial('education', $vars) ?>
 <?= $view->partial('contact', $vars) ?>
+<div class="dock" data-dock hidden>
+  <a class="button button--primary dock__cta" href="#contact"><?= $e($hero['cta_contact']) ?></a>
+  <button class="button dock__share" type="button" data-share data-copied="<?= $e($c['ui']['share_copied']) ?>" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v7.5h14V12"/></svg>
+    <span data-share-label><?= $e($c['ui']['share']) ?></span>
+  </button>
+</div>

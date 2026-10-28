@@ -15,7 +15,7 @@ $mobile = $w['mobile'];
 
   <?php foreach ($w['projects'] as $p): ?>
   <article class="project" id="project-<?= $e($p['id']) ?>" aria-labelledby="project-<?= $e($p['id']) ?>-title">
-    <div class="project__media">
+    <div class="project__media<?= count($p['media']) > 1 ? ' project__media--gallery' : '' ?>"<?php if (count($p['media']) > 1): ?> data-gallery="<?= $e(str_replace('{title}', $p['title'], $c['ui']['gallery'])) ?>"<?php endif; ?>>
       <?php foreach ($p['media'] as $i => $m): ?>
       <figure class="shot shot--<?= $e($m['frame']) ?><?= $i === 0 ? ' shot--lead' : '' ?><?= $m['height'] > $m['width'] ? ' shot--portrait' : '' ?>">
         <?php if ($m['type'] === 'youtube'): ?>
