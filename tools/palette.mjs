@@ -1,13 +1,14 @@
 // Surface and text colours for site.css, from one seed with Material Color Utilities (HCT tonal palettes).
 // One hue, two neutral palettes: "paper" (low chroma) for the light theme, where the chip is a drawing, and
-// "board" (solder-mask chroma) for the dark theme, where it is the part on its board. Tones follow the
+// "blueprint" (higher chroma) for the dark theme, where it is the part on its board. Tones follow the
 // Material 3 surface roles, so contrast comes from tone distance rather than from picking colours by eye.
-// The brand colours (accent, pads, lit) are not generated here.
+// The seed is the logo's cobalt. Brand colours are picked by hand from the cobalt and cyan tonal palettes:
+// accent = the logo cobalt (light) and its cyan (dark), pads = cyan T40 / T80, lit = cyan T85 / T90.
 //
 //   npm i @material/material-color-utilities@0.3.0 && node tools/palette.mjs   (on a build machine)
 import { Hct, TonalPalette, argbFromHex, hexFromArgb } from '@material/material-color-utilities';
 
-const SEED = '#0B5E45';
+const SEED = '#2A5ED9';
 const hue = Hct.fromInt(argbFromHex(SEED)).hue;
 const palettes = {
   light: { neutral: TonalPalette.fromHueAndChroma(hue, 6), variant: TonalPalette.fromHueAndChroma(hue, 8) },

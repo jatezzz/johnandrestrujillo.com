@@ -1,6 +1,7 @@
 // Motion layer, on top of a page that already works without it: controls that lean toward the pointer, the chip
 // that tilts and powers the pins the pointer comes near, a signal along the evidence panel when a pin is picked,
-// the masthead trace that follows the section on screen, and on phones a masthead that steps aside while reading.
+// the masthead trace that follows the section on screen, the mark's calibration intro, and on phones a masthead that
+// steps aside while reading.
 // Pointer effects run only with a mouse or trackpad and never with reduced motion. Nothing here adds content; screen readers get the same page.
 (() => {
   'use strict';
@@ -161,6 +162,24 @@
     sections.forEach((section) => watcher.observe(section));
     window.addEventListener('resize', place, { passive: true });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+  }
+
+  // ---- The mark calibrates once per visit: the middle slice steps into place, then the bar is drawn ----
+  const mark = document.querySelector('.brand .mark');
+  if (mark && !reducedMotion.matches) {
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem('mark-intro') === '1';
+      sessionStorage.setItem('mark-intro', '1');
+    } catch (error) {
+      // storage blocked: play it, it is short
+    }
+    if (!seen) {
+      mark.classList.add('is-intro');
+      mark.addEventListener('animationend', (event) => {
+        if (event.target.classList.contains('mark__bar')) mark.classList.remove('is-intro');
+      });
+    }
   }
 
   // ---- Phones: the masthead steps aside while reading down and comes back on the first scroll up ----

@@ -21,7 +21,7 @@
 </head>
 <body class="og">
   <div class="og__text">
-    <p class="og__name"><?= $e($c['person']['name']) ?></p>
+    <p class="og__name"><?= $view->partial('mark', []) ?><?= $e($c['person']['name']) ?></p>
     <p class="og__lines">
       <?php foreach ($c['hero']['title_lines'] as $line): ?>
       <span class="hero__line"><?= $m($line) ?></span>

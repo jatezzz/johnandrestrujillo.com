@@ -29,20 +29,23 @@
 /* ---------- Tokens ---------- */
 
 :root {
-  --paper: #F5FBF5;
+  --paper: #FAF8FF;
   --surface: #FFFFFF;
-  --surface-high: #E4EAE4;
-  --ink: #171D1A;
-  --graphite: #404944;
-  --rule: #BFC9C2;
-  --field: #707973;
-  --accent: #0B5E45;
-  --accent-ink: #F5F7F6;
-  --pad: #A8811F;
-  --lit: #D9B45A;
-  --lit-ink: #0F1A1F;
-  --package: #1B2327;
-  --silk: #EEF2EE;
+  --surface-high: #E8E7EF;
+  --ink: #1A1B21;
+  --graphite: #45464F;
+  --rule: #C5C6D0;
+  --field: #757680;
+  --accent: #2A5ED9;
+  --accent-ink: #FFFFFF;
+  --pad: #006972;
+  --mark-slice: #2A5ED9;
+  --mark-letter: #FFFFFF;
+  --mark-bar: #7FE3F0;
+  --lit: #7FE3F0;
+  --lit-ink: #001F23;
+  --package: #121729;
+  --silk: #EEF0FA;
   --ok-bg: #E3F1EA;
   --ok-ink: #0B5E45;
   --err: #A3241B;
@@ -74,19 +77,19 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #02170F;
-    --surface: #0D241B;
-    --surface-high: #182E25;
-    --ink: #CFE9DA;
-    --graphite: #ACCEBD;
-    --rule: #2E4D40;
-    --field: #779888;
-    --accent: #E2BC5E;
-    --accent-ink: #0A2018;
-    --pad: #D6B04F;
-    --lit: #F1CE6E;
-    --lit-ink: #0A2018;
-    --package: #0F1417;
+    --paper: #0D1323;
+    --surface: #1A1F30;
+    --surface-high: #24293B;
+    --ink: #DDE1F9;
+    --graphite: #BFC5E3;
+    --rule: #3F465F;
+    --field: #8990AC;
+    --accent: #7FE3F0;
+    --accent-ink: #001F23;
+    --pad: #71D5E2;
+    --lit: #8EF2FF;
+    --lit-ink: #001F23;
+    --package: #070B16;
     --ok-bg: #123A2C;
     --ok-ink: #BFE8D2;
     --err: #FF9A8F;
@@ -102,19 +105,19 @@
 }
 
 :root[data-theme="dark"] {
-  --paper: #02170F;
-  --surface: #0D241B;
-  --surface-high: #182E25;
-  --ink: #CFE9DA;
-  --graphite: #ACCEBD;
-  --rule: #2E4D40;
-  --field: #779888;
-  --accent: #E2BC5E;
-  --accent-ink: #0A2018;
-  --pad: #D6B04F;
-  --lit: #F1CE6E;
-  --lit-ink: #0A2018;
-  --package: #0F1417;
+  --paper: #0D1323;
+  --surface: #1A1F30;
+  --surface-high: #24293B;
+  --ink: #DDE1F9;
+  --graphite: #BFC5E3;
+  --rule: #3F465F;
+  --field: #8990AC;
+  --accent: #7FE3F0;
+  --accent-ink: #001F23;
+  --pad: #71D5E2;
+  --lit: #8EF2FF;
+  --lit-ink: #001F23;
+  --package: #070B16;
   --ok-bg: #123A2C;
   --ok-ink: #BFE8D2;
   --err: #FF9A8F;
@@ -331,18 +334,53 @@ svg {
   text-decoration: none;
 }
 
-.brand__chip {
-  width: 1rem;
-  height: 1.35rem;
-  fill: currentColor;
+/* The JAT mark (templates/partials/mark.php). One colour set for both themes: it was measured on light and dark grounds. */
+.mark {
+  width: 1.75rem;
+  height: 1.5rem;
+  flex: none;
+  overflow: visible;
 }
 
-.brand__pins {
-  fill: var(--pad);
+.mark__slice {
+  fill: var(--mark-slice);
 }
 
-.brand__notch {
-  fill: var(--paper);
+.mark__letter {
+  fill: var(--mark-letter);
+}
+
+.mark__bar {
+  fill: var(--mark-bar);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Calibration intro, once per visit (motion.js): the middle slice steps down twice, then the bar is drawn from its
+   centre. Every move decelerates into place; nothing falls or bounces. */
+@media (prefers-reduced-motion: no-preference) {
+  .mark.is-intro .mark__mid {
+    animation: mark-calibrate 1.7s both;
+  }
+
+  .mark.is-intro .mark__bar {
+    animation: mark-gauge 1.7s both;
+  }
+}
+
+@keyframes mark-calibrate {
+  0% { translate: 0 -4px; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+  16% { translate: 0 -2px; }
+  28% { translate: 0 -2px; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+  44%,
+  100% { translate: 0 0; }
+}
+
+@keyframes mark-gauge {
+  0%,
+  52% { scale: 0 1; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+  80%,
+  100% { scale: 1 1; }
 }
 
 .masthead__nav {
@@ -2233,6 +2271,9 @@ main [id] {
     --graphite: #333333;
     --rule: #BBBBBB;
     --accent: #000000;
+    --mark-slice: #000000;
+    --mark-letter: #FFFFFF;
+    --mark-bar: #FFFFFF;
   }
 
   .stage-banner,

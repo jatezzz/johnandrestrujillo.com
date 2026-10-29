@@ -30,8 +30,8 @@ $other = $c['ui']['other_lang'];
 <link rel="alternate" hreflang="es" href="<?= $e($urls['es']) ?>">
 <link rel="alternate" hreflang="x-default" href="<?= $e($urls['en']) ?>">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F5FBF5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#02170F" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FAF8FF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1323" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="<?= $e($og_type) ?>">
 <meta property="og:title" content="<?= $e($page_title) ?>">
 <meta property="og:description" content="<?= $e($page_description) ?>">
@@ -66,7 +66,7 @@ $other = $c['ui']['other_lang'];
 <header class="masthead">
   <div class="masthead__inner">
     <a class="brand" href="<?= $e($lang === 'es' ? '/es/' : '/') ?>">
-      <svg class="brand__chip" viewBox="0 0 24 32" aria-hidden="true" focusable="false"><rect x="5" y="2" width="14" height="28" rx="2"/><path class="brand__notch" d="M9.5 2a2.5 2.5 0 0 0 5 0"/><g class="brand__pins"><rect x="1" y="6" width="4" height="2"/><rect x="1" y="12" width="4" height="2"/><rect x="1" y="18" width="4" height="2"/><rect x="1" y="24" width="4" height="2"/><rect x="19" y="6" width="4" height="2"/><rect x="19" y="12" width="4" height="2"/><rect x="19" y="18" width="4" height="2"/><rect x="19" y="24" width="4" height="2"/></g></svg>
+      <?= $view->partial('mark', []) ?>
       <span class="brand__name"><?= $e($c['person']['name']) ?></span>
     </a>
     <nav class="masthead__nav" aria-label="<?= $e($c['ui']['nav_label']) ?>">
