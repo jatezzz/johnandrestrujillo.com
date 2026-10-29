@@ -1363,13 +1363,31 @@ svg {
 
 /* ---------- Experience ---------- */
 
+/* Experience reads like a scope trace: a signal runs down the left edge and each role is a pulse on it.
+   With scroll-driven animations the trace is drawn as you read, its head on a line 65% down the screen, and a
+   pulse lights up when its role reaches that line. Without them, or with reduced motion, the trace is simply
+   drawn. CSS only. */
 .roles {
+  --trace-x: -1.6rem;
+  position: relative;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 2.1rem;
   list-style: none;
 }
 
+.roles::before {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  bottom: 0;
+  left: calc(2.1rem + var(--trace-x));
+  width: 2px;
+  background: repeating-linear-gradient(to bottom, var(--rule) 0 4px, transparent 4px 8px);
+}
+
 .role {
+  --pulse-top: 2.1rem;
+  position: relative;
   display: grid;
   gap: 0.4rem 2.5rem;
   padding-block: 1.75rem;
@@ -1377,8 +1395,66 @@ svg {
 }
 
 .role:first-child {
+  --pulse-top: 0.35rem;
   padding-top: 0;
   border-top: 0;
+}
+
+/* the trace through this role, and its pulse: a square step out of the line */
+.role::before,
+.role::after {
+  content: "";
+  position: absolute;
+  left: var(--trace-x);
+  pointer-events: none;
+}
+
+.role::before {
+  top: calc(var(--pulse-top) + 0.1rem);
+  bottom: -2.1rem; /* down to the next role's pulse */
+  width: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 55%, transparent);
+  transform-origin: top;
+}
+
+.role:last-child::before {
+  bottom: 0;
+}
+
+.role::after {
+  top: var(--pulse-top);
+  width: 0.75rem;
+  height: 0.7rem;
+  border: 2px solid var(--accent);
+  border-left: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--accent) 55%, transparent));
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .role::before {
+      animation: trace-draw linear both;
+      animation-timeline: view(block 0 35%);
+      animation-range: entry 0% exit 0%;
+    }
+
+    .role::after {
+      animation: trace-pulse linear both;
+      animation-timeline: view(block 0 35%);
+      animation-range: entry 0% entry 12rem;
+    }
+  }
+}
+
+@keyframes trace-draw {
+  from { scale: 1 0; }
+  to { scale: 1 1; }
+}
+
+@keyframes trace-pulse {
+  from { opacity: 0.25; scale: 0.2 1; }
+  to { opacity: 1; scale: 1 1; }
 }
 
 @media (min-width: 52rem) {
@@ -2622,6 +2698,9 @@ main [id] {
     position: static;
   }
 
+  .roles::before,
+  .role::before,
+  .role::after,
   .masthead::after,
   .masthead__trace,
   .dock,

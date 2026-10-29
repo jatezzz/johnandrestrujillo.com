@@ -619,6 +619,15 @@
         ]
       },
       {
+        "title": "Experience as a scope trace",
+        "what": "A signal runs down the Experience list as you read, and each role is a pulse that lights up when it reaches the reading line.",
+        "hard": "It is drawn by scroll-driven animations (a view timeline per role, inset so the trace head sits 65% down the screen), in CSS with no script and no scroll listener. Without support, or with reduced motion, the trace is simply drawn.",
+        "files": [
+          "public/assets/css/site.css",
+          "templates/partials/experience.php"
+        ]
+      },
+      {
         "title": "The mark calibrates",
         "what": "On the first page of a visit the logo’s middle slice steps into place and its bar is drawn.",
         "hard": "It is CSS on the inline SVG, with no animation library, played once per visit and skipped with reduced motion.",

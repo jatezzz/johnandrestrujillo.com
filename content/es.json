@@ -619,6 +619,15 @@
         ]
       },
       {
+        "title": "La experiencia como traza de osciloscopio",
+        "what": "Una señal recorre la lista de Experiencia mientras lees, y cada trabajo es un pulso que se enciende cuando llega a la línea de lectura.",
+        "hard": "La dibujan animaciones ligadas al scroll (una línea de tiempo de vista por trabajo, recortada para que la punta de la traza quede al 65% de la pantalla), en CSS, sin script ni escuchador de scroll. Sin soporte, o con movimiento reducido, la traza simplemente aparece dibujada.",
+        "files": [
+          "public/assets/css/site.css",
+          "templates/partials/experience.php"
+        ]
+      },
+      {
         "title": "El logo se calibra",
         "what": "En la primera página de la visita, la tajada del medio del logo se ajusta en su lugar y se traza su barra.",
         "hard": "Es CSS sobre el SVG incrustado, sin librería de animación, una vez por visita y omitido con movimiento reducido.",
