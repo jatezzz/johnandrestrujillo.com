@@ -25,4 +25,8 @@ DirectoryIndex index.php
   <FilesMatch "\.(css|js|woff2|svg|png|jpg|webp|ico)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
+  # /favicon.ico is the one asset fetched at a fixed URL, with no hash to change.
+  <Files "favicon.ico">
+    Header set Cache-Control "public, max-age=604800"
+  </Files>
 </IfModule>
