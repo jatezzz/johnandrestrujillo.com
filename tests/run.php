@@ -230,6 +230,18 @@ test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', f
     }
 });
 
+test('speculation rules: served as JSON and announced only on HTML pages', function (): void {
+    $r = app()->handle('GET', '/speculationrules.json');
+    expect($r->status === 200 && $r->header('Content-Type') === 'application/speculationrules+json', 'rules have their MIME type');
+    $rules = json_decode($r->body, true);
+    expect(is_array($rules) && ($rules['prerender'][0]['eagerness'] ?? '') === 'moderate', 'prerender on intent, not on load');
+    expect(str_contains($r->body, "[href*='?']"), 'links with a query string (the contact image check) are excluded');
+    expect(app()->handle('GET', '/')->header('Speculation-Rules') === '"/speculationrules.json"', 'home announces the rules');
+    expect(app()->handle('GET', '/work/ai-platform/')->header('Speculation-Rules') === '"/speculationrules.json"', 'case page announces the rules');
+    expect(app()->handle('GET', '/robots.txt')->header('Speculation-Rules') === null, 'plain text does not');
+    expect(app()->handle('GET', '/nope')->header('Speculation-Rules') === null, 'a 404 does not');
+});
+
 test('llms.txt summarizes the profile for AI assistants', function (): void {
     $r = app()->handle('GET', '/llms.txt');
     expect($r->status === 200 && str_starts_with((string) $r->header('Content-Type'), 'text/markdown'), 'llms.txt is served as markdown');

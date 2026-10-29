@@ -58,6 +58,7 @@ final class App
                 '/robots.txt' => $this->robots(),
                 '/sitemap.xml' => $this->sitemap(),
                 '/llms.txt' => $this->llms(),
+                '/speculationrules.json' => $this->speculationRules(),
                 '/healthz' => Response::text("ok\n")->withHeader('Cache-Control', 'no-store'),
                 '/og/en', '/og/es' => $this->card(substr($path, 4), $path),
                 default => $this->study($method, $path) ?? $this->notFound($path),
@@ -191,6 +192,7 @@ final class App
             'page_title' => $project['title'] . ' | ' . $c['person']['name'],
             'page_description' => $project['text'],
             'og_type' => 'article',
+            'expect' => 'case-stack',
             'json_ld' => $this->caseJsonLd($c, $project, $lang, $urls),
         ]);
 
@@ -227,6 +229,28 @@ final class App
      * A plain-text summary for AI assistants that search the web (the llms.txt convention):
      * who he is, the projects with their front end and back end, and where to reach him.
      */
+    /**
+     * Speculation rules, delivered by header (see secure()) rather than an inline script, so the strict CSP
+     * stays as it is. Chrome prerenders a case study or a home page when the visitor shows intent (hover, or
+     * pointer down on touch) and the click opens it instantly; other browsers ignore the header.
+     */
+    private function speculationRules(): Response
+    {
+        $rules = [
+            'prerender' => [[
+                'where' => ['and' => [
+                    ['href_matches' => ['/', '/#*', '/es/', '/es/#*', '/work/*', '/es/trabajo/*']],
+                    // a query string means a personal page (the contact image check): never fetch it unasked
+                    ['not' => ['selector_matches' => "[rel~=nofollow], [download], [href*='?']"]],
+                ]],
+                'eagerness' => 'moderate',
+            ]],
+        ];
+
+        return Response::text((string) json_encode($rules, JSON_UNESCAPED_SLASHES), 200, 'application/speculationrules+json')
+            ->withHeader('Cache-Control', $this->config['env'] === 'production' ? 'public, max-age=3600' : 'no-store');
+    }
+
     private function llms(): Response
     {
         $c = Content::load($this->root, 'en');
@@ -463,6 +487,9 @@ final class App
         }
         if ($this->config['noindex']) {
             $headers['X-Robots-Tag'] = 'noindex, nofollow';
+        }
+        if (str_starts_with((string) $response->header('Content-Type'), 'text/html') && $response->status === 200) {
+            $headers['Speculation-Rules'] = '"/speculationrules.json"';
         }
         foreach ($headers as $name => $value) {
             $response = $response->withHeader($name, $value);

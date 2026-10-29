@@ -7,7 +7,9 @@
  * @var array<string, mixed> $p
  * @var callable $e
  * @var callable $asset
+ * @var bool $eager on a case study the lead screen is the first thing seen (and the page-transition target)
  */
+$eager = !empty($eager);
 ?>
 <div class="project__media<?= count($p['media']) > 1 ? ' project__media--gallery' : '' ?>"<?php if (count($p['media']) > 1): ?> data-gallery="<?= $e(str_replace('{title}', $p['title'], $c['ui']['gallery'])) ?>"<?php endif; ?>>
   <?php foreach ($p['media'] as $i => $m): ?>
@@ -27,7 +29,7 @@
     <figcaption><?= $e($m['caption']) ?></figcaption>
     <?php else: ?>
     <div class="shot__frame">
-      <img src="<?= $e($asset($m['src'])) ?>" width="<?= (int) $m['width'] ?>" height="<?= (int) $m['height'] ?>" loading="lazy" alt="<?= $e($m['alt']) ?>">
+      <img src="<?= $e($asset($m['src'])) ?>" width="<?= (int) $m['width'] ?>" height="<?= (int) $m['height'] ?>"<?= $eager && $i === 0 ? ' fetchpriority="high"' : ' loading="lazy"' ?> alt="<?= $e($m['alt']) ?>">
     </div>
     <figcaption><?= $e($m['caption']) ?></figcaption>
     <?php endif; ?>

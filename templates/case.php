@@ -21,9 +21,9 @@ $w = $c['work'];
     <p class="case-study__lede"><?= $e($p['text']) ?></p>
   </header>
 
-  <?= $view->partial('media', ['c' => $c, 'p' => $p, 'asset' => $asset]) ?>
+  <?= $view->partial('media', ['c' => $c, 'p' => $p, 'asset' => $asset, 'eager' => true]) ?>
 
-  <dl class="stack">
+  <dl class="stack" id="case-stack">
     <div class="stack__row"><dt><?= $e($w['front_label']) ?></dt><dd><?= $e($p['front']) ?></dd></div>
     <?php if (!empty($p['back'])): ?>
     <div class="stack__row"><dt><?= $e($w['back_label']) ?></dt><dd><?= $e($p['back']) ?></dd></div>

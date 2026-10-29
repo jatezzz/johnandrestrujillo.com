@@ -12,8 +12,16 @@
 
   // ---- Metrics: anonymous, cookie-free events to /e, relayed server-side (src/Metrics.php) ----
   const metricsOn = document.body.dataset.metrics === 'on';
+  // A page Chrome prerendered (speculation rules) may never be shown: hold its events until it is.
+  const shown = document.prerendering
+    ? new Promise((resolve) => document.addEventListener('prerenderingchange', resolve, { once: true }))
+    : null;
   const send = (event, props = {}) => {
     if (!metricsOn) return;
+    if (document.prerendering) {
+      shown.then(() => send(event, props));
+      return;
+    }
     const body = JSON.stringify({ event, props: { $pathname: location.pathname, ...props } });
     try {
       if (navigator.sendBeacon && navigator.sendBeacon('/e', new Blob([body], { type: 'application/json' }))) return;
@@ -33,7 +41,11 @@
     }
     const width = window.innerWidth;
     const viewport = width < 640 ? 'phone' : width < 1024 ? 'tablet' : 'desktop';
+    // how this page arrived: prerendered by the speculation rules (shown on activation), or a plain navigation
+    const entry = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+    const nav = !entry ? '' : (document.prerendering || entry.activationStart > 0) ? 'prerender' : entry.type;
     send('$pageview', {
+      nav,
       lang: root.lang,
       theme: root.getAttribute('data-theme') || 'system',
       viewport,

@@ -54,6 +54,10 @@ $other = $c['ui']['other_lang'];
 <link rel="preload" href="/assets/fonts/atkinson-next-v7-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?= $e($asset('css/site.css')) ?>">
 <script src="<?= $e($asset('js/theme.js')) ?>"></script>
+<script src="<?= $e($asset('js/transitions.js')) ?>"></script>
+<?php if (!empty($expect)): ?>
+<link rel="expect" href="#<?= $e($expect) ?>" blocking="render">
+<?php endif; ?>
 <script src="<?= $e($asset('js/site.js')) ?>" defer></script>
 <script src="<?= $e($asset('js/motion.js')) ?>" defer></script>
 <script type="application/ld+json"><?= $json_ld ?></script>

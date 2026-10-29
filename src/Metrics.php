@@ -22,7 +22,7 @@ final class Metrics
 {
     /** Events the browser may send, each with the only properties it may carry. */
     private const BROWSER_EVENTS = [
-        '$pageview' => ['$pathname', '$referring_domain', 'lang', 'theme', 'viewport', 'status'],
+        '$pageview' => ['$pathname', '$referring_domain', 'lang', 'theme', 'viewport', 'status', 'nav'],
         '$web_vitals' => ['$pathname', '$web_vitals_LCP_value', '$web_vitals_CLS_value', '$web_vitals_FCP_value', '$web_vitals_INP_value'],
         '$exception' => ['$pathname', '$exception_type', '$exception_message', '$exception_source', '$exception_lineno'],
         'pin_selected' => ['$pathname', 'pin'],

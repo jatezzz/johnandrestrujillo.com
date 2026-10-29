@@ -2200,6 +2200,27 @@ main [id] {
   .hero__person img {
     view-transition-name: portrait;
   }
+
+  /* Work card <-> case study: transitions.js names the pair; the screen and the title travel and resize. */
+  ::view-transition-group(case-media),
+  ::view-transition-group(case-title) {
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::view-transition-old(case-media),
+  ::view-transition-new(case-media) {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  ::view-transition-old(case-title),
+  ::view-transition-new(case-title) {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    object-position: left top;
+  }
 }
 
 /* the 30%-wide pulse travels the whole edge without leaving the panel: 0 → 70% of the panel = 233% of itself */
