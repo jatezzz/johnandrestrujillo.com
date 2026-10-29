@@ -245,6 +245,12 @@ test('Under the hood renders in each language with real weights and the CSP', fu
     expect(!str_contains(app()->handle('GET', '/')->body, 'js/hood.js'), 'the home page does not load the readings script');
 });
 
+test('IndexNow: exactly one key file, and it holds its own name', function () use ($root): void {
+    $keys = array_values(array_filter(glob($root . '/public/*.txt') ?: [], static fn (string $f): bool => (bool) preg_match('/\/[0-9a-f]{32}\.txt$/', $f)));
+    expect(count($keys) === 1, 'one key file in public/');
+    expect(count($keys) === 1 && trim((string) file_get_contents($keys[0])) === basename($keys[0], '.txt'), 'the file contains the key');
+});
+
 test('speculation rules: served as JSON and announced only on HTML pages', function (): void {
     $r = app()->handle('GET', '/speculationrules.json');
     expect($r->status === 200 && $r->header('Content-Type') === 'application/speculationrules+json', 'rules have their MIME type');

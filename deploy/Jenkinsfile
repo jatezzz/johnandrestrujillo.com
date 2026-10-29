@@ -69,6 +69,18 @@ pipeline {
         }
       }
     }
+    stage('Notify search engines') {
+      when { expression { env.DEPLOY_DRY_RUN == '0' } }
+      steps {
+        // IndexNow (Bing, Yandex and others): the sitemap's URLs in one request. Never fails the build.
+        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+          sh '''
+            docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$WORKSPACE:/src" -w /src "$CI_IMAGE" \
+              php tools/indexnow.php https://johnandrestrujillo.com
+          '''
+        }
+      }
+    }
   }
   post {
     always {
