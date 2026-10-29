@@ -139,6 +139,12 @@
       send('disclosure_toggled', { id: owner ? owner.id : 'page', state: details.open ? 'open' : 'closed' });
     }, true);
 
+    // Which claim sources people open.
+    document.addEventListener('toggle', (event) => {
+      const pop = event.target;
+      if (pop instanceof HTMLElement && pop.classList.contains('proof') && event.newState === 'open') send('proof_opened', { id: pop.id });
+    }, true);
+
     // Which external links people follow (host and path only).
     document.addEventListener('click', (event) => {
       const link = event.target.closest ? event.target.closest('a[href^="http"]') : null;
@@ -189,6 +195,13 @@
       }
     }
   }
+
+  // ---- Claim sources: a link inside the popover jumps in the page, so put the popover away ----
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest ? event.target.closest('.proof a[href^="#"]') : null;
+    const pop = link ? link.closest('[popover]') : null;
+    if (pop && pop.hidePopover) pop.hidePopover();
+  });
 
   // ---- Theme toggle ----
   const toggle = document.querySelector('[data-theme-toggle]');

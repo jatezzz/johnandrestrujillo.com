@@ -541,12 +541,12 @@ svg {
   color: var(--graphite);
 }
 
-.hero__proof li {
+.hero__proof > li {
   padding-left: 1.1rem;
   position: relative;
 }
 
-.hero__proof li::before {
+.hero__proof > li::before {
   content: "";
   position: absolute;
   left: 0;
@@ -554,6 +554,105 @@ svg {
   width: 0.45rem;
   height: 0.45rem;
   background: var(--accent);
+}
+
+/* Claim sources (templates/partials/proof.php): a popover placed by CSS anchor positioning, next to the button
+   that opened it (its implicit anchor), flipping when it would leave the viewport. Without anchor positioning the
+   browser's own placement (centred) is kept. Entry and exit fade without script (@starting-style). */
+.proof__open {
+  margin-left: 0.35rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font: 600 0.72rem/1.5 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 0.1em;
+  cursor: pointer;
+}
+
+.proof__open:hover,
+.proof__open:focus-visible {
+  border-color: var(--accent);
+}
+
+.proof {
+  width: min(26rem, calc(100vw - 2rem));
+  margin: 0;
+  padding: 0.9rem 1rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.proof::backdrop {
+  background: transparent;
+}
+
+@supports (position-area: bottom) {
+  .proof {
+    inset: auto;
+    margin-block: 0.45rem;
+    position-area: bottom span-right;
+    position-try-fallbacks: flip-block, bottom span-left, top span-left;
+  }
+}
+
+.proof__title {
+  margin: 0 0 0.5rem;
+  color: var(--graphite);
+  font: 600 0.75rem/1.4 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.proof__list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step--1);
+}
+
+.proof__list a {
+  color: inherit;
+  text-decoration-color: var(--rule);
+}
+
+.proof__period {
+  display: block;
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.proof__more {
+  margin: 0.7rem 0 0;
+  font-size: var(--step--1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .proof {
+    opacity: 0;
+    translate: 0 -0.35rem;
+    transition: opacity 0.18s ease-out, translate 0.18s ease-out, display 0.18s allow-discrete, overlay 0.18s allow-discrete;
+  }
+
+  .proof:popover-open {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .proof:popover-open {
+      opacity: 0;
+      translate: 0 -0.35rem;
+    }
+  }
 }
 
 .hero__actions {

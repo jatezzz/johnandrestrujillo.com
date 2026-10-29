@@ -25,8 +25,8 @@ $hero = $c['hero'];
     </h1>
     <p class="hero__lede"><?= $e($hero['lede']) ?></p>
     <ul class="hero__proof" aria-label="<?= $e($hero['proof']['label']) ?>">
-      <?php foreach ($hero['proof']['items'] as $item): ?>
-      <li><?= $e($item) ?></li>
+      <?php foreach ($hero['proof']['items'] as $i => $item): ?>
+      <li><?= $view->partial('proof', ['c' => $c, 'n' => $i + 1, 'claim' => $item, 'evidence' => $hero['proof']['evidence'][$i]]) ?></li>
       <?php endforeach; ?>
     </ul>
     <p class="hero__actions">

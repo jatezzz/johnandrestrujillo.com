@@ -27,7 +27,10 @@
     "gallery": "Screens of {title}. Swipe for more.",
     "not_found_title": "This page doesn’t exist",
     "not_found_body": "The link may be old or mistyped. Everything on this site is on one page.",
-    "not_found_home": "Go to the home page"
+    "not_found_home": "Go to the home page",
+    "proof_open": "Source",
+    "proof_title": "Where this comes from",
+    "proof_more": "Full experience"
   },
   "person": {
     "name": "John Andrés Trujillo",
@@ -46,6 +49,11 @@
         "10+ years shipping software, 7+ on iOS in production",
         "Long engagements: almost 6 years with one firm, 3 with another",
         "My AI platform has been in daily client use since June 2025"
+      ],
+      "evidence": [
+        {"roles": ["accessibility", "consultancy", "art-marketplace", "mobile-modernization"]},
+        {"roles": ["consultancy", "accessibility", "art-marketplace"]},
+        {"roles": ["ai-platform"], "case": "ai-platform"}
       ]
     },
     "cta_contact": "Write to me",

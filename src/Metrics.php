@@ -35,6 +35,7 @@ final class Metrics
         'cta_click' => ['$pathname', 'cta', 'loc', 'viewport'],
         'contact_started' => ['$pathname', 'viewport'],
         'disclosure_toggled' => ['$pathname', 'id', 'state'],
+        'proof_opened' => ['$pathname', 'id'],
         'shared' => ['$pathname', 'method'],
     ];
     private const MAX_PER_HOUR = 300;

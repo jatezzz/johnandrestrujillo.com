@@ -27,7 +27,10 @@
     "gallery": "Pantallas de {title}. Desliza para ver más.",
     "not_found_title": "Esta página no existe",
     "not_found_body": "Puede que el enlace sea antiguo o tenga un error. Todo el sitio está en una sola página.",
-    "not_found_home": "Ir al inicio"
+    "not_found_home": "Ir al inicio",
+    "proof_open": "Fuente",
+    "proof_title": "De dónde sale",
+    "proof_more": "Experiencia completa"
   },
   "person": {
     "name": "John Andrés Trujillo",
@@ -46,6 +49,11 @@
         "Más de 10 años entregando software, más de 7 en iOS en producción",
         "Relaciones largas: casi 6 años con una firma y 3 con otra",
         "Mi plataforma de IA la usan clientes a diario desde junio de 2025"
+      ],
+      "evidence": [
+        {"roles": ["accessibility", "consultancy", "art-marketplace", "mobile-modernization"]},
+        {"roles": ["consultancy", "accessibility", "art-marketplace"]},
+        {"roles": ["ai-platform"], "case": "ai-platform"}
       ]
     },
     "cta_contact": "Escríbeme",
