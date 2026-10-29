@@ -8,10 +8,11 @@
  * @var array{left: list<array<string, string>>, right: list<array<string, string>>} $sides
  * @var array<string, list<array<string, mixed>>> $evidence
  * @var callable $e
+ * @var callable $asset
  */
 $p = $c['pinout'];
 ?>
-<div class="hero__chip">
+<div class="hero__chip" data-traces="<?= $e($asset('js/traces.js')) ?>">
   <figure class="pinout">
     <figcaption class="pinout__caption"><strong><?= $e($p['title']) ?>.</strong> <?= $e($p['hint']) ?></figcaption>
     <div class="pinout__body">

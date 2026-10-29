@@ -117,6 +117,16 @@
       panel.classList.add('is-signal');
     }));
     panel.addEventListener('animationend', () => panel.classList.remove('is-signal'));
+
+    // With WebGPU, the pick also sends a pulse along a circuit trace from the pin into the panel (traces.js,
+    // fetched on the first pick so it costs nothing until then). Without it the edge signal above is all there is.
+    const chip = document.querySelector('.hero__chip[data-traces]');
+    let traces = null;
+    pinLinks.forEach((pin) => pin.addEventListener('click', () => {
+      if (!chip || reducedMotion.matches || !('gpu' in navigator)) return;
+      traces = traces || import(chip.dataset.traces).then((m) => m.init(chip, pinLinks, panel)).catch(() => null);
+      traces.then((t) => { if (t) t.select(pin); });
+    }));
   }
 
   // ---- Masthead: a trace under the link of the section on screen ----

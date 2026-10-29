@@ -64,6 +64,7 @@
     popover: typeof HTMLElement.prototype.showPopover === 'function',
     spec: !!(HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')),
     scroll: css('animation-timeline: view()'),
+    gpu: 'gpu' in navigator,
   };
   Object.entries(support).forEach(([key, ok]) => set('data-support', key, ok ? t.yes : t.no));
 

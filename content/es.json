@@ -553,7 +553,8 @@
       "anchor": "Anchor positioning en CSS",
       "popover": "Popover",
       "spec": "Speculation rules (precarga)",
-      "scroll": "Animaciones ligadas al scroll"
+      "scroll": "Animaciones ligadas al scroll",
+      "gpu": "WebGPU"
     },
     "yes": "sí",
     "no": "no: la página funciona sin eso",
@@ -625,6 +626,14 @@
         "files": [
           "public/assets/css/site.css",
           "templates/partials/experience.php"
+        ]
+      },
+      {
+        "title": "Pistas del circuito en la GPU",
+        "what": "Al elegir una pata, un pulso recorre una pista de circuito impreso desde esa pata, por el costado del chip, hasta el panel que muestra la evidencia.",
+        "hard": "Es un shader de WebGPU: cada píxel mide su distancia a cada tramo de pista, así las líneas y el brillo quedan nítidos en cualquier densidad de pantalla sin geometría que reconstruir. Las pistas se trazan como en una placa, sin cruzarse. El código carga solo con la primera elección, dibuja solo mientras el pulso se mueve y se omite con movimiento reducido o sin WebGPU.",
+        "files": [
+          "public/assets/js/traces.js"
         ]
       },
       {

@@ -553,7 +553,8 @@
       "anchor": "CSS anchor positioning",
       "popover": "Popover",
       "spec": "Speculation rules (prerender)",
-      "scroll": "Scroll-driven animations"
+      "scroll": "Scroll-driven animations",
+      "gpu": "WebGPU"
     },
     "yes": "yes",
     "no": "no: the page works without it",
@@ -625,6 +626,14 @@
         "files": [
           "public/assets/css/site.css",
           "templates/partials/experience.php"
+        ]
+      },
+      {
+        "title": "Circuit traces on the GPU",
+        "what": "Picking a pin sends a pulse along a printed-circuit trace from that pin, down beside the chip, into the panel that shows the evidence.",
+        "hard": "It is a WebGPU shader: every pixel measures its distance to each trace segment, so lines and glow stay sharp at any pixel density with no geometry to rebuild. The traces are routed like a board, so none cross. The code loads only on the first pick, renders only while the pulse moves, and is skipped with reduced motion or without WebGPU.",
+        "files": [
+          "public/assets/js/traces.js"
         ]
       },
       {
