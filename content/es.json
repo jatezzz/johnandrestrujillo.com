@@ -1,8 +1,8 @@
 {
   "lang": "es",
   "locale": "es_EC",
-  "updated": "2026-10-22",
-  "updated_label": "22 oct 2026",
+  "updated": "2026-10-29",
+  "updated_label": "29 oct 2026",
   "meta": {
     "title": "John Andrés Trujillo, ingeniero móvil sénior: iOS, Android e IA",
     "description": "Ingeniero móvil sénior en Quito, Ecuador, con trabajo remoto. iOS y Android nativo desde 2015, además de Flutter, React Native, backend y agentes de IA.",
@@ -520,6 +520,131 @@
       "unavailable": "El formulario no está disponible ahora.",
       "captcha": "Los caracteres no coinciden. Inténtalo de nuevo con la nueva imagen."
     }
+  },
+  "hood": {
+    "path": "/es/bajo-el-capo/",
+    "link": "Bajo el capó",
+    "title": "Bajo el capó",
+    "description": "Cómo está hecho este sitio: mediciones en vivo de tu visita, cuánto pesa cada parte, su política de seguridad y las técnicas de front-end detrás, cada una con su código.",
+    "lede": "Este sitio es su propia hoja de datos. Las primeras lecturas son tu visita, medida por tu navegador mientras lees. El resto es cómo está hecha la página, cuánto pesa y las técnicas que usa, cada una con su código.",
+    "live_title": "Tu visita, en vivo",
+    "live_note": "Las mide tu navegador con las APIs de rendimiento: son los mismos números que recogen las métricas anónimas del sitio.",
+    "live": {
+      "lcp": "Mayor elemento pintado",
+      "cls": "Movimiento del diseño",
+      "inp": "Respuesta más lenta a un toque o tecla",
+      "arrival": "Cómo llegó esta página",
+      "bytes": "Transferido para esta página",
+      "requests": "Solicitudes"
+    },
+    "arrival": {
+      "prerender": "Precargada antes de tu clic",
+      "navigate": "Navegación normal",
+      "back_forward": "Atrás o adelante",
+      "reload": "Recarga"
+    },
+    "waiting": "midiendo…",
+    "interact": "toca o presiona una tecla para medir",
+    "cached": "desde la caché",
+    "noscript": "Estas lecturas necesitan JavaScript; todo lo demás del sitio funciona sin él.",
+    "support_title": "Qué soporta tu navegador",
+    "support": {
+      "vt": "Transiciones entre páginas",
+      "anchor": "Anchor positioning en CSS",
+      "popover": "Popover",
+      "spec": "Speculation rules (precarga)",
+      "scroll": "Animaciones ligadas al scroll"
+    },
+    "yes": "sí",
+    "no": "no: la página funciona sin eso",
+    "prefs_title": "Tus ajustes que el sitio respeta",
+    "prefs": {
+      "scheme": "Tema de color",
+      "motion": "Movimiento",
+      "contrast": "Contraste",
+      "transparency": "Transparencia"
+    },
+    "pref_values": {
+      "dark": "oscuro",
+      "light": "claro",
+      "reduce": "reducido",
+      "full": "completo",
+      "more": "aumentado",
+      "normal": "estándar",
+      "solid": "reducida",
+      "glass": "estándar"
+    },
+    "build_title": "La construcción",
+    "build_lede": "PHP simple y CSS y JavaScript escritos a mano. Sin framework, sin empaquetador, sin dependencias en ejecución y nada cargado desde otro dominio.",
+    "weights_title": "Cuánto pesa la portada",
+    "weights": {
+      "html": "HTML",
+      "css": "CSS",
+      "js": "JavaScript, {n} archivos",
+      "fonts": "Tipografías, {n} archivos",
+      "total": "Total"
+    },
+    "weights_note": "Bytes tal como se envían, con gzip. Las imágenes y los videos cargan solo cuando aparecen en pantalla, así que no se cuentan.",
+    "csp_title": "Política de seguridad, textual",
+    "csp_note": "Scripts y estilos solo de este sitio y nada incrustado. Cada técnica de abajo tuvo que funcionar dentro de ella.",
+    "tech_title": "Técnicas",
+    "hard_label": "Qué la hace difícil",
+    "code": "Código",
+    "techniques": [
+      {
+        "title": "Casos de estudio instantáneos",
+        "what": "Chrome precarga un caso de estudio en cuanto muestras intención (pasar el mouse, o tocar en el teléfono), así el clic lo abre al instante, y la captura y el título de la tarjeta viajan a la página nueva.",
+        "hard": "Las speculation rules suelen ir en un script dentro de la página, y esta política de seguridad lo prohíbe, así que llegan en una cabecera HTTP. La transformación abarca dos documentos: cada lado nombra sus elementos cuando la página se va y cuando aparece la siguiente.",
+        "files": [
+          "src/App.php",
+          "public/assets/js/transitions.js"
+        ]
+      },
+      {
+        "title": "Una fuente para cada cifra",
+        "what": "Cada afirmación de la introducción abre los trabajos que la respaldan, junto a su botón.",
+        "hard": "Abrir, cerrar, Esc y el foco los da la Popover API, y la ubicación el anchor positioning de CSS, que recién llegó a todos los navegadores grandes en 2026. Ningún script lo abre, lo ubica ni lo cierra.",
+        "files": [
+          "templates/partials/proof.php",
+          "public/assets/css/site.css"
+        ]
+      },
+      {
+        "title": "El chip de capacidades",
+        "what": "El chip se inclina hacia el puntero, las patas cercanas se encienden y al elegir una se ve dónde se usó esa habilidad.",
+        "hard": "Un solo escuchador del puntero, limitado a la tasa de cuadros, mueve la inclinación, el brillo y los botones magnéticos. Solo corre con mouse o trackpad y nunca con movimiento reducido.",
+        "files": [
+          "public/assets/js/motion.js",
+          "templates/partials/pinout.php"
+        ]
+      },
+      {
+        "title": "El logo se calibra",
+        "what": "En la primera página de la visita, la tajada del medio del logo se ajusta en su lugar y se traza su barra.",
+        "hard": "Es CSS sobre el SVG incrustado, sin librería de animación, una vez por visita y omitido con movimiento reducido.",
+        "files": [
+          "templates/partials/mark.php",
+          "public/assets/css/site.css"
+        ]
+      },
+      {
+        "title": "Un tema a partir de un color",
+        "what": "Cada superficie y color de texto sale del cobalto del logo.",
+        "hard": "Los tonos se generan con Material Color Utilities (HCT) y los roles de Material 3, y luego se mide cada par de texto, contorno y logo contra WCAG.",
+        "files": [
+          "tools/palette.mjs"
+        ]
+      },
+      {
+        "title": "Métricas sin cookies",
+        "what": "Conteos anónimos de qué se lee y se toca, sin cookies ni scripts de terceros.",
+        "hard": "Los eventos van a este mismo sitio y el servidor reenvía solo una lista permitida de campos. Una página precargada guarda sus eventos hasta que de verdad se muestra.",
+        "files": [
+          "src/Metrics.php",
+          "public/assets/js/site.js"
+        ]
+      }
+    ]
   },
   "footer": {
     "colophon": "Tipografía Atkinson Hyperlegible, diseñada por el Braille Institute para lectores con baja visión.",

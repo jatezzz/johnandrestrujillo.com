@@ -6,6 +6,10 @@ namespace Portfolio;
 
 final class App
 {
+    /** Shown verbatim on the Under the hood page. */
+    public const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
+        . "font-src 'self'; connect-src 'self'; manifest-src 'self'; media-src 'self'; frame-src https://www.youtube-nocookie.com; form-action 'self'; base-uri 'none'; frame-ancestors 'none'";
+
     /** @var array<string, mixed> */
     private array $config;
     private View $view;
@@ -59,6 +63,8 @@ final class App
                 '/sitemap.xml' => $this->sitemap(),
                 '/llms.txt' => $this->llms(),
                 '/speculationrules.json' => $this->speculationRules(),
+                '/under-the-hood/', '/es/bajo-el-capo/' => $this->hood($path === '/under-the-hood/' ? 'en' : 'es', $method),
+                '/under-the-hood', '/es/bajo-el-capo' => Response::redirect($path . '/', 301),
                 '/healthz' => Response::text("ok\n")->withHeader('Cache-Control', 'no-store'),
                 '/og/en', '/og/es' => $this->card(substr($path, 4), $path),
                 default => $this->study($method, $path) ?? $this->notFound($path),
@@ -230,6 +236,60 @@ final class App
      * who he is, the projects with their front end and back end, and where to reach him.
      */
     /**
+     * The site's own datasheet: live readings of the visit (hood.js), what the home page weighs, the CSP and the
+     * techniques, each with links to its code.
+     */
+    private function hood(string $lang, string $method): Response
+    {
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'GET, HEAD');
+        }
+        $c = Content::load($this->root, $lang);
+        $paths = ['en' => '/under-the-hood/', 'es' => '/es/bajo-el-capo/'];
+        $urls = array_map(fn (string $p): string => $this->config['base_url'] . $p, $paths);
+        $html = $this->page($lang, 'hood', [
+            'urls' => $urls,
+            'canonical' => $urls[$lang],
+            'switch_url' => $paths[$lang === 'en' ? 'es' : 'en'],
+            'page_title' => $c['hood']['title'] . ' | ' . $c['person']['name'],
+            'page_description' => $c['hood']['description'],
+            'page_script' => 'js/hood.js',
+            'weights' => $this->weights(),
+            'csp' => self::CSP,
+            'json_ld' => (string) json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'WebPage',
+                'name' => $c['hood']['title'],
+                'url' => $urls[$lang],
+                'inLanguage' => $lang,
+                'author' => ['@type' => 'Person', 'name' => $c['person']['name']],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+        ]);
+
+        return Response::html($html)->withHeader('Cache-Control', $this->cacheControl(true));
+    }
+
+    /**
+     * What the English home page weighs as served: gzip for text, fonts as they are (already compressed).
+     *
+     * @return array{html: int, css: int, js: int, js_files: int, fonts: int, font_files: int, total: int}
+     */
+    private function weights(): array
+    {
+        $gz = static fn (string $data): int => strlen((string) gzencode($data, 6));
+        $public = $this->root . '/public/assets/';
+        $html = $gz($this->page('en', 'home', ['form' => ['values' => [], 'errors' => [], 'sent' => false, 'captcha' => null]]));
+        $css = $gz((string) file_get_contents($public . 'css/site.css'));
+        $scripts = ['theme', 'transitions', 'site', 'motion'];
+        $js = array_sum(array_map(static fn (string $f): int => $gz((string) file_get_contents($public . "js/{$f}.js")), $scripts));
+        $fonts = glob($public . 'fonts/*.woff2') ?: [];
+        $fontBytes = array_sum(array_map(static fn (string $f): int => (int) filesize($f), $fonts));
+
+        return ['html' => $html, 'css' => $css, 'js' => $js, 'js_files' => count($scripts), 'fonts' => $fontBytes,
+            'font_files' => count($fonts), 'total' => $html + $css + $js + $fontBytes];
+    }
+
+    /**
      * Speculation rules, delivered by header (see secure()) rather than an inline script, so the strict CSP
      * stays as it is. Chrome prerenders a case study or a home page when the visitor shows intent (hover, or
      * pointer down on touch) and the click opens it instantly; other browsers ignore the header.
@@ -239,7 +299,7 @@ final class App
         $rules = [
             'prerender' => [[
                 'where' => ['and' => [
-                    ['href_matches' => ['/', '/#*', '/es/', '/es/#*', '/work/*', '/es/trabajo/*']],
+                    ['href_matches' => ['/', '/#*', '/es/', '/es/#*', '/work/*', '/es/trabajo/*', '/under-the-hood/', '/es/bajo-el-capo/']],
                     // a query string means a personal page (the contact image check): never fetch it unasked
                     ['not' => ['selector_matches' => "[rel~=nofollow], [download], [href*='?']"]],
                 ]],
@@ -307,6 +367,7 @@ final class App
         foreach (Content::load($this->root, 'en')['work']['projects'] as $project) {
             $pages[] = array_map(static fn (string $p): string => $base . $p, self::casePaths($project['id']));
         }
+        $pages[] = ['en' => $base . '/under-the-hood/', 'es' => $base . '/es/bajo-el-capo/'];
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
             . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
         foreach ($pages as $urls) {
@@ -479,8 +540,7 @@ final class App
             'X-Frame-Options' => 'DENY',
             'Cross-Origin-Opener-Policy' => 'same-origin',
             'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
-            'Content-Security-Policy' => "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
-                . "font-src 'self'; connect-src 'self'; manifest-src 'self'; media-src 'self'; frame-src https://www.youtube-nocookie.com; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+            'Content-Security-Policy' => self::CSP,
         ];
         if ($this->config['env'] === 'production' && str_starts_with($this->config['base_url'], 'https://')) {
             $headers['Strict-Transport-Security'] = 'max-age=31536000';

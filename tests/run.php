@@ -192,14 +192,14 @@ test('robots.txt and sitemap.xml', function (): void {
     expect(str_contains($closed, 'Disallow: /'), 'staging robots.txt disallows everything');
     $sitemap = app()->handle('GET', '/sitemap.xml');
     expect(simplexml_load_string($sitemap->body) !== false, 'sitemap is valid XML');
-    expect(substr_count($sitemap->body, '<loc>') === 6, 'sitemap lists the home and the two case pages in both languages');
+    expect(substr_count($sitemap->body, '<loc>') === 8, 'sitemap lists the home, the two case pages and Under the hood in both languages');
     expect(str_contains($sitemap->body, '<loc>https://example.test/es/trabajo/code-on-the-go/</loc>'), 'sitemap lists the Spanish case pages');
 });
 
 // ---------- HTML hygiene ----------
 
 test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', function (): void {
-    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/'] as $path) {
         $html = app()->handle('GET', $path)->body;
         $doc = dom($html);
         $xpath = new DOMXPath($doc);
@@ -230,6 +230,21 @@ test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', f
     }
 });
 
+test('Under the hood renders in each language with real weights and the CSP', function (): void {
+    foreach (['/under-the-hood/' => ['en', '/es/bajo-el-capo/'], '/es/bajo-el-capo/' => ['es', '/under-the-hood/']] as $path => [$lang, $other]) {
+        $r = app()->handle('GET', $path);
+        expect($r->status === 200, "$path renders");
+        expect(str_contains($r->body, '<html lang="' . $lang . '"'), "$path is in its language");
+        expect(str_contains($r->body, 'hreflang="' . ($lang === 'en' ? 'es' : 'en') . '" href="https://example.test' . $other . '"'), "$path points at its translation");
+        expect(str_contains($r->body, 'js/hood.js'), "$path loads its readings script");
+        expect(str_contains($r->body, 'class="hood__csp"><code>default-src') && str_contains($r->body, 'frame-ancestors'), "$path shows the CSP");
+        expect((bool) preg_match('/<td class="num">[1-9][0-9]*\.[0-9] KB<\/td>/', $r->body), "$path shows measured weights");
+    }
+    expect(app()->handle('GET', '/under-the-hood')->status === 301, 'without the trailing slash it redirects');
+    expect(app()->handle('POST', '/under-the-hood/')->status === 405, 'POST is refused');
+    expect(!str_contains(app()->handle('GET', '/')->body, 'js/hood.js'), 'the home page does not load the readings script');
+});
+
 test('speculation rules: served as JSON and announced only on HTML pages', function (): void {
     $r = app()->handle('GET', '/speculationrules.json');
     expect($r->status === 200 && $r->header('Content-Type') === 'application/speculationrules+json', 'rules have their MIME type');
@@ -257,7 +272,7 @@ test('every asset a page references exists', function (): void {
 });
 
 test('HTML: heading levels never skip', function (): void {
-    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/'] as $path) {
         $doc = dom(app()->handle('GET', $path)->body);
         $previous = 0;
         foreach ((new DOMXPath($doc))->query('//h1|//h2|//h3|//h4|//h5|//h6') as $heading) {

@@ -1,8 +1,8 @@
 {
   "lang": "en",
   "locale": "en_US",
-  "updated": "2026-10-22",
-  "updated_label": "22 Oct 2026",
+  "updated": "2026-10-29",
+  "updated_label": "29 Oct 2026",
   "meta": {
     "title": "John Andrés Trujillo, Senior Mobile Engineer: iOS, Android and AI",
     "description": "Senior mobile engineer in Quito, Ecuador, working remotely. Native iOS and Android since 2015, plus Flutter, React Native, backends and AI agents.",
@@ -520,6 +520,131 @@
       "unavailable": "The form is offline right now.",
       "captcha": "The characters didn’t match. Try again with the new image."
     }
+  },
+  "hood": {
+    "path": "/under-the-hood/",
+    "link": "Under the hood",
+    "title": "Under the hood",
+    "description": "How this site is built: live readings of your visit, what each part weighs, its security policy, and the front-end techniques behind it, each with its code.",
+    "lede": "This site is its own datasheet. The first readings are your visit, measured by your browser while you read. The rest is how the page is built, what it weighs, and the techniques behind it, each with its code.",
+    "live_title": "Your visit, live",
+    "live_note": "Measured by your browser with the Performance APIs: the same numbers this site’s anonymous metrics collect.",
+    "live": {
+      "lcp": "Largest paint",
+      "cls": "Layout shift",
+      "inp": "Slowest response to a tap or key",
+      "arrival": "How this page arrived",
+      "bytes": "Transferred for this page",
+      "requests": "Requests"
+    },
+    "arrival": {
+      "prerender": "Prerendered before you clicked",
+      "navigate": "Normal navigation",
+      "back_forward": "Back or forward",
+      "reload": "Reload"
+    },
+    "waiting": "measuring…",
+    "interact": "tap or press a key to measure",
+    "cached": "from cache",
+    "noscript": "These readings need JavaScript; everything else on the site works without it.",
+    "support_title": "What your browser supports",
+    "support": {
+      "vt": "Page-to-page transitions",
+      "anchor": "CSS anchor positioning",
+      "popover": "Popover",
+      "spec": "Speculation rules (prerender)",
+      "scroll": "Scroll-driven animations"
+    },
+    "yes": "yes",
+    "no": "no: the page works without it",
+    "prefs_title": "Your settings this site follows",
+    "prefs": {
+      "scheme": "Colour scheme",
+      "motion": "Motion",
+      "contrast": "Contrast",
+      "transparency": "Transparency"
+    },
+    "pref_values": {
+      "dark": "dark",
+      "light": "light",
+      "reduce": "reduced",
+      "full": "full",
+      "more": "increased",
+      "normal": "standard",
+      "solid": "reduced",
+      "glass": "standard"
+    },
+    "build_title": "The build",
+    "build_lede": "Plain PHP and hand-written CSS and JavaScript. No framework, no bundler, no runtime dependency, and nothing loaded from another domain.",
+    "weights_title": "What the home page weighs",
+    "weights": {
+      "html": "HTML",
+      "css": "CSS",
+      "js": "JavaScript, {n} files",
+      "fonts": "Fonts, {n} files",
+      "total": "Total"
+    },
+    "weights_note": "Bytes as served, with gzip. Images and video load only when they come into view, so they are not counted.",
+    "csp_title": "Security policy, verbatim",
+    "csp_note": "Scripts and styles only from this site and nothing inline. Every technique below had to work inside it.",
+    "tech_title": "Techniques",
+    "hard_label": "What makes it hard",
+    "code": "Code",
+    "techniques": [
+      {
+        "title": "Instant case studies",
+        "what": "Chrome prerenders a case study as soon as you show intent (hover, or touch on a phone), so the click opens it at once, and the card’s screen and title travel into the new page.",
+        "hard": "Speculation rules usually live in an inline script, which this security policy forbids, so they arrive in an HTTP header. The morph spans two documents: each side names its elements as the page leaves and as the next one appears.",
+        "files": [
+          "src/App.php",
+          "public/assets/js/transitions.js"
+        ]
+      },
+      {
+        "title": "A source for every claim",
+        "what": "Each claim in the introduction opens the roles behind it, next to its button.",
+        "hard": "Opening, closing, Esc and focus come from the Popover API, and the placement from CSS anchor positioning, which only reached every major browser in 2026. No script opens, places or closes it.",
+        "files": [
+          "templates/partials/proof.php",
+          "public/assets/css/site.css"
+        ]
+      },
+      {
+        "title": "The capability chip",
+        "what": "The chip tilts toward the pointer, the pins near it light up, and picking one shows where that skill was used.",
+        "hard": "One pointer listener, throttled to the frame rate, drives the tilt, the glow and the magnetic buttons. It runs only with a mouse or trackpad and never with reduced motion.",
+        "files": [
+          "public/assets/js/motion.js",
+          "templates/partials/pinout.php"
+        ]
+      },
+      {
+        "title": "The mark calibrates",
+        "what": "On the first page of a visit the logo’s middle slice steps into place and its bar is drawn.",
+        "hard": "It is CSS on the inline SVG, with no animation library, played once per visit and skipped with reduced motion.",
+        "files": [
+          "templates/partials/mark.php",
+          "public/assets/css/site.css"
+        ]
+      },
+      {
+        "title": "A theme from one colour",
+        "what": "Every surface and text colour comes from the logo’s cobalt.",
+        "hard": "The tones are generated with Material Color Utilities (HCT) and Material 3 roles, then each text, outline and logo pair is measured against WCAG.",
+        "files": [
+          "tools/palette.mjs"
+        ]
+      },
+      {
+        "title": "Metrics without cookies",
+        "what": "Anonymous counts of what people read and click, with no cookie and no third-party script.",
+        "hard": "Events go to this site and the server forwards only an allow-list of fields. A prerendered page holds its events until it is actually shown.",
+        "files": [
+          "src/Metrics.php",
+          "public/assets/js/site.js"
+        ]
+      }
+    ]
   },
   "footer": {
     "colophon": "Set in Atkinson Hyperlegible, a typeface the Braille Institute designed for low-vision readers.",

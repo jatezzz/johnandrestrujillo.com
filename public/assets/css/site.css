@@ -1910,6 +1910,213 @@ svg {
   }
 }
 
+/* ---------- Under the hood (templates/hood.php) ---------- */
+
+.hood {
+  padding-block: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(3rem, 2rem + 4vw, 5.5rem);
+}
+
+.hood__head {
+  max-width: 52rem;
+  margin-bottom: 2.5rem;
+}
+
+.hood__title {
+  margin: 0 0 1rem;
+  font-size: var(--step-3);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.hood__lede {
+  max-width: 62ch;
+  margin: 0;
+  font-size: var(--step-1);
+}
+
+.hood__lede--small {
+  font-size: var(--step-0);
+  margin-bottom: 1.5rem;
+}
+
+.hood__section {
+  padding-block: 2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.hood__note {
+  max-width: 62ch;
+  margin: 0.5rem 0 1.25rem;
+  color: var(--graphite);
+  font-size: var(--step--1);
+}
+
+.hood__sub {
+  margin: 1.75rem 0 0.6rem;
+  color: var(--graphite);
+  font: 600 0.78rem/1.4 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.readings {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  margin: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.readings__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface);
+}
+
+.readings dt {
+  color: var(--graphite);
+  font-size: var(--step--1);
+}
+
+.readings dd {
+  margin: 0;
+  color: var(--accent);
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+
+@media (min-width: 30rem) {
+  .readings {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 62rem) {
+  .readings {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.readings.readings dd.is-hint {
+  color: var(--graphite);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 400;
+}
+
+.readings--compact {
+  grid-template-columns: 1fr;
+}
+
+.readings--compact .readings__row {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.6rem;
+}
+
+.readings--compact dd {
+  color: var(--ink);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-align: right;
+}
+
+.hood__pair {
+  display: grid;
+  gap: 0 2rem;
+}
+
+@media (min-width: 48rem) {
+  .hood__pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.weights {
+  width: min(100%, 26rem);
+  border-collapse: collapse;
+}
+
+.weights th,
+.weights td {
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  font-weight: 400;
+}
+
+.weights td {
+  text-align: right;
+}
+
+.weights tfoot th,
+.weights tfoot td {
+  border-bottom: 0;
+  font-weight: 700;
+}
+
+.hood__csp {
+  max-width: 100%;
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: 0.8rem/1.6 var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.techniques {
+  display: grid;
+  gap: 1.75rem;
+  max-width: 52rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: technique;
+}
+
+.technique {
+  position: relative;
+  padding-left: 2.75rem;
+  counter-increment: technique;
+}
+
+.technique::before {
+  content: counter(technique, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  color: var(--accent);
+  font: 700 0.85rem/1.4 var(--font-mono);
+}
+
+.technique__title {
+  margin: 0 0 0.35rem;
+  font-size: var(--step-1);
+}
+
+.technique p {
+  margin: 0 0 0.45rem;
+}
+
+.technique__hard {
+  color: var(--graphite);
+}
+
+.technique__code {
+  font-size: var(--step--1);
+}
+
 .case-study {
   padding-block: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(3rem, 2rem + 4vw, 5.5rem);
 }

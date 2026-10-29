@@ -60,6 +60,9 @@ $other = $c['ui']['other_lang'];
 <?php endif; ?>
 <script src="<?= $e($asset('js/site.js')) ?>" defer></script>
 <script src="<?= $e($asset('js/motion.js')) ?>" defer></script>
+<?php if (!empty($page_script)): ?>
+<script src="<?= $e($asset($page_script)) ?>" defer></script>
+<?php endif; ?>
 <script type="application/ld+json"><?= $json_ld ?></script>
 </head>
 <body data-status="<?= (int) $status ?>"<?php if ($site['metrics']): ?> data-metrics="on"<?php endif; ?>>
@@ -98,6 +101,7 @@ $other = $c['ui']['other_lang'];
     <p><?= $e($c['footer']['colophon']) ?></p>
     <p><?= $e($c['footer']['colophon_color']) ?></p>
     <p><?= $e($c['footer']['updated']) ?> <span class="num"><?= $e($c['updated_label']) ?></span>.</p>
+    <p><a href="<?= $e($c['hood']['path']) ?>"><?= $e($c['hood']['link']) ?></a></p>
     <?php if ($site['source_url'] !== ''): ?>
     <p><a href="<?= $e($site['source_url']) ?>"><?= $e($c['footer']['source']) ?></a></p>
     <?php endif; ?>
