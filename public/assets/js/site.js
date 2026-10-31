@@ -16,13 +16,25 @@
   const shown = document.prerendering
     ? new Promise((resolve) => document.addEventListener('prerenderingchange', resolve, { once: true }))
     : null;
+  // The owner's own visits: open any page once with ?internal=1 (?internal=0 undoes it) and this browser
+  // tags its events, so they can be filtered out of the numbers.
+  let internal = false;
+  try {
+    const flag = new URLSearchParams(location.search).get('internal');
+    if (flag === '1') localStorage.setItem('internal', '1');
+    if (flag === '0') localStorage.removeItem('internal');
+    internal = localStorage.getItem('internal') === '1';
+  } catch (error) {
+    // storage blocked: count the visit as a normal one
+  }
   const send = (event, props = {}) => {
     if (!metricsOn) return;
     if (document.prerendering) {
       shown.then(() => send(event, props));
       return;
     }
-    const body = JSON.stringify({ event, props: { $pathname: location.pathname, ...props } });
+    const tag = internal ? { internal: 1 } : {};
+    const body = JSON.stringify({ event, props: { $pathname: location.pathname, ...props, ...tag } });
     try {
       if (navigator.sendBeacon && navigator.sendBeacon('/e', new Blob([body], { type: 'application/json' }))) return;
     } catch (error) {

@@ -11,7 +11,8 @@ namespace Portfolio;
  * an allow-list and forwards them after the response has been sent. Visitors never
  * talk to a third party, so the Content Security Policy stays 'self' only.
  *
- * Privacy: no cookies or storage, no person profiles, no IP or GeoIP sent. The
+ * Privacy: no cookies, no person profiles, no IP or GeoIP sent. The only stored flag is the
+ * owner's opt-in "internal" mark (localStorage, set with ?internal=1), never set for visitors. The
  * visitor id is a keyed hash of the day, IP and browser, so it can't follow anyone
  * across days and can't be reversed into an IP. Bots and headless browsers are dropped.
  *
@@ -88,6 +89,9 @@ final class Metrics
             } elseif ((is_int($value) || is_float($value)) && is_finite((float) $value)) {
                 $props[$key] = $value;
             }
+        }
+        if (($data['props']['internal'] ?? null) === 1) {
+            $props['internal'] = true; // the owner's own browser (?internal=1), filtered out of the numbers
         }
         $this->capture($event, $props, $ip, $agent, 'browser');
 

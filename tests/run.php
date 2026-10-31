@@ -462,6 +462,13 @@ test('metrics: allow-list, privacy and limits', function (): void {
     expect($event['properties']['$process_person_profile'] === false && $event['properties']['$geoip_disable'] === true, 'no profiles, no GeoIP');
     expect(!str_contains(json_encode($event), '198.51.100.9'), 'the IP address must never be sent');
     expect(str_starts_with($event['distinct_id'], 'anon-'), 'anonymous visitor id');
+    expect(!isset($event['properties']['internal']), 'visitors are not marked internal');
+    $owner = app(['metrics_mode' => 'log', 'var_dir' => $dir]);
+    $owner->handle('POST', '/e', [], $server, '{"event":"pin_selected","props":{"pin":"llm","internal":1}}');
+    $owner->handle('POST', '/e', [], $server, '{"event":"pin_selected","props":{"pin":"llm","internal":"yes"}}');
+    [$own, $other] = $owner->metrics()->pending() + [[], []];
+    expect(($own['properties']['internal'] ?? null) === true, 'the owner\'s browser is marked internal');
+    expect(!isset($other['properties']['internal']), 'only internal=1 marks a visit');
     expect($app->handle('POST', '/e', [], $server, '{"event":"buy_now"}')->status === 400, 'unknown event refused');
     expect($app->handle('POST', '/e', [], $server, str_repeat('x', 5000))->status === 413, 'oversized body refused');
     $bots = count($app->metrics()->pending());
