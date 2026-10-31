@@ -56,6 +56,13 @@
     // how this page arrived: prerendered by the speculation rules (shown on activation), or a plain navigation
     const entry = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
     const nav = !entry ? '' : (document.prerendering || entry.activationStart > 0) ? 'prerender' : entry.type;
+    // Where a shared link came from (?utm_source=linkedin...), since apps like LinkedIn hide the referrer.
+    const params = new URLSearchParams(location.search);
+    const campaign = {};
+    for (const key of ['utm_source', 'utm_medium', 'utm_campaign']) {
+      const value = (params.get(key) || '').toLowerCase();
+      if (/^[a-z0-9_.-]{1,40}$/.test(value)) campaign[key] = value;
+    }
     send('$pageview', {
       nav,
       lang: root.lang,
@@ -63,7 +70,14 @@
       viewport,
       $referring_domain: referrer,
       status: document.body.dataset.status || '200',
+      ...campaign,
     });
+    // Keep the address bar clean, so a copied link doesn't carry the tags (or ?internal) on to someone else.
+    if (['utm_source', 'utm_medium', 'utm_campaign', 'internal'].some((key) => params.has(key)) && history.replaceState) {
+      ['utm_source', 'utm_medium', 'utm_campaign', 'internal'].forEach((key) => params.delete(key));
+      const rest = params.toString();
+      history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+    }
 
     // Core Web Vitals, sent once when the page is hidden.
     const vitals = {};

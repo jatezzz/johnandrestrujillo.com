@@ -466,7 +466,9 @@ test('metrics: allow-list, privacy and limits', function (): void {
     $owner = app(['metrics_mode' => 'log', 'var_dir' => $dir]);
     $owner->handle('POST', '/e', [], $server, '{"event":"pin_selected","props":{"pin":"llm","internal":1}}');
     $owner->handle('POST', '/e', [], $server, '{"event":"pin_selected","props":{"pin":"llm","internal":"yes"}}');
-    [$own, $other] = $owner->metrics()->pending() + [[], []];
+    $owner->handle('POST', '/e', [], $server, '{"event":"$pageview","props":{"$pathname":"/","utm_source":"linkedin","utm_medium":"profile"}}');
+    [$own, $other, $tagged] = $owner->metrics()->pending() + [[], [], []];
+    expect(($tagged['properties']['utm_source'] ?? '') === 'linkedin' && ($tagged['properties']['utm_medium'] ?? '') === 'profile', 'a pageview keeps its UTM tags');
     expect(($own['properties']['internal'] ?? null) === true, 'the owner\'s browser is marked internal');
     expect(!isset($other['properties']['internal']), 'only internal=1 marks a visit');
     expect($app->handle('POST', '/e', [], $server, '{"event":"buy_now"}')->status === 400, 'unknown event refused');
