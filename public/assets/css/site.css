@@ -2265,6 +2265,136 @@ svg {
   margin: 3rem 0 0;
 }
 
+/* ---------- Notes (the blog index and a single article) ---------- */
+
+.notes-list {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2.5rem;
+}
+
+.notes-list__item {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.notes-list__item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.notes-list__meta,
+.note__meta {
+  margin: 0 0 0.4rem;
+  color: var(--graphite);
+  font-size: var(--step--1);
+}
+
+.notes-list__title {
+  margin: 0 0 0.6rem;
+  font-size: var(--step-2);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.notes-list__desc {
+  max-width: 44rem;
+  margin: 0;
+  color: var(--graphite);
+}
+
+.notes-index__back {
+  margin-top: 3rem;
+}
+
+.note__meta {
+  margin-bottom: 0.75rem;
+}
+
+.note__byline {
+  margin: 0.75rem 0 0;
+  color: var(--graphite);
+}
+
+.note__body {
+  max-width: 44rem;
+  margin-top: 2.5rem;
+}
+
+.note__body > p {
+  margin: 0 0 1.25rem;
+  line-height: 1.7;
+}
+
+.note__h2 {
+  margin: 2.75rem 0 1rem;
+  font-size: var(--step-1);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.note__list {
+  max-width: 44rem;
+  margin: 0 0 1.25rem;
+  padding-left: 1.25rem;
+  line-height: 1.7;
+}
+
+.note__list li {
+  margin-bottom: 0.6rem;
+}
+
+.note__demo {
+  margin: 0 0 1.5rem;
+  color: var(--graphite);
+  font-size: var(--step--1);
+}
+
+.note__body code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.note__code {
+  max-width: 100%;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: 0.85rem/1.6 var(--font-mono);
+}
+
+.note__code code {
+  padding: 0;
+  background: none;
+  font: inherit;
+}
+
+/* TL;DR summary and inline SVG diagrams. Colours come from tokens, so both themes work; --surface-high
+   (not --silk) backs the TL;DR because --silk is not redefined in dark mode and would strand the text. */
+.note__tldr{border:1px solid var(--rule);border-radius:var(--radius);background:var(--surface-high);padding:1rem 1.25rem;margin:1.75rem 0}
+.note__tldr-label{margin:0 0 .5rem;font-weight:700;letter-spacing:.02em}
+.note__figure{margin:2rem 0}
+.note__figure figcaption{color:var(--graphite);font-size:.9rem;margin-top:.5rem;text-align:center}
+.note-dg{width:100%;height:auto;display:block;max-width:40rem;margin-inline:auto}
+.note-dg .b{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+.note-dg .core{fill:var(--accent);stroke:var(--accent)}
+.note-dg .t{fill:var(--ink);font-size:14px;font-family:var(--font-body)}
+.note-dg .t-core{fill:var(--accent-ink);font-size:17px;font-weight:700;font-family:var(--font-body)}
+.note-dg .t-core-sub{fill:var(--accent-ink);font-size:12px;font-family:var(--font-body)}
+.note-dg .t-core-mono{fill:var(--accent-ink);font-size:12px;font-family:var(--font-mono)}
+.note-dg .head{fill:var(--field);font-size:11px;letter-spacing:.08em;font-family:var(--font-body)}
+.note-dg .ln{stroke:var(--field);stroke-width:1.5}
+.note-dg .ah{fill:var(--field)}
+
 /* ---------- Motion (motion.js and the browser's own scroll and view timelines) ----------
  * Everything below is an enhancement: without support, or with reduced motion, the page is the same page
  * standing still. Pointer effects are set by motion.js only for a mouse or trackpad.

@@ -1,0 +1,43 @@
+<svg class="note-dg" viewBox="0 0 760 320" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="AI Core is a router in the middle. On the left, the consumers that call it: agent chat, code suggestions, speech-to-text and vector search. On the right, the interchangeable backends it routes to: a local on-device llama.cpp model, Gemini, an OpenAI-compatible server, and Claude.">
+  <defs>
+    <marker id="dg-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="ah" d="M0 0 L10 5 L0 10 z"/>
+    </marker>
+  </defs>
+  <text class="head" x="124" y="40" text-anchor="middle">CONSUMERS</text>
+  <text class="head" x="636" y="40" text-anchor="middle">BACKENDS</text>
+
+  <!-- consumers -->
+  <g>
+    <rect class="b" x="24"  y="70"  width="200" height="44" rx="6"/><text class="t" x="124" y="97"  text-anchor="middle">Agent chat</text>
+    <rect class="b" x="24"  y="130" width="200" height="44" rx="6"/><text class="t" x="124" y="157" text-anchor="middle">Code suggestions</text>
+    <rect class="b" x="24"  y="190" width="200" height="44" rx="6"/><text class="t" x="124" y="217" text-anchor="middle">Speech-to-text</text>
+    <rect class="b" x="24"  y="250" width="200" height="44" rx="6"/><text class="t" x="124" y="277" text-anchor="middle">Vector search</text>
+  </g>
+
+  <!-- router -->
+  <rect class="core" x="300" y="70" width="160" height="224" rx="8"/>
+  <text class="t-core" x="380" y="170" text-anchor="middle">AI Core</text>
+  <text class="t-core-sub" x="380" y="192" text-anchor="middle">the router</text>
+  <text class="t-core-mono" x="380" y="214" text-anchor="middle">LlmInferenceService</text>
+
+  <!-- backends -->
+  <g>
+    <rect class="b" x="536" y="70"  width="200" height="44" rx="6"/><text class="t" x="636" y="97"  text-anchor="middle">Local · llama.cpp</text>
+    <rect class="b" x="536" y="130" width="200" height="44" rx="6"/><text class="t" x="636" y="157" text-anchor="middle">Gemini</text>
+    <rect class="b" x="536" y="190" width="200" height="44" rx="6"/><text class="t" x="636" y="217" text-anchor="middle">OpenAI-compatible</text>
+    <rect class="b" x="536" y="250" width="200" height="44" rx="6"/><text class="t" x="636" y="277" text-anchor="middle">Claude</text>
+  </g>
+
+  <!-- links -->
+  <g fill="none">
+    <path class="ln" marker-end="url(#dg-ah)" d="M224 92  H300"/>
+    <path class="ln" marker-end="url(#dg-ah)" d="M224 152 H300"/>
+    <path class="ln" marker-end="url(#dg-ah)" d="M224 212 H300"/>
+    <path class="ln" marker-end="url(#dg-ah)" d="M224 272 H300"/>
+    <path class="ln" marker-end="url(#dg-ah)" d="M460 92  H536"/>
+    <path class="ln" marker-end="url(#dg-ah)" d="M460 152 H536"/>
+    <path class="ln" marker-end="url(#dg-ah)" d="M460 212 H536"/>
+    <path class="ln" marker-end="url(#dg-ah)" d="M460 272 H536"/>
+  </g>
+</svg>

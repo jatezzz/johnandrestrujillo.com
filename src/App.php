@@ -65,9 +65,11 @@ final class App
                 '/speculationrules.json' => $this->speculationRules(),
                 '/under-the-hood/', '/es/bajo-el-capo/' => $this->hood($path === '/under-the-hood/' ? 'en' : 'es', $method),
                 '/under-the-hood', '/es/bajo-el-capo' => Response::redirect($path . '/', 301),
+                '/notes/' => $this->notesIndex($method),
+                '/notes' => Response::redirect('/notes/', 301),
                 '/healthz' => Response::text("ok\n")->withHeader('Cache-Control', 'no-store'),
                 '/og/en', '/og/es' => $this->card(substr($path, 4), $path),
-                default => $this->study($method, $path) ?? $this->notFound($path),
+                default => $this->study($method, $path) ?? $this->note($method, $path) ?? $this->noteMarkdown($method, $path) ?? $this->notFound($path),
             };
         } catch (\Throwable $error) {
             error_log(sprintf('portfolio: %s: %s at %s:%d', $error::class, $error->getMessage(), $error->getFile(), $error->getLine()));
@@ -211,6 +213,202 @@ final class App
         return ['en' => '/work/' . $id . '/', 'es' => '/es/trabajo/' . $id . '/'];
     }
 
+    /** The Notes index at /notes/. Notes are English only; the Spanish nav links here too. */
+    private function notesIndex(string $method): Response
+    {
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'GET, HEAD');
+        }
+        $c = Content::load($this->root, 'en');
+        $url = $this->config['base_url'] . '/notes/';
+        $html = $this->page('en', 'notes', [
+            'canonical' => $url,
+            'urls' => ['en' => $url, 'es' => $url],
+            'page_title' => $c['notes']['title'] . ' | ' . $c['person']['name'],
+            'page_description' => $c['notes']['description'],
+            'og_type' => 'website',
+            'json_ld' => (string) json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'Blog',
+                'name' => $c['notes']['title'],
+                'description' => $c['notes']['description'],
+                'url' => $url,
+                'inLanguage' => 'en',
+                'author' => ['@type' => 'Person', 'name' => $c['person']['name'], 'url' => $this->config['base_url'] . '/'],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+        ]);
+
+        return Response::html($html)->withHeader('Cache-Control', $this->cacheControl(true));
+    }
+
+    /**
+     * A single note at /notes/<slug>/ (English only). Null when the path is not one, so the
+     * caller answers 404. Missing trailing slash redirects, like a case page.
+     */
+    private function note(string $method, string $path): ?Response
+    {
+        if (preg_match('#^/notes/([a-z0-9-]+)(/?)$#', $path, $m) !== 1) {
+            return null;
+        }
+        $c = Content::load($this->root, 'en');
+        $note = null;
+        foreach ($c['notes']['items'] as $candidate) {
+            if ($candidate['slug'] === $m[1]) {
+                $note = $candidate;
+            }
+        }
+        if ($note === null) {
+            return null;
+        }
+        if ($m[2] === '') {
+            return Response::redirect($path . '/', 301);
+        }
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'GET, HEAD');
+        }
+        $url = $this->config['base_url'] . '/notes/' . $note['slug'] . '/';
+        $html = $this->page('en', 'note', [
+            'note' => $note,
+            'canonical' => $url,
+            'urls' => ['en' => $url, 'es' => $url],
+            'page_title' => $note['title'] . ' | ' . $c['person']['name'],
+            'page_description' => $note['description'],
+            'og_type' => 'article',
+            'json_ld' => $this->noteJsonLd($c, $note, $url),
+        ]);
+
+        return Response::html($html)->withHeader('Cache-Control', $this->cacheControl(true));
+    }
+
+    /**
+     * @param array<string, mixed> $c
+     * @param array<string, mixed> $note
+     */
+    private function noteJsonLd(array $c, array $note, string $url): string
+    {
+        $base = $this->config['base_url'];
+        $data = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BlogPosting',
+            'headline' => $note['title'],
+            'description' => $note['description'],
+            'url' => $url,
+            'inLanguage' => 'en',
+            'datePublished' => $note['date'],
+            'dateModified' => $note['date'],
+            'author' => [
+                '@type' => 'Person',
+                'name' => $c['person']['name'],
+                'jobTitle' => $c['person']['role'],
+                'url' => $base . '/',
+            ],
+            'isPartOf' => ['@type' => 'Blog', 'name' => $c['notes']['title'], 'url' => $base . '/notes/'],
+        ];
+
+        return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP);
+    }
+
+    /**
+     * An agent-friendly Markdown version of a note at /notes/<slug>.md, rendered from the same
+     * body blocks as the HTML. Null when the path is not one, so the caller answers 404.
+     */
+    private function noteMarkdown(string $method, string $path): ?Response
+    {
+        if (preg_match('#^/notes/([a-z0-9-]+)\.md$#', $path, $m) !== 1) {
+            return null;
+        }
+        $c = Content::load($this->root, 'en');
+        $note = null;
+        foreach ($c['notes']['items'] as $candidate) {
+            if ($candidate['slug'] === $m[1]) {
+                $note = $candidate;
+            }
+        }
+        if ($note === null) {
+            return null;
+        }
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            return Response::text("Method not allowed.\n", 405)->withHeader('Allow', 'GET, HEAD');
+        }
+
+        return Response::text(self::noteToMarkdown($note), 200, 'text/markdown; charset=utf-8')
+            ->withHeader('Cache-Control', $this->cacheControl(true));
+    }
+
+    /**
+     * Render a note's body blocks to Markdown deterministically (one source of truth with the HTML).
+     *
+     * @param array<string, mixed> $note
+     */
+    private static function noteToMarkdown(array $note): string
+    {
+        $inline = static function (array $parts): string {
+            $out = '';
+            foreach ($parts as $run) {
+                $s = (string) $run['s'];
+                $out .= match ($run['t']) {
+                    'code'   => '`' . $s . '`',
+                    'em'     => '*' . $s . '*',
+                    'strong' => '**' . $s . '**',
+                    'link'   => '[' . (!empty($run['code']) ? '`' . $s . '`' : $s) . '](' . $run['url'] . ')',
+                    default  => $s,
+                };
+            }
+
+            return $out;
+        };
+
+        $lines = [
+            '# ' . $note['title'],
+            '',
+            'By ' . $note['author'] . ' · ' . $note['date_label'],
+            '',
+        ];
+        foreach ($note['body'] as $block) {
+            switch ($block['type']) {
+                case 'h2':
+                    $lines[] = '';
+                    $lines[] = '## ' . $block['text'];
+                    $lines[] = '';
+                    break;
+                case 'p':
+                    $lines[] = $inline($block['runs']);
+                    $lines[] = '';
+                    break;
+                case 'demo':
+                    $lines[] = '*' . $inline($block['runs']) . '*';
+                    $lines[] = '';
+                    break;
+                case 'ul':
+                    foreach ($block['items'] as $item) {
+                        $lines[] = '- ' . $inline($item);
+                    }
+                    $lines[] = '';
+                    break;
+                case 'code':
+                    $lines[] = '```' . ($block['lang'] ?? '');
+                    $lines[] = $block['code'];
+                    $lines[] = '```';
+                    $lines[] = '';
+                    break;
+                case 'tldr':
+                    $lines[] = '## ' . $block['label'];
+                    $lines[] = '';
+                    foreach ($block['items'] as $item) {
+                        $lines[] = '- ' . $inline($item);
+                    }
+                    $lines[] = '';
+                    break;
+                case 'figure':
+                    $lines[] = '*Figure — ' . $inline($block['caption']) . '*';
+                    $lines[] = '';
+                    break;
+            }
+        }
+
+        return rtrim(implode("\n", $lines)) . "\n";
+    }
+
     /** Anonymous metrics posted by site.js (see Metrics). */
     private function beacon(string $method, string $body, array $server): Response
     {
@@ -299,7 +497,7 @@ final class App
         $rules = [
             'prerender' => [[
                 'where' => ['and' => [
-                    ['href_matches' => ['/', '/#*', '/es/', '/es/#*', '/work/*', '/es/trabajo/*', '/under-the-hood/', '/es/bajo-el-capo/']],
+                    ['href_matches' => ['/', '/#*', '/es/', '/es/#*', '/work/*', '/es/trabajo/*', '/under-the-hood/', '/es/bajo-el-capo/', '/notes/', '/notes/*']],
                     // a query string means a personal page (the contact image check): never fetch it unasked
                     ['not' => ['selector_matches' => "[rel~=nofollow], [download], [href*='?']"]],
                 ]],
@@ -346,6 +544,13 @@ final class App
             $lines[] = "- {$item['title']}: {$item['role']}, {$item['context']} ({$item['period']})";
         }
         $lines[] = '';
+        $lines[] = '## Notes';
+        $lines[] = '';
+        foreach ($c['notes']['items'] as $note) {
+            $lines[] = "- [{$note['title']}]({$base}/notes/{$note['slug']}/) — {$note['description']}";
+            $lines[] = "  - Markdown: {$base}/notes/{$note['slug']}.md";
+        }
+        $lines[] = '';
         $lines[] = '## Links';
         $lines[] = '';
         $lines[] = "- [Portfolio, English]({$base}/)";
@@ -368,6 +573,11 @@ final class App
             $pages[] = array_map(static fn (string $p): string => $base . $p, self::casePaths($project['id']));
         }
         $pages[] = ['en' => $base . '/under-the-hood/', 'es' => $base . '/es/bajo-el-capo/'];
+        // Notes are English only: one entry each, with no translation alternate.
+        $pages[] = ['en' => $base . '/notes/'];
+        foreach (Content::load($this->root, 'en')['notes']['items'] as $note) {
+            $pages[] = ['en' => $base . '/notes/' . $note['slug'] . '/'];
+        }
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
             . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
         foreach ($pages as $urls) {

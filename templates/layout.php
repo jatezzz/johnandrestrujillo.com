@@ -79,7 +79,7 @@ $other = $c['ui']['other_lang'];
     <nav class="masthead__nav" aria-label="<?= $e($c['ui']['nav_label']) ?>">
       <ul>
         <?php foreach ($c['ui']['nav'] as $item): ?>
-        <li><a href="<?= $e($home) ?>#<?= $e($item['id']) ?>"><?= $e($item['label']) ?></a></li>
+        <li><a href="<?= $e($item['href'] ?? $home . '#' . $item['id']) ?>"><?= $e($item['label']) ?></a></li>
         <?php endforeach; ?>
       </ul>
     </nav>

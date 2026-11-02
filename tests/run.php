@@ -157,6 +157,56 @@ test('case pages render in each language with their own alternates', function ()
     expect(str_contains($home, 'href="/work/ai-platform/"'), 'the home page links to each case');
 });
 
+test('notes: the index and each article render, with redirects and 404s', function (): void {
+    $slug = 'code-on-the-go-ai-agent-on-the-phone';
+
+    $index = app()->handle('GET', '/notes/');
+    expect($index->status === 200, '/notes/ status ' . $index->status);
+    expect(str_contains($index->body, '<html lang="en">'), '/notes/ is English');
+    expect(str_contains($index->body, 'rel="canonical" href="https://example.test/notes/"'), '/notes/ canonical');
+    expect(str_contains($index->body, 'href="/notes/' . $slug . '/"'), '/notes/ links to the article');
+
+    $note = app()->handle('GET', '/notes/' . $slug . '/');
+    expect($note->status === 200, 'note status ' . $note->status);
+    expect(str_contains($note->body, '<html lang="en">'), 'note is English');
+    expect(str_contains($note->body, 'rel="canonical" href="https://example.test/notes/' . $slug . '/"'), 'note canonical');
+    expect(str_contains($note->body, '<meta property="og:type" content="article">'), 'note og:type should be article');
+    expect(str_contains($note->body, '"@type":"BlogPosting"'), 'note has BlogPosting JSON-LD');
+    expect(str_contains($note->body, '<pre class="note__code"><code>'), 'note renders its code block');
+    expect(str_contains($note->body, 'href="/work/code-on-the-go/"'), 'note links to its case study');
+    expect(str_contains($note->body, 'class="note__tldr"'), 'note renders its TL;DR');
+    expect(substr_count($note->body, '<svg class="note-dg"') === 2, 'note inlines both diagrams, found ' . substr_count($note->body, '<svg class="note-dg"'));
+    expect(substr_count($note->body, '<figcaption') === 2, 'note renders both figure captions');
+    expect(str_contains($note->body, 'href="/notes/' . $slug . '.md"'), 'note links to its Markdown version');
+
+    $r = app()->handle('GET', '/notes/' . $slug);
+    expect($r->status === 301 && $r->header('Location') === '/notes/' . $slug . '/', 'a note without the trailing slash redirects');
+    expect(app()->handle('GET', '/notes')->status === 301, '/notes redirects to /notes/');
+    expect(app()->handle('GET', '/notes/does-not-exist/')->status === 404, 'an unknown note is a 404');
+    expect(app()->handle('POST', '/notes/' . $slug . '/')->status === 405, 'POST to a note is 405');
+
+    expect(str_contains(app()->handle('GET', '/')->body, 'href="/notes/"'), 'the English nav links to /notes/');
+    expect(str_contains(app()->handle('GET', '/es/')->body, 'href="/notes/"'), 'the Spanish nav also links to /notes/ (English)');
+});
+
+test('notes: the Markdown version renders from the same blocks', function (): void {
+    $slug = 'code-on-the-go-ai-agent-on-the-phone';
+
+    $md = app()->handle('GET', '/notes/' . $slug . '.md');
+    expect($md->status === 200, '.md status ' . $md->status);
+    expect(str_starts_with((string) $md->header('Content-Type'), 'text/markdown'), '.md is served as markdown');
+    expect(str_starts_with($md->body, '# A coding agent on the phone'), '.md starts with the title');
+    expect(str_contains($md->body, '## One router'), '.md keeps the section headings');
+    expect(str_contains($md->body, '## In short'), '.md renders the TL;DR');
+    expect(str_contains($md->body, "```kotlin\n"), '.md fences the code block as kotlin');
+    expect(str_contains($md->body, '*Figure — '), '.md keeps the diagram captions');
+    expect(str_contains($md->body, '[Code on the Go](https://github.com/appdevforall/CodeOnTheGo)'), '.md renders links');
+    expect(str_contains($md->body, '[`ContextSizePolicy.kt`](https://github.com/appdevforall/'), '.md renders code-styled links with backticks');
+
+    expect(app()->handle('GET', '/notes/does-not-exist.md')->status === 404, 'an unknown .md note is a 404');
+    expect(app()->handle('POST', '/notes/' . $slug . '.md')->status === 405, 'POST to a .md note is 405');
+});
+
 test('redirects, 404s and method checks', function (): void {
     $r = app()->handle('GET', '/es');
     expect($r->status === 301 && $r->header('Location') === '/es/', '/es should redirect to /es/');
@@ -192,14 +242,16 @@ test('robots.txt and sitemap.xml', function (): void {
     expect(str_contains($closed, 'Disallow: /'), 'staging robots.txt disallows everything');
     $sitemap = app()->handle('GET', '/sitemap.xml');
     expect(simplexml_load_string($sitemap->body) !== false, 'sitemap is valid XML');
-    expect(substr_count($sitemap->body, '<loc>') === 8, 'sitemap lists the home, the two case pages and Under the hood in both languages');
+    expect(substr_count($sitemap->body, '<loc>') === 10, 'sitemap lists the home, the two case pages and Under the hood in both languages, plus the English-only Notes index and the first note');
     expect(str_contains($sitemap->body, '<loc>https://example.test/es/trabajo/code-on-the-go/</loc>'), 'sitemap lists the Spanish case pages');
+    expect(str_contains($sitemap->body, '<loc>https://example.test/notes/</loc>'), 'sitemap lists the Notes index');
+    expect(str_contains($sitemap->body, '<loc>https://example.test/notes/code-on-the-go-ai-agent-on-the-phone/</loc>'), 'sitemap lists the first note');
 });
 
 // ---------- HTML hygiene ----------
 
 test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', function (): void {
-    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/', '/notes/', '/notes/code-on-the-go-ai-agent-on-the-phone/'] as $path) {
         $html = app()->handle('GET', $path)->body;
         $doc = dom($html);
         $xpath = new DOMXPath($doc);
@@ -268,6 +320,7 @@ test('llms.txt summarizes the profile for AI assistants', function (): void {
     expect($r->status === 200 && str_starts_with((string) $r->header('Content-Type'), 'text/markdown'), 'llms.txt is served as markdown');
     expect(str_starts_with($r->body, '# John Andrés Trujillo'), 'llms.txt starts with the name');
     expect(str_contains($r->body, '## Projects') && str_contains($r->body, 'Code on the Go'), 'llms.txt lists the projects');
+    expect(str_contains($r->body, '## Notes') && str_contains($r->body, '/notes/code-on-the-go-ai-agent-on-the-phone/'), 'llms.txt lists the notes');
 });
 
 test('every asset a page references exists', function (): void {
@@ -278,7 +331,7 @@ test('every asset a page references exists', function (): void {
 });
 
 test('HTML: heading levels never skip', function (): void {
-    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/', '/notes/', '/notes/code-on-the-go-ai-agent-on-the-phone/'] as $path) {
         $doc = dom(app()->handle('GET', $path)->body);
         $previous = 0;
         foreach ((new DOMXPath($doc))->query('//h1|//h2|//h3|//h4|//h5|//h6') as $heading) {

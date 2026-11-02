@@ -158,7 +158,11 @@ $app = new Portfolio\App($root, [
     'revision' => '',
 ]);
 $pages = [];
-foreach (['/', '/es/', '/robots.txt', '/sitemap.xml', '/does-not-exist', '/es/no-existe'] as $path) {
+$paths = ['/', '/es/', '/robots.txt', '/sitemap.xml', '/does-not-exist', '/es/no-existe', '/notes/'];
+foreach (Portfolio\Content::load($root, 'en')['notes']['items'] as $note) {
+    $paths[] = '/notes/' . $note['slug'] . '/';
+}
+foreach ($paths as $path) {
     $pages[$path] = $app->handle('GET', $path)->body;
 }
 

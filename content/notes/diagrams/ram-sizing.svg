@@ -1,0 +1,22 @@
+<svg class="note-dg" viewBox="0 0 520 440" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="How the context size is chosen at load time: start from the RAM free right now, subtract the model weights, subtract the run buffer, halve what is left to get the KV cache share, clamp the result between 4,096 and 16,384 tokens, and that becomes n_ctx.">
+  <defs>
+    <marker id="dg-ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="ah" d="M0 0 L10 5 L0 10 z"/>
+    </marker>
+  </defs>
+  <g>
+    <rect class="b" x="80" y="16"  width="360" height="46" rx="6"/><text class="t" x="260" y="44"  text-anchor="middle">Free RAM, right now</text>
+    <rect class="b" x="80" y="86"  width="360" height="46" rx="6"/><text class="t" x="260" y="114" text-anchor="middle">− model weights</text>
+    <rect class="b" x="80" y="156" width="360" height="46" rx="6"/><text class="t" x="260" y="184" text-anchor="middle">− run buffer</text>
+    <rect class="b" x="80" y="226" width="360" height="46" rx="6"/><text class="t" x="260" y="254" text-anchor="middle">÷ 2  →  KV cache share</text>
+    <rect class="b" x="80" y="296" width="360" height="46" rx="6"/><text class="t" x="260" y="324" text-anchor="middle">clamp 4,096 – 16,384</text>
+    <rect class="core" x="80" y="366" width="360" height="46" rx="6"/><text class="t-core-mono" x="260" y="395" text-anchor="middle">n_ctx</text>
+  </g>
+  <g fill="none">
+    <path class="ln" marker-end="url(#dg-ah2)" d="M260 62  V86"/>
+    <path class="ln" marker-end="url(#dg-ah2)" d="M260 132 V156"/>
+    <path class="ln" marker-end="url(#dg-ah2)" d="M260 202 V226"/>
+    <path class="ln" marker-end="url(#dg-ah2)" d="M260 272 V296"/>
+    <path class="ln" marker-end="url(#dg-ah2)" d="M260 342 V366"/>
+  </g>
+</svg>
