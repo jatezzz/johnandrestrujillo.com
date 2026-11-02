@@ -222,6 +222,21 @@
     }
   }
 
+  // ---- After a rejected submit the page re-renders at the top (the POST to /contact has no #fragment):
+  //      bring the form into view and focus the first field the server flagged, so the error is seen. ----
+  const formError = document.querySelector('#contact .notice--error');
+  if (formError) {
+    const section = document.getElementById('contact');
+    if (section) {
+      const smooth = !(reducedMotion && reducedMotion.matches);
+      section.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
+      const firstBad = section.querySelector('[aria-invalid="true"]');
+      if (firstBad) {
+        try { firstBad.focus({ preventScroll: true }); } catch (error) { firstBad.focus(); }
+      }
+    }
+  }
+
   // ---- Claim sources: a link inside the popover jumps in the page, so put the popover away ----
   document.addEventListener('click', (event) => {
     const link = event.target.closest ? event.target.closest('.proof a[href^="#"]') : null;
