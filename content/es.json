@@ -37,7 +37,7 @@
     "name": "John Andrés Trujillo",
     "role": "Ingeniero móvil sénior",
     "location": "Quito, Ecuador",
-    "profiles": ["https://appdevforall.org/author/john-trujillo/"],
+    "profiles": ["https://appdevforall.org/author/john-trujillo/", "https://torre.ai/johnandrestrujillo"],
     "articles": [{"headline": "Gemini with Code on the Go: A fully-functional developer’s agent", "url": "https://appdevforall.org/gemini-with-code-on-the-go-integrating-an-ai-agent-into-a-mobile-first-ide/", "publisher": "App Dev for All", "date": "2026-03-09"}],
     "knows_about": ["iOS", "Android", "Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "Flutter", "React Native", "Desarrollo de apps móviles", "Agentes de IA", "Integración de LLM", "Google Gemini", "LLM en el dispositivo", "Python", "FastAPI", "AWS Lambda", "Google Cloud"]
   },

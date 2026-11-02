@@ -680,6 +680,7 @@ final class App
             'mainEntity' => [
                 '@type' => 'Person',
                 'name' => $c['person']['name'],
+                'alternateName' => 'John Trujillo',
                 'jobTitle' => $c['person']['role'],
                 'url' => $urls['en'],
                 'homeLocation' => ['@type' => 'Place', 'name' => $c['person']['location']],
