@@ -1752,6 +1752,97 @@ svg {
   margin-top: 1.5rem;
 }
 
+/* ---------- What colleagues say ---------- */
+
+.recs {
+  display: grid;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 62rem) {
+  .recs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.rec {
+  display: flex;
+}
+
+.rec__card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.35rem 1rem;
+  align-content: start;
+  width: 100%;
+  margin: 0;
+  padding: 1.5rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.rec__avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.rec__quote {
+  grid-column: 2;
+  margin: 0;
+}
+
+.rec__quote p {
+  margin: 0;
+}
+
+.rec__by {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin-top: 0.85rem;
+}
+
+.rec__name {
+  font-weight: 800;
+}
+
+.rec__role {
+  color: var(--graphite);
+  font-size: 0.9rem;
+}
+
+.rec__link {
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 40rem) {
+  .rec__card {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+
+  .rec__quote,
+  .rec__by {
+    grid-column: 1;
+  }
+}
+
 /* ---------- Contact ---------- */
 
 .contact {

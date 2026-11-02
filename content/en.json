@@ -485,6 +485,27 @@
       {"name": "Spanish", "level": "native"}
     ]
   },
+  "recommendations": {
+    "title": "What colleagues say",
+    "subtitle": "Engineers I built Code on the Go with.",
+    "via_label": "via LinkedIn",
+    "items": [
+      {
+        "name": "Akash Yadav",
+        "role": "Software Engineer · Code on the Go",
+        "initials": "AY",
+        "url": "https://www.linkedin.com/in/itsaky",
+        "quote": "He designed the AI Agent architecture as a plugin layer, integrating llama.cpp, Gemini/OpenAI, and MCP in Code on the Go. He's thoughtful, reliable, and easy to work with, and he made the whole team better."
+      },
+      {
+        "name": "Oluwadara Abijo",
+        "role": "Senior Android Engineer · Code on the Go",
+        "initials": "OA",
+        "url": "https://www.linkedin.com/in/oluwadara-abijo",
+        "quote": "He took ownership of the AI features in Code on the Go and contributed to the Sketch-to-UI feature. He is receptive to feedback and eager to learn."
+      }
+    ]
+  },
   "contact": {
     "title": "Contact",
     "intro": "Tell me about the role or the project. The message goes straight to my inbox, and I answer by email.",

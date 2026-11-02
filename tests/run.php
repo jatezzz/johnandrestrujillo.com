@@ -363,6 +363,24 @@ test('every pin links to its evidence list', function (): void {
     }
 });
 
+test('home: colleagues section shows monograms linking to LinkedIn, before contact', function (): void {
+    foreach (['/' => ['What colleagues say', 'via LinkedIn'], '/es/' => ['Lo que dicen mis colegas', 'en LinkedIn']] as $path => [$title, $via]) {
+        $html = app()->handle('GET', $path)->body;
+        expect(str_contains($html, 'id="recommendations"'), "{$path}: recommendations section missing");
+        expect(str_contains($html, $title), "{$path}: section title missing");
+        expect(str_contains($html, '>' . $via . '</a>'), "{$path}: via-LinkedIn label missing");
+        expect(str_contains($html, 'Akash Yadav') && str_contains($html, 'Oluwadara Abijo'), "{$path}: colleague names missing");
+        expect(str_contains($html, '>AY</span>') && str_contains($html, '>OA</span>'), "{$path}: monogram initials missing");
+        expect(str_contains($html, 'https://www.linkedin.com/in/itsaky') && str_contains($html, 'https://www.linkedin.com/in/oluwadara-abijo'), "{$path}: colleague LinkedIn profiles missing");
+        expect(strpos($html, 'id="recommendations"') < strpos($html, 'id="contact"'), "{$path}: section must lead into contact");
+
+        $xpath = new DOMXPath(dom($html));
+        $links = $xpath->query('//*[@id="recommendations"]//a[contains(@href, "linkedin.com/in/")]');
+        expect($links->length === 2, "{$path}: expected two LinkedIn links in the section, found " . $links->length);
+        expect($xpath->query('//*[@id="recommendations"]//img')->length === 0, "{$path}: colleagues must be monograms, not photos");
+    }
+});
+
 // ---------- Contact form ----------
 
 /** A POST that passes every check unless a test overrides a field. */
