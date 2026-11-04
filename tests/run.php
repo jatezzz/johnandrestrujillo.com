@@ -246,6 +246,14 @@ test('robots.txt and sitemap.xml', function (): void {
     expect(str_contains($sitemap->body, '<loc>https://example.test/es/trabajo/code-on-the-go/</loc>'), 'sitemap lists the Spanish case pages');
     expect(str_contains($sitemap->body, '<loc>https://example.test/notes/</loc>'), 'sitemap lists the Notes index');
     expect(str_contains($sitemap->body, '<loc>https://example.test/notes/code-on-the-go-ai-agent-on-the-phone/</loc>'), 'sitemap lists the first note');
+    $dates = json_decode((string) file_get_contents(__DIR__ . '/../content/page-updates.json'), true, 64, JSON_THROW_ON_ERROR);
+    $xml = simplexml_load_string($sitemap->body);
+    foreach ($xml->url as $entry) {
+        $path = substr((string) $entry->loc, strlen('https://example.test'));
+        expect((string) $entry->lastmod === ($dates[$path] ?? null), 'sitemap lastmod matches the substantial update date of ' . $path);
+    }
+    expect(count($dates) === 10, 'every sitemap URL has a dated entry');
+    expect($dates['/'] !== $dates['/work/ai-platform/'], 'home updates do not change case study dates');
 });
 
 // ---------- HTML hygiene ----------

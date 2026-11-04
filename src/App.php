@@ -14,6 +14,8 @@ final class App
     private array $config;
     private View $view;
     private Metrics $metrics;
+    /** @var array<string, string>|null */
+    private ?array $pageUpdates = null;
 
     /** @param array<string, mixed> $overrides */
     public function __construct(private readonly string $root, array $overrides = [])
@@ -567,7 +569,6 @@ final class App
     private function sitemap(): Response
     {
         $base = $this->config['base_url'];
-        $updated = Content::load($this->root, 'en')['updated'];
         $pages = [['en' => $base . '/', 'es' => $base . '/es/']];
         foreach (Content::load($this->root, 'en')['work']['projects'] as $project) {
             $pages[] = array_map(static fn (string $p): string => $base . $p, self::casePaths($project['id']));
@@ -582,7 +583,8 @@ final class App
             . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
         foreach ($pages as $urls) {
             foreach ($urls as $url) {
-                $xml .= "  <url>\n    <loc>" . View::e($url) . "</loc>\n    <lastmod>" . View::e($updated) . "</lastmod>\n";
+                $path = substr($url, strlen($base));
+                $xml .= "  <url>\n    <loc>" . View::e($url) . "</loc>\n    <lastmod>" . View::e($this->pageLastmod($path)) . "</lastmod>\n";
                 foreach ($urls as $alt => $altUrl) {
                     $xml .= '    <xhtml:link rel="alternate" hreflang="' . $alt . '" href="' . View::e($altUrl) . '"/>' . "\n";
                 }
@@ -592,6 +594,23 @@ final class App
         $xml .= "</urlset>\n";
 
         return Response::text($xml, 200, 'application/xml; charset=utf-8')->withHeader('Cache-Control', $this->cacheControl(true));
+    }
+
+    /** Dates of substantial page changes, kept per URL so a home edit does not date every case study. */
+    private function pageLastmod(string $path): string
+    {
+        if ($this->pageUpdates === null) {
+            $json = file_get_contents($this->root . '/content/page-updates.json');
+            if ($json === false) {
+                throw new \RuntimeException('Cannot read page update dates');
+            }
+            $this->pageUpdates = json_decode($json, true, 64, JSON_THROW_ON_ERROR);
+        }
+        $date = $this->pageUpdates[$path] ?? null;
+        if (!is_string($date) || preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) !== 1) {
+            throw new \RuntimeException('Missing or invalid page update date for ' . $path);
+        }
+        return $date;
     }
 
     private function notFound(string $path): Response
@@ -676,7 +695,7 @@ final class App
             '@type' => 'ProfilePage',
             'url' => $urls[$lang],
             'inLanguage' => $lang,
-            'dateModified' => $c['updated'],
+            'dateModified' => $this->pageLastmod($lang === 'es' ? '/es/' : '/'),
             'mainEntity' => [
                 '@type' => 'Person',
                 'name' => $c['person']['name'],
@@ -715,7 +734,7 @@ final class App
             'description' => $project['text'],
             'url' => $urls[$lang],
             'inLanguage' => $lang,
-            'dateModified' => $c['updated'],
+            'dateModified' => $this->pageLastmod(self::casePaths($project['id'])[$lang]),
             'author' => [
                 '@type' => 'Person',
                 'name' => $c['person']['name'],

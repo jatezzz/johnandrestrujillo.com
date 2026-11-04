@@ -20,6 +20,9 @@ me as the author; this note is the disclosure.
   a 2 MB default memory limit (the app raises it at bootstrap).
 - **Content as data.** All copy lives in `content/en.json` and `content/es.json`, which share
   one shape; the templates only arrange it. Tests fail if the two languages drift apart.
+  When a page changes substantially, update its date in `content/page-updates.json` as well;
+  the sitemap and page metadata use that per-URL date. Update `updated` and `updated_label`
+  in both language files when the home page changes.
 - **Fast and strict by default.** Server-rendered HTML, one stylesheet, two small scripts,
   self-hosted fonts, no cookies, no third-party requests. A strict Content Security Policy
   (`script-src 'self'`, `connect-src 'self'`, no inline scripts or styles).
