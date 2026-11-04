@@ -49,13 +49,13 @@ $hero = $c['hero'];
   <?= $view->partial('pinout', $vars) ?>
 </section>
 <?= $view->partial('work', $vars) ?>
+<?php if (!empty($c['recommendations']['items'])): ?>
+<?= $view->partial('recommendations', $vars) ?>
+<?php endif; ?>
 <?= $view->partial('experience', $vars) ?>
 <?= $view->partial('skills', $vars) ?>
 <?= $view->partial('code', $vars) ?>
 <?= $view->partial('education', $vars) ?>
-<?php if (!empty($c['recommendations']['items'])): ?>
-<?= $view->partial('recommendations', $vars) ?>
-<?php endif; ?>
 <?= $view->partial('contact', $vars) ?>
 <div class="dock" data-dock hidden>
   <a class="button button--primary dock__cta" href="#contact" data-cta="write" data-loc="bottom_bar"><?= $e($hero['cta_contact']) ?></a>

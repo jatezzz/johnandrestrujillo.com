@@ -363,21 +363,27 @@ test('every pin links to its evidence list', function (): void {
     }
 });
 
-test('home: colleagues section shows monograms linking to LinkedIn, before contact', function (): void {
-    foreach (['/' => ['What colleagues say', 'via LinkedIn'], '/es/' => ['Lo que dicen mis colegas', 'en LinkedIn']] as $path => [$title, $via]) {
+test('home: cross-project recommendations show LinkedIn photos and a monogram fallback', function (): void {
+    foreach (['/' => ["What people I've worked with say", 'View on LinkedIn'], '/es/' => ['Lo que dicen quienes han trabajado conmigo', 'Ver en LinkedIn']] as $path => [$title, $via]) {
         $html = app()->handle('GET', $path)->body;
         expect(str_contains($html, 'id="recommendations"'), "{$path}: recommendations section missing");
-        expect(str_contains($html, $title), "{$path}: section title missing");
+        expect(str_contains($html, htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8')), "{$path}: section title missing");
         expect(str_contains($html, '>' . $via . '</a>'), "{$path}: via-LinkedIn label missing");
-        expect(str_contains($html, 'Akash Yadav') && str_contains($html, 'Oluwadara Abijo'), "{$path}: colleague names missing");
-        expect(str_contains($html, '>AY</span>') && str_contains($html, '>OA</span>'), "{$path}: monogram initials missing");
-        expect(str_contains($html, 'https://www.linkedin.com/in/itsaky') && str_contains($html, 'https://www.linkedin.com/in/oluwadara-abijo'), "{$path}: colleague LinkedIn profiles missing");
-        expect(strpos($html, 'id="recommendations"') < strpos($html, 'id="contact"'), "{$path}: section must lead into contact");
+        foreach (['Adan Argueta', 'David Schachter', 'Akash Yadav', 'Oluwadara Abijo', 'Avesta Narimani'] as $name) {
+            expect(str_contains($html, $name), "{$path}: missing {$name}");
+        }
+        expect(str_contains($html, 'John did great work and it will make the world better.'), "{$path}: David's quote missing");
+        expect(strpos($html, 'id="work"') < strpos($html, 'id="recommendations"') && strpos($html, 'id="recommendations"') < strpos($html, 'id="experience"'), "{$path}: recommendations must follow work");
 
         $xpath = new DOMXPath(dom($html));
-        $links = $xpath->query('//*[@id="recommendations"]//a[contains(@href, "linkedin.com/in/")]');
-        expect($links->length === 2, "{$path}: expected two LinkedIn links in the section, found " . $links->length);
-        expect($xpath->query('//*[@id="recommendations"]//img')->length === 0, "{$path}: colleagues must be monograms, not photos");
+        $avatars = $xpath->query('//*[@id="recommendations"]//a[contains(@class, "rec__avatar")]');
+        expect($avatars->length === 5, "{$path}: expected five profile links, found " . $avatars->length);
+        $photos = $xpath->query('//*[@id="recommendations"]//a[contains(@class, "rec__avatar")]/img');
+        expect($photos->length === 4, "{$path}: expected four public photos and one monogram fallback");
+        foreach ($photos as $photo) {
+            expect($photo->getAttribute('alt') === '', "{$path}: avatar photos must be decorative beside the visible name");
+        }
+        expect(str_contains($html, '>AY</span>'), "{$path}: Akash's monogram fallback missing");
     }
 });
 

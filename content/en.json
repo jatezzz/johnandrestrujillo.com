@@ -486,23 +486,55 @@
     ]
   },
   "recommendations": {
-    "title": "What colleagues say",
-    "subtitle": "Engineers I built Code on the Go with.",
-    "via_label": "via LinkedIn",
+    "title": "What people I've worked with say",
+    "subtitle": "Perspectives from iOS, Android, and AI collaborations.",
+    "via_label": "View on LinkedIn",
+    "comment_label": "View comment on LinkedIn",
     "items": [
+      {
+        "name": "Adan Argueta",
+        "role": "iOS Developer · Swift collaboration",
+        "initials": "AA",
+        "photo": "img/people/adan-argueta.jpg",
+        "url": "https://www.linkedin.com/in/adan-argueta/",
+        "source_url": "https://www.linkedin.com/in/john-andres-trujillo/details/recommendations/?detailScreenTabIndex=0",
+        "quote": "John consistently delivered clean, reliable, and high-performing code using Swift."
+      },
+      {
+        "name": "David Schachter",
+        "role": "App Dev for All · Code on the Go",
+        "initials": "DS",
+        "photo": "img/people/david-schachter.jpg",
+        "url": "https://www.linkedin.com/in/davidschachter/",
+        "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7523052243462414336/",
+        "source_type": "comment",
+        "quote": "John did great work and it will make the world better."
+      },
       {
         "name": "Akash Yadav",
         "role": "Software Engineer · Code on the Go",
         "initials": "AY",
         "url": "https://www.linkedin.com/in/itsaky",
-        "quote": "He designed the AI Agent architecture as a plugin layer, integrating llama.cpp, Gemini/OpenAI, and MCP in Code on the Go. He's thoughtful, reliable, and easy to work with, and he made the whole team better."
+        "source_url": "https://www.linkedin.com/in/john-andres-trujillo/details/recommendations/?detailScreenTabIndex=0",
+        "quote": "He designed the AI Agent architecture as a plugin layer, integrating llama.cpp, Gemini/OpenAI, and MCP in Code On the Go."
       },
       {
         "name": "Oluwadara Abijo",
         "role": "Senior Android Engineer · Code on the Go",
         "initials": "OA",
+        "photo": "img/people/oluwadara-abijo.jpg",
         "url": "https://www.linkedin.com/in/oluwadara-abijo",
-        "quote": "He took ownership of the AI features in Code on the Go and contributed to the Sketch-to-UI feature. He is receptive to feedback and eager to learn."
+        "source_url": "https://www.linkedin.com/in/john-andres-trujillo/details/recommendations/?detailScreenTabIndex=0",
+        "quote": "He took ownership of the AI features in Code on the Go and contributed to the Sketch-to-UI feature."
+      },
+      {
+        "name": "Avesta Narimani",
+        "role": "Data Engineer · Code on the Go",
+        "initials": "AN",
+        "photo": "img/people/avesta-narimani.jpg",
+        "url": "https://www.linkedin.com/in/avestanarimani/",
+        "source_url": "https://www.linkedin.com/in/john-andres-trujillo/details/recommendations/?detailScreenTabIndex=0",
+        "quote": "John is an outstanding senior mobile developer who expertly bridges the gap between complex AI architecture and polished production environments."
       }
     ]
   },
