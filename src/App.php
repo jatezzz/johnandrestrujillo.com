@@ -199,8 +199,9 @@ final class App
             'urls' => $urls,
             'canonical' => $urls[$lang],
             'switch_url' => $paths[$lang === 'en' ? 'es' : 'en'],
-            'page_title' => $project['title'] . ' | ' . $c['person']['name'],
-            'page_description' => $project['text'],
+            // Optional search snippet: a shorter title and a description written for the query people type.
+            'page_title' => $project['seo_title'] ?? ($project['title'] . ' | ' . $c['person']['name']),
+            'page_description' => $project['seo_description'] ?? $project['text'],
             'og_type' => 'article',
             'expect' => 'case-stack',
             'json_ld' => $this->caseJsonLd($c, $project, $lang, $urls),

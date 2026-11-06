@@ -194,6 +194,8 @@
       },
       {
         "id": "code-on-the-go",
+        "seo_title": "Code on the Go: the offline Android IDE with an AI agent",
+        "seo_description": "How the AI agent in Code on the Go works: an open-source Android IDE that builds apps on the phone, offline, with local models, Gemini and OpenAI.",
         "kicker": "Mar 2025 – Oct 2026 · App Dev for All (nonprofit) · open source",
         "title": "Code on the Go: an AI agent inside a phone-based IDE",
         "text": "An Android IDE that runs on the phone. I built its AI agent: you ask in plain language, and it reads, edits, builds and fixes your project on the device.",
@@ -733,6 +735,509 @@
     "reading_suffix": "min read",
     "as_markdown": "Read as Markdown",
     "items": [
+      {
+        "slug": "fake-recruiter-malware-onchain-trail",
+        "title": "Where a fake recruiter's malware gets its orders: five contracts on Polygon in 37 seconds",
+        "date": "2026-11-06",
+        "date_label": "6 November 2026",
+        "description": "A take-home test from a fake recruiter reads its server address from a Polygon smart contract. The contract's public history shows one wallet, five identical contracts in 37 seconds, and team labels.",
+        "reading_minutes": 6,
+        "author": "John Andrés Trujillo",
+        "body": [
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "In October a \"recruiter\" sent me a coding test for a crypto project. I didn't run it on my laptop. I took it apart in an isolated lab instead, and found that it doesn't carry its server address. It asks a smart contract on Polygon for it, a technique "
+              },
+              {
+                "t": "link",
+                "s": "Google's threat intelligence team calls EtherHiding",
+                "url": "https://cloud.google.com/blog/topics/threat-intelligence/dprk-adopts-etherhiding"
+              },
+              {
+                "t": "text",
+                "s": "."
+              }
+            ]
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "This week Binance said the same play, a fake interview with a take-home repo, "
+              },
+              {
+                "t": "link",
+                "s": "cost it about $6.3B",
+                "url": "https://www.bbc.com/news/articles/ck5ynwz9gy67o"
+              },
+              {
+                "t": "text",
+                "s": ". So I went back to my sample. A contract is public by design, which means its whole history is public too. This is what that history shows."
+              }
+            ]
+          },
+          {
+            "type": "tldr",
+            "label": "In short",
+            "items": [
+              [
+                {
+                  "t": "text",
+                  "s": "The sample asks a Polygon contract for its server with a read-only call that is free and leaves no transaction."
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "One wallet funded five new wallets, and they deployed five byte-identical contracts within 37 seconds, each labeled with a team number."
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "The contract my sample reads changed servers once, on 18 September, and has pointed at the same address since."
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "Anyone can read that history, defenders included: every server change is a permanent, timestamped record."
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "Take-home code is untrusted code. Run it in a throwaway VM, never on the laptop you work from."
+                }
+              ]
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "How the sample finds its server"
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "Instead of a hard-coded domain, the loader calls "
+              },
+              {
+                "t": "code",
+                "s": "get(key)"
+              },
+              {
+                "t": "text",
+                "s": " on a contract through a Polygon RPC endpoint. The key is a short ASCII string packed into a "
+              },
+              {
+                "t": "code",
+                "s": "bytes32"
+              },
+              {
+                "t": "text",
+                "s": ". The call is an "
+              },
+              {
+                "t": "code",
+                "s": "eth_call"
+              },
+              {
+                "t": "text",
+                "s": ": read-only, free, and not a transaction, so the infected machines leave nothing on the chain when they ask."
+              }
+            ]
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "To move every infected machine to a new server, the owner sends one "
+              },
+              {
+                "t": "code",
+                "s": "set()"
+              },
+              {
+                "t": "text",
+                "s": " transaction. There is no domain to seize and no DNS record to sinkhole."
+              }
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "What the contract is"
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "Polygon stores bytecode, not source code. I hashed candidate function signatures with keccak-256 and matched them against the selectors in the bytecode to recover the interface. The event name came out the same way, from its topic hash. Here is a reconstruction that behaves the same. It is not the attackers' source:"
+              }
+            ]
+          },
+          {
+            "type": "code",
+            "lang": "solidity",
+            "code": "// Reconstructed from the deployed bytecode. Same behaviour, not the attackers' source.\ncontract C {\n    address public owner;\n    mapping(bytes32 => string) private urls;\n\n    event UrlSet(bytes32 indexed key, string url);\n\n    function set(bytes32 key, string calldata url) external {\n        require(msg.sender == owner);\n        urls[key] = url;\n        emit UrlSet(key, url);\n    }\n\n    function get(bytes32 key) external view returns (string memory) {\n        return urls[key];\n    }\n\n    // plus owner(), transferOwnership(address) and its event\n}"
+          },
+          {
+            "type": "ul",
+            "items": [
+              [
+                {
+                  "t": "strong",
+                  "s": "Only the owner can write."
+                },
+                {
+                  "t": "text",
+                  "s": " There is a "
+                },
+                {
+                  "t": "code",
+                  "s": "transferOwnership"
+                },
+                {
+                  "t": "text",
+                  "s": ", but no "
+                },
+                {
+                  "t": "code",
+                  "s": "renounceOwnership"
+                },
+                {
+                  "t": "text",
+                  "s": " and no way to self-destruct, so the contract cannot be deleted. The owner can re-point it at any time."
+                }
+              ],
+              [
+                {
+                  "t": "strong",
+                  "s": "Every write is labeled."
+                },
+                {
+                  "t": "text",
+                  "s": " Each update sets the key the malware uses and, right after it, a readable key such as "
+                },
+                {
+                  "t": "code",
+                  "s": "team2"
+                },
+                {
+                  "t": "text",
+                  "s": " with the same URL."
+                }
+              ]
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "One wallet, five contracts, 37 seconds"
+          },
+          {
+            "type": "figure",
+            "src": "onchain-fanout.svg",
+            "caption": [
+              {
+                "t": "text",
+                "s": "One funding wallet, five fresh wallets, five byte-identical contracts. The sample I received reads team2."
+              }
+            ]
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "The wallet that deployed my sample's contract had a nonce of 0 at the time: it was brand new. Polygon emits a fee-transfer log for every transaction, so filtering those logs by address lists a wallet's transactions without an indexer. That led to the wallet that funded it, and to its siblings:"
+              }
+            ]
+          },
+          {
+            "type": "ul",
+            "items": [
+              [
+                {
+                  "t": "strong",
+                  "s": "17 Sep 2026, 13:25–13:27 UTC:"
+                },
+                {
+                  "t": "text",
+                  "s": " one wallet sends 0.9 POL to each of five new wallets."
+                }
+              ],
+              [
+                {
+                  "t": "strong",
+                  "s": "13:35:09–13:35:46 UTC:"
+                },
+                {
+                  "t": "text",
+                  "s": " each of the five deploys the same bytecode, about one every 9 seconds."
+                }
+              ],
+              [
+                {
+                  "t": "strong",
+                  "s": "Minutes later:"
+                },
+                {
+                  "t": "text",
+                  "s": " each contract gets a server URL and a label: team1, team2, team3, team9, team10. Mine is team2."
+                }
+              ]
+            ]
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "The numbering has gaps, with no team4 to team8 from this funder. That suggests more groups than these five. I didn't search other funders."
+              }
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Snapshots at real dates"
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "An archive node can answer "
+              },
+              {
+                "t": "code",
+                "s": "get()"
+              },
+              {
+                "t": "text",
+                "s": " as of any past block. These are the values for my sample's key on "
+              },
+              {
+                "t": "link",
+                "s": "its contract",
+                "url": "https://polygonscan.com/address/0x5C00998365A57CD53AB5Ea2963689a158dff6301"
+              },
+              {
+                "t": "text",
+                "s": ", by date. I've masked part of each server address:"
+              }
+            ]
+          },
+          {
+            "type": "code",
+            "lang": "text",
+            "code": "date (UTC)         block          get(key) returned\n2026-09-17 13:36   93,964,751     (empty: deployed, not yet set)\n2026-09-17 20:00   93,980,111     45.59.x.x:5000\n2026-09-18 08:00   94,008,911     13.140.x.x:5000\n2026-10-10 17:15   95,298,167     13.140.x.x:5000   <- my first read\n2026-11-05 23:00   96,809,429     13.140.x.x:5000"
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "The other teams moved more. Team3 changed servers three times in its first eleven days, and team1 moved on 20 October. On 3 November, the day "
+              },
+              {
+                "t": "link",
+                "s": "The Hacker News published Binance's findings",
+                "url": "https://thehackernews.com/2026/11/binance-reveals-how-fake-job-interviews.html"
+              },
+              {
+                "t": "text",
+                "s": ", team9 was re-pointed to a server my sample already used for its keylogger and clipboard agents. That is a timing coincidence. Nothing here shows a cause."
+              }
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Why this cuts both ways"
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "For the operators, a contract is infrastructure that survives takedowns: no hosting account to close, no domain to seize, and reads that cost nothing. For defenders, the same property is a gift. The contract is a public log of every server change, with a block number and a timestamp, and nobody can edit it after the fact."
+              }
+            ]
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "Blocking public RPC endpoints isn't practical for most teams. Watching for "
+              },
+              {
+                "t": "code",
+                "s": "UrlSet"
+              },
+              {
+                "t": "text",
+                "s": " events on known contracts is, and so is alerting when a developer machine makes "
+              },
+              {
+                "t": "code",
+                "s": "eth_call"
+              },
+              {
+                "t": "text",
+                "s": " requests it has no reason to make."
+              }
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "What I'd tell any developer"
+          },
+          {
+            "type": "ul",
+            "items": [
+              [
+                {
+                  "t": "text",
+                  "s": "Treat a take-home repo like an attachment from a stranger. Open it in a throwaway VM with no SSH keys, no wallet, no cloud credentials and no logged-in browser."
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "Read the install and build scripts before you install anything. That is where a loader can hide."
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "If a \"recruiter\" pushes you to run it today, on your own machine, the urgency is the tell."
+                }
+              ]
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "The five contracts and the sources"
+          },
+          {
+            "type": "ul",
+            "items": [
+              [
+                {
+                  "t": "text",
+                  "s": "team1 "
+                },
+                {
+                  "t": "link",
+                  "s": "0x4917f0f44be927e6e8b5e4c904a9dd98bfae8b76",
+                  "url": "https://polygonscan.com/address/0x4917f0f44be927e6e8b5e4c904a9dd98bfae8b76",
+                  "code": true
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "team2 "
+                },
+                {
+                  "t": "link",
+                  "s": "0x5C00998365A57CD53AB5Ea2963689a158dff6301",
+                  "url": "https://polygonscan.com/address/0x5C00998365A57CD53AB5Ea2963689a158dff6301",
+                  "code": true
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "team3 "
+                },
+                {
+                  "t": "link",
+                  "s": "0x1a9700e5d74f64429594df53efcb6bc8c3936cb5",
+                  "url": "https://polygonscan.com/address/0x1a9700e5d74f64429594df53efcb6bc8c3936cb5",
+                  "code": true
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "team9 "
+                },
+                {
+                  "t": "link",
+                  "s": "0x05a071fcccb797cff4eedce28d0ae9c01444dc1a",
+                  "url": "https://polygonscan.com/address/0x05a071fcccb797cff4eedce28d0ae9c01444dc1a",
+                  "code": true
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "s": "team10 "
+                },
+                {
+                  "t": "link",
+                  "s": "0xf4da4843ded8e82f3e7bd25290f4445000a4c4dd",
+                  "url": "https://polygonscan.com/address/0xf4da4843ded8e82f3e7bd25290f4445000a4c4dd",
+                  "code": true
+                }
+              ]
+            ]
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "Sources: Binance's findings as reported by the "
+              },
+              {
+                "t": "link",
+                "s": "BBC",
+                "url": "https://www.bbc.com/news/articles/ck5ynwz9gy67o"
+              },
+              {
+                "t": "text",
+                "s": " and "
+              },
+              {
+                "t": "link",
+                "s": "The Hacker News",
+                "url": "https://thehackernews.com/2026/11/binance-reveals-how-fake-job-interviews.html"
+              },
+              {
+                "t": "text",
+                "s": ", and "
+              },
+              {
+                "t": "link",
+                "s": "Google Threat Intelligence on EtherHiding",
+                "url": "https://cloud.google.com/blog/topics/threat-intelligence/dprk-adopts-etherhiding"
+              },
+              {
+                "t": "text",
+                "s": ". I'm not attributing my sample to any group. The technique and the fake-interview pattern are public."
+              }
+            ]
+          },
+          {
+            "type": "p",
+            "runs": [
+              {
+                "t": "text",
+                "s": "Method: passive reads only, through public Polygon RPC endpoints. I never used the RPC endpoint configured in the sample and never contacted the servers it points to."
+              }
+            ]
+          }
+        ]
+      },
       {
         "slug": "code-on-the-go-ai-agent-on-the-phone",
         "title": "A coding agent on the phone it builds for: lessons from Code on the Go",

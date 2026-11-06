@@ -157,6 +157,14 @@ test('case pages render in each language with their own alternates', function ()
     expect(str_contains($home, 'href="/work/ai-platform/"'), 'the home page links to each case');
 });
 
+test('cases: an optional search title and description replace the defaults', function (): void {
+    $es = app()->handle('GET', '/es/trabajo/code-on-the-go/')->body;
+    expect(str_contains($es, '<title>Code on the Go: IDE de Android con agente de IA sin Internet</title>'), 'the Spanish case uses its search title');
+    expect(str_contains($es, 'name="description" content="Cómo funciona el agente de IA de Code on the Go'), 'the Spanish case uses its search description');
+    $ai = app()->handle('GET', '/work/ai-platform/')->body;
+    expect(str_contains($ai, ' | John Andrés Trujillo</title>'), 'a case without a search title keeps the default');
+});
+
 test('notes: the index and each article render, with redirects and 404s', function (): void {
     $slug = 'code-on-the-go-ai-agent-on-the-phone';
 
@@ -187,6 +195,19 @@ test('notes: the index and each article render, with redirects and 404s', functi
 
     expect(str_contains(app()->handle('GET', '/')->body, 'href="/notes/"'), 'the English nav links to /notes/');
     expect(str_contains(app()->handle('GET', '/es/')->body, 'href="/notes/"'), 'the Spanish nav also links to /notes/ (English)');
+});
+
+test('notes: the on-chain note renders its diagram, code and links', function (): void {
+    $slug = 'fake-recruiter-malware-onchain-trail';
+    $note = app()->handle('GET', '/notes/' . $slug . '/');
+    expect($note->status === 200, 'on-chain note status ' . $note->status);
+    expect(substr_count($note->body, '<svg class="note-dg"') === 1, 'on-chain note inlines its diagram');
+    expect(str_contains($note->body, 'href="https://polygonscan.com/address/0x5C00998365A57CD53AB5Ea2963689a158dff6301"'), 'on-chain note links the contract');
+    expect(!preg_match('/\b13\.140\.\d+\.\d+/', $note->body), 'on-chain note masks the server addresses');
+    $md = app()->handle('GET', '/notes/' . $slug . '.md');
+    expect($md->status === 200 && str_contains($md->body, "```solidity\n"), 'on-chain note .md fences the Solidity block');
+    $index = app()->handle('GET', '/notes/')->body;
+    expect(strpos($index, $slug) < strpos($index, 'code-on-the-go-ai-agent-on-the-phone'), 'the newest note is listed first');
 });
 
 test('notes: the Markdown version renders from the same blocks', function (): void {
@@ -242,7 +263,8 @@ test('robots.txt and sitemap.xml', function (): void {
     expect(str_contains($closed, 'Disallow: /'), 'staging robots.txt disallows everything');
     $sitemap = app()->handle('GET', '/sitemap.xml');
     expect(simplexml_load_string($sitemap->body) !== false, 'sitemap is valid XML');
-    expect(substr_count($sitemap->body, '<loc>') === 10, 'sitemap lists the home, the two case pages and Under the hood in both languages, plus the English-only Notes index and the first note');
+    expect(substr_count($sitemap->body, '<loc>') === 11, 'sitemap lists the home, the two case pages and Under the hood in both languages, plus the English-only Notes index and both notes');
+    expect(str_contains($sitemap->body, '<loc>https://example.test/notes/fake-recruiter-malware-onchain-trail/</loc>'), 'sitemap lists the second note');
     expect(str_contains($sitemap->body, '<loc>https://example.test/es/trabajo/code-on-the-go/</loc>'), 'sitemap lists the Spanish case pages');
     expect(str_contains($sitemap->body, '<loc>https://example.test/notes/</loc>'), 'sitemap lists the Notes index');
     expect(str_contains($sitemap->body, '<loc>https://example.test/notes/code-on-the-go-ai-agent-on-the-phone/</loc>'), 'sitemap lists the first note');
@@ -252,14 +274,14 @@ test('robots.txt and sitemap.xml', function (): void {
         $path = substr((string) $entry->loc, strlen('https://example.test'));
         expect((string) $entry->lastmod === ($dates[$path] ?? null), 'sitemap lastmod matches the substantial update date of ' . $path);
     }
-    expect(count($dates) === 10, 'every sitemap URL has a dated entry');
+    expect(count($dates) === 11, 'every sitemap URL has a dated entry');
     expect($dates['/'] !== $dates['/work/ai-platform/'], 'home updates do not change case study dates');
 });
 
 // ---------- HTML hygiene ----------
 
 test('HTML: unique ids, working anchors, one h1, no inline styles or scripts', function (): void {
-    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/', '/notes/', '/notes/code-on-the-go-ai-agent-on-the-phone/'] as $path) {
+    foreach (['/', '/es/', '/work/ai-platform/', '/es/trabajo/code-on-the-go/', '/under-the-hood/', '/es/bajo-el-capo/', '/notes/', '/notes/code-on-the-go-ai-agent-on-the-phone/', '/notes/fake-recruiter-malware-onchain-trail/'] as $path) {
         $html = app()->handle('GET', $path)->body;
         $doc = dom($html);
         $xpath = new DOMXPath($doc);
