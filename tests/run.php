@@ -399,7 +399,7 @@ test('home: cross-project recommendations show LinkedIn photos and a monogram fa
         expect(str_contains($html, 'id="recommendations"'), "{$path}: recommendations section missing");
         expect(str_contains($html, htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8')), "{$path}: section title missing");
         expect(str_contains($html, '>' . $via . '</a>'), "{$path}: via-LinkedIn label missing");
-        foreach (['Adan Argueta', 'David Schachter', 'Akash Yadav', 'Oluwadara Abijo', 'Avesta Narimani'] as $name) {
+        foreach (['Adan Argueta', 'David Schachter', 'Akash Yadav', 'Oluwadara Abijo', 'Avesta Narimani', 'Joel Menchavez'] as $name) {
             expect(str_contains($html, $name), "{$path}: missing {$name}");
         }
         expect(str_contains($html, 'John did great work and it will make the world better.'), "{$path}: David's quote missing");
@@ -407,9 +407,9 @@ test('home: cross-project recommendations show LinkedIn photos and a monogram fa
 
         $xpath = new DOMXPath(dom($html));
         $avatars = $xpath->query('//*[@id="recommendations"]//a[contains(@class, "rec__avatar")]');
-        expect($avatars->length === 5, "{$path}: expected five profile links, found " . $avatars->length);
+        expect($avatars->length === 6, "{$path}: expected six profile links, found " . $avatars->length);
         $photos = $xpath->query('//*[@id="recommendations"]//a[contains(@class, "rec__avatar")]/img');
-        expect($photos->length === 4, "{$path}: expected four public photos and one monogram fallback");
+        expect($photos->length === 5, "{$path}: expected five public photos and one monogram fallback");
         foreach ($photos as $photo) {
             expect($photo->getAttribute('alt') === '', "{$path}: avatar photos must be decorative beside the visible name");
         }

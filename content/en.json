@@ -537,6 +537,15 @@
         "url": "https://www.linkedin.com/in/avestanarimani/",
         "source_url": "https://www.linkedin.com/in/john-andres-trujillo/details/recommendations/?detailScreenTabIndex=0",
         "quote": "John is an outstanding senior mobile developer who expertly bridges the gap between complex AI architecture and polished production environments."
+      },
+      {
+        "name": "Joel Menchavez",
+        "role": "Developer · Code on the Go",
+        "initials": "JM",
+        "photo": "img/people/joel-menchavez.jpg",
+        "url": "https://www.linkedin.com/in/joel-menchavez-8b5669/",
+        "source_url": "https://www.linkedin.com/in/john-andres-trujillo/details/recommendations/?detailScreenTabIndex=0",
+        "quote": "He took ownership of the AI agent work, connecting it with the IDE’s tools and working through the practical constraints of running AI on a mobile device."
       }
     ]
   },
