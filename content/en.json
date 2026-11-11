@@ -1,8 +1,8 @@
 {
   "lang": "en",
   "locale": "en_US",
-  "updated": "2026-11-04",
-  "updated_label": "4 Nov 2026",
+  "updated": "2026-11-11",
+  "updated_label": "11 Nov 2026",
   "meta": {
     "title": "John Andrés Trujillo, Senior Mobile Engineer: iOS, Android and AI",
     "description": "Senior mobile engineer in Quito, Ecuador, working remotely. Native iOS and Android since 2015, plus Flutter, React Native, backends and AI agents.",
@@ -42,23 +42,27 @@
     "knows_about": ["iOS", "Android", "Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "Flutter", "React Native", "Mobile app development", "AI agents", "LLM integration", "Google Gemini", "On-device LLMs", "Python", "FastAPI", "AWS Lambda", "Google Cloud"]
   },
   "hero": {
-    "title_lines": ["Mobile engineer since {2015}.", "These days I also build AI systems."],
-    "lede": "I’m a senior mobile engineer in Quito, Ecuador, working remotely. I build the apps people use, and the backend and AI that run behind them.",
+    "title_lines": ["I build mobile apps", "and the AI", "behind them."],
+    "lede": "I’m a senior mobile engineer in Quito, Ecuador, working remotely since 2015. Native iOS and Android, plus the backend and the AI agents that run behind the screen.",
     "proof": {
       "label": "In short",
       "items": [
-        "10+ years shipping software, 7+ on iOS in production",
-        "Long engagements: almost 6 years with one firm, 3 with another",
-        "My AI platform has been in daily client use since June 2025"
+        {"value": "10+", "label": "years shipping software, 7+ of them on iOS in production"},
+        {"value": "~6", "label": "years with one firm, and 3 with another: long engagements"},
+        {"value": "Daily", "label": "client use of my AI platform since June 2025"},
+        {"value": "500+", "label": "commits to Code on the Go, an open-source Android IDE"}
       ],
       "evidence": [
         {"roles": ["accessibility", "consultancy", "art-marketplace", "mobile-modernization"]},
         {"roles": ["consultancy", "accessibility", "art-marketplace"]},
-        {"roles": ["ai-platform"], "case": "ai-platform"}
+        {"roles": ["ai-platform"], "case": "ai-platform"},
+        {"roles": ["code-on-the-go"], "case": "code-on-the-go"}
       ]
     },
     "cta_contact": "Write to me",
+    "cta_work": "See the work",
     "cta_cv": "CV (PDF)",
+    "links_label": "Profiles and CV",
     "facts": {
       "label": "Spec sheet",
       "rows": [
@@ -95,6 +99,16 @@
     {"id": "ops", "side": "right", "label": "Ops", "name": "Delivery & observability"},
     {"id": "sec", "side": "right", "label": "Sec", "name": "Security"}
   ],
+  "approach": {
+    "title": "How I work with AI agents",
+    "intro": "I use coding agents every day. How much they do on their own depends on what a mistake would cost.",
+    "points": [
+      {"title": "Autonomy by risk", "text": "Agents draft, refactor and test on their own. Anything that touches production, money or a person’s data waits for a human to approve it."},
+      {"title": "Plan, act, check", "text": "In Code on the Go I designed the agent as a planner, an executor that drives the IDE’s own tools, and a critic that sends failed builds back with their logs."},
+      {"title": "Proof on every change", "text": "This site is built the same way: Claude Code writes under my direction, tests and a publication guard run on every change, and nothing goes live until I approve it."}
+    ],
+    "link": "Read the Code on the Go case"
+  },
   "work": {
     "title": "Work",
     "intro": "Ten years of native apps, and two projects up close: what people see on screen and what runs behind it.",

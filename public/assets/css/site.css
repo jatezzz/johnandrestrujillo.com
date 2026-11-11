@@ -531,29 +531,58 @@ svg {
   font-size: 1.125rem;
 }
 
-.hero__proof {
+/* Four numbers under the buttons, each with its source (templates/partials/proof.php). */
+.hero__stats {
   display: grid;
-  gap: 0.4rem;
-  max-width: 54ch;
-  margin: 1.25rem 0 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  max-width: 40rem;
+  margin: 2rem 0 0;
   padding: 0;
   list-style: none;
+}
+
+.stat {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.stat__value {
+  font-size: var(--step-2);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat__label {
   color: var(--graphite);
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
-.hero__proof > li {
-  padding-left: 1.1rem;
-  position: relative;
+.button__arrow {
+  margin-left: 0.4em;
 }
 
-.hero__proof > li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.62em;
-  width: 0.45rem;
-  height: 0.45rem;
-  background: var(--accent);
+/* Profiles and CV: small links under the two buttons, so the buttons stay two. */
+.hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-weight: 700;
+}
+
+.hero__links a {
+  text-underline-offset: 0.2em;
 }
 
 /* Claim sources (templates/partials/proof.php): a popover placed by CSS anchor positioning, next to the button
@@ -988,6 +1017,51 @@ svg {
   max-width: 48ch;
   margin: 0;
   color: var(--graphite);
+}
+
+/* ---------- How I work with AI agents ---------- */
+
+.approach__list {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 52rem) {
+  .approach__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.approach__item {
+  padding: 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.approach__item p {
+  margin: 0;
+  color: var(--graphite);
+}
+
+.approach__n {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.approach__title {
+  margin: 0.4rem 0 0.5rem;
+  font-size: var(--step-1);
+}
+
+.approach__more {
+  margin: 1.5rem 0 0;
 }
 
 /* ---------- Work ---------- */

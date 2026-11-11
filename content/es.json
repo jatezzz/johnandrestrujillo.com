@@ -1,8 +1,8 @@
 {
   "lang": "es",
   "locale": "es_EC",
-  "updated": "2026-11-04",
-  "updated_label": "4 nov 2026",
+  "updated": "2026-11-11",
+  "updated_label": "11 nov 2026",
   "meta": {
     "title": "John Andrés Trujillo, ingeniero móvil sénior: iOS, Android e IA",
     "description": "Ingeniero móvil sénior en Quito, Ecuador, con trabajo remoto. iOS y Android nativo desde 2015, además de Flutter, React Native, backend y agentes de IA.",
@@ -42,23 +42,27 @@
     "knows_about": ["iOS", "Android", "Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "Flutter", "React Native", "Desarrollo de apps móviles", "Agentes de IA", "Integración de LLM", "Google Gemini", "LLM en el dispositivo", "Python", "FastAPI", "AWS Lambda", "Google Cloud"]
   },
   "hero": {
-    "title_lines": ["Ingeniero móvil desde {2015}.", "Hoy también construyo sistemas de IA."],
-    "lede": "Soy ingeniero móvil sénior en Quito, Ecuador, y trabajo de forma remota. Construyo las apps que la gente usa, y el backend y la IA que corren detrás.",
+    "title_lines": ["Construyo apps", "móviles y la IA", "que hay detrás."],
+    "lede": "Soy ingeniero móvil sénior en Quito, Ecuador, y trabajo de forma remota desde 2015. iOS y Android nativos, más el backend y los agentes de IA que corren detrás de la pantalla.",
     "proof": {
       "label": "En resumen",
       "items": [
-        "Más de 10 años entregando software, más de 7 en iOS en producción",
-        "Relaciones largas: casi 6 años con una firma y 3 con otra",
-        "Mi plataforma de IA la usan clientes a diario desde junio de 2025"
+        {"value": "10+", "label": "años entregando software, más de 7 en iOS en producción"},
+        {"value": "~6", "label": "años con una firma y 3 con otra: relaciones largas"},
+        {"value": "A diario", "label": "usan clientes mi plataforma de IA desde junio de 2025"},
+        {"value": "500+", "label": "commits en Code on the Go, un IDE Android de código abierto"}
       ],
       "evidence": [
         {"roles": ["accessibility", "consultancy", "art-marketplace", "mobile-modernization"]},
         {"roles": ["consultancy", "accessibility", "art-marketplace"]},
-        {"roles": ["ai-platform"], "case": "ai-platform"}
+        {"roles": ["ai-platform"], "case": "ai-platform"},
+        {"roles": ["code-on-the-go"], "case": "code-on-the-go"}
       ]
     },
     "cta_contact": "Escríbeme",
+    "cta_work": "Ver el trabajo",
     "cta_cv": "CV (PDF, en inglés)",
+    "links_label": "Perfiles y CV",
     "facts": {
       "label": "Ficha técnica",
       "rows": [
@@ -95,6 +99,16 @@
     {"id": "ops", "side": "right", "label": "Ops", "name": "Entrega y observabilidad"},
     {"id": "sec", "side": "right", "label": "Sec", "name": "Seguridad"}
   ],
+  "approach": {
+    "title": "Cómo trabajo con agentes de IA",
+    "intro": "Uso agentes de programación todos los días. Cuánto hacen solos depende de lo que costaría un error.",
+    "points": [
+      {"title": "Autonomía según el riesgo", "text": "Los agentes redactan, refactorizan y prueban solos. Lo que toca producción, dinero o datos de una persona espera a que alguien lo apruebe."},
+      {"title": "Planear, actuar, revisar", "text": "En Code on the Go diseñé el agente como un planificador, un ejecutor que usa las herramientas del propio IDE y un crítico que devuelve los builds fallidos con sus logs."},
+      {"title": "Pruebas en cada cambio", "text": "Este sitio se hace igual: Claude Code escribe bajo mi dirección, las pruebas y un guardián de publicación corren en cada cambio, y nada sale sin mi aprobación."}
+    ],
+    "link": "Leer el caso de Code on the Go"
+  },
   "work": {
     "title": "Trabajo",
     "intro": "Diez años de apps nativas y dos proyectos de cerca: lo que la gente ve en pantalla y lo que corre detrás.",

@@ -24,19 +24,25 @@ $hero = $c['hero'];
       <?php endforeach; ?>
     </h1>
     <p class="hero__lede"><?= $e($hero['lede']) ?></p>
-    <ul class="hero__proof" aria-label="<?= $e($hero['proof']['label']) ?>">
-      <?php foreach ($hero['proof']['items'] as $i => $item): ?>
-      <li><?= $view->partial('proof', ['c' => $c, 'n' => $i + 1, 'claim' => $item, 'evidence' => $hero['proof']['evidence'][$i]]) ?></li>
-      <?php endforeach; ?>
-    </ul>
     <p class="hero__actions">
       <a class="button button--primary" href="#contact" data-magnetic data-cta="write" data-loc="hero"><?= $e($hero['cta_contact']) ?></a>
-      <?php if ($site['linkedin_url'] !== ''): ?>
-      <a class="button" href="<?= $e($site['linkedin_url']) ?>" rel="me" data-magnetic data-cta="linkedin" data-loc="hero">LinkedIn</a>
-      <?php endif; ?>
-      <a class="button" href="<?= $e($site['github_url']) ?>" rel="me" data-magnetic data-cta="github" data-loc="hero">GitHub</a>
-      <a class="button" href="<?= $e($asset('cv/john-andres-trujillo-cv.pdf')) ?>" type="application/pdf" data-magnetic data-cta="cv" data-loc="hero"><?= $e($hero['cta_cv']) ?></a>
+      <a class="button" href="#work" data-magnetic data-cta="work" data-loc="hero"><?= $e($hero['cta_work']) ?><span class="button__arrow" aria-hidden="true">↓</span></a>
     </p>
+    <ul class="hero__links" aria-label="<?= $e($hero['links_label']) ?>">
+      <?php if ($site['linkedin_url'] !== ''): ?>
+      <li><a href="<?= $e($site['linkedin_url']) ?>" rel="me" data-cta="linkedin" data-loc="hero">LinkedIn</a></li>
+      <?php endif; ?>
+      <li><a href="<?= $e($site['github_url']) ?>" rel="me" data-cta="github" data-loc="hero">GitHub</a></li>
+      <li><a href="<?= $e($asset('cv/john-andres-trujillo-cv.pdf')) ?>" type="application/pdf" data-cta="cv" data-loc="hero"><?= $e($hero['cta_cv']) ?></a></li>
+    </ul>
+    <ul class="hero__stats" aria-label="<?= $e($hero['proof']['label']) ?>">
+      <?php foreach ($hero['proof']['items'] as $i => $item): ?>
+      <li class="stat">
+        <span class="stat__value num"><?= $e($item['value']) ?></span>
+        <span class="stat__label"><?= $view->partial('proof', ['c' => $c, 'n' => $i + 1, 'claim' => $item['label'], 'evidence' => $hero['proof']['evidence'][$i]]) ?></span>
+      </li>
+      <?php endforeach; ?>
+    </ul>
     <table class="spec-sheet">
       <caption><?= $e($hero['facts']['label']) ?></caption>
       <tbody>
@@ -48,6 +54,7 @@ $hero = $c['hero'];
   </div>
   <?= $view->partial('pinout', $vars) ?>
 </section>
+<?= $view->partial('approach', $vars) ?>
 <?= $view->partial('work', $vars) ?>
 <?php if (!empty($c['recommendations']['items'])): ?>
 <?= $view->partial('recommendations', $vars) ?>
