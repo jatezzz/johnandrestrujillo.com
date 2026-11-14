@@ -269,6 +269,23 @@ svg {
   list-style: none;
 }
 
+.plain-list--social {
+  gap: 0.5rem;
+}
+
+.plain-list--social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.social-icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  fill: currentColor;
+}
+
 .button {
   display: inline-flex;
   align-items: center;

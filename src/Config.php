@@ -19,6 +19,9 @@ final class Config
         'linkedin_url' => 'https://www.linkedin.com/in/john-andres-trujillo/',
         'instagram_url' => 'https://www.instagram.com/johnandrestrujillo/',
         'tiktok_url' => 'https://www.tiktok.com/@johnandrestrujillo',
+        'x_url' => 'https://x.com/jatezzz',
+        'threads_url' => 'https://www.threads.com/@johnandrestrujillo',
+        'youtube_url' => 'https://www.youtube.com/@johnandrestrujilloestrella9231',
         'source_url' => '',
         'revision' => '',
         'metrics_mode' => 'off',        // off | log | posthog
