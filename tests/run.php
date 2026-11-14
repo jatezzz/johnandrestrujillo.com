@@ -568,6 +568,7 @@ test('metrics: allow-list, privacy and limits', function (): void {
     expect(($event['event'] ?? '') === '$pageview' && !isset($event['properties']['email']), 'unknown properties are dropped');
     expect($event['properties']['$process_person_profile'] === false && $event['properties']['$geoip_disable'] === true, 'no profiles, no GeoIP');
     expect(!str_contains(json_encode($event), '198.51.100.9'), 'the IP address must never be sent');
+    expect(($event['properties']['$raw_user_agent'] ?? '') === 'Mozilla/5.0 (Macintosh)', 'user-agent is sent for device/browser/OS');
     expect(str_starts_with($event['distinct_id'], 'anon-'), 'anonymous visitor id');
     expect(!isset($event['properties']['internal']), 'visitors are not marked internal');
     $owner = app(['metrics_mode' => 'log', 'var_dir' => $dir]);

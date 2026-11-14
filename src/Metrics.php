@@ -11,10 +11,11 @@ namespace Portfolio;
  * an allow-list and forwards them after the response has been sent. Visitors never
  * talk to a third party, so the Content Security Policy stays 'self' only.
  *
- * Privacy: no cookies, no person profiles, no IP or GeoIP sent. The only stored flag is the
- * owner's opt-in "internal" mark (localStorage, set with ?internal=1), never set for visitors. The
- * visitor id is a keyed hash of the day, IP and browser, so it can't follow anyone
- * across days and can't be reversed into an IP. Bots and headless browsers are dropped.
+ * Privacy: no cookies, no person profiles, no IP or GeoIP sent. The user-agent IS sent as
+ * $raw_user_agent so PostHog can derive device/browser/OS (no IP, no person profile). The only
+ * stored flag is the owner's opt-in "internal" mark (localStorage, set with ?internal=1), never
+ * set for visitors. The visitor id is a keyed hash of the day, IP and browser, so it can't follow
+ * anyone across days and can't be reversed into an IP. Bots and headless browsers are dropped.
  *
  * Modes (config metrics_mode): off | log (var_dir/events.log, used on staging) |
  * posthog (needs posthog_key and posthog_host).
@@ -116,6 +117,9 @@ final class Metrics
                 'env' => $this->config['env'],
                 '$process_person_profile' => false,
                 '$geoip_disable' => true,
+                // The user-agent lets PostHog derive device/browser/OS at ingestion.
+                // It carries no IP and no person profile, so it keeps the no-PII stance.
+                '$raw_user_agent' => $agent !== '' ? mb_substr($agent, 0, 400) : null,
             ],
         ];
     }
